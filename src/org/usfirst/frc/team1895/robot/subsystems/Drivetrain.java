@@ -1,9 +1,10 @@
 package org.usfirst.frc.team1895.robot.subsystems;
 
-import com.ctre.CANTalon;
+import com.ctre.TalonSRX;
 
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -16,10 +17,10 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Drivetrain extends Subsystem {
 	
 	// motors
-    private CANTalon left_dt_motor1;
-    private CANTalon left_dt_motor2;
-    private CANTalon right_dt_motor1;
-    private CANTalon right_dt_motor2;
+    private TalonSRX left_dt_motor1;
+    private TalonSRX left_dt_motor2;
+    private TalonSRX right_dt_motor1;
+    private TalonSRX right_dt_motor2;
     
     // pneumatics
     private final Compressor compressor;

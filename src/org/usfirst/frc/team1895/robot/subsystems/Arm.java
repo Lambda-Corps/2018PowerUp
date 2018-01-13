@@ -2,9 +2,8 @@ package org.usfirst.frc.team1895.robot.subsystems;
 
 import org.usfirst.frc.team1895.robot.commands.arm.Default_Arm;
 
-import com.ctre.CANTalon;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -17,11 +16,11 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Arm extends Subsystem {
 
 	// motors
-    private CANTalon wrist_motor;
-    private CANTalon arm_intake1;
-    private CANTalon arm_intake2;
-    private CANTalon arm_rotation_motor1;
-    private CANTalon arm_rotation_motor2;
+    private TalonSRX wrist_motor;
+    private TalonSRX arm_intake1;
+    private TalonSRX arm_intake2;
+    private TalonSRX arm_rotation_motor1;
+    private TalonSRX arm_rotation_motor2;
     
     // pneumatics
     private final DoubleSolenoid telescoping_solenoid;

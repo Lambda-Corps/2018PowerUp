@@ -2,9 +2,8 @@ package org.usfirst.frc.team1895.robot.subsystems;
 
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.Default_LowerIntake;
 
-import com.ctre.CANTalon;
-
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -18,8 +17,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class LowerIntake extends Subsystem {
 
 	// motors
-	private CANTalon left_lower_intake_motor;
-	private CANTalon right_lower_intake_motor;
+	private TalonSRX left_lower_intake_motor;
+	private TalonSRX right_lower_intake_motor;
 	
 	// pneumatics
 	private final DoubleSolenoid lower_intake_solenoid;
