@@ -1,13 +1,13 @@
-package org.usfirst.frc.team1895.robot.commands.intake;
+package org.usfirst.frc.team1895.robot.commands.lowerIntake;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class Default_Intake extends Command {
+public class Default_LowerIntake extends Command {
 
-    public Default_Intake() {
+    public Default_LowerIntake() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     }

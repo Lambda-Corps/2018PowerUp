@@ -1,13 +1,13 @@
-package org.usfirst.frc.team1895.robot.commands.intake;
+package org.usfirst.frc.team1895.robot.commands.claw;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class GrabCube extends Command {
+public class GrabCube_Claw extends Command {
 
-    public GrabCube() {
+    public GrabCube_Claw() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     }

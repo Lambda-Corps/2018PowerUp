@@ -5,9 +5,9 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class LiftArm extends Command {
+public class RotateArmDown extends Command {
 
-    public LiftArm() {
+    public RotateArmDown() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     }

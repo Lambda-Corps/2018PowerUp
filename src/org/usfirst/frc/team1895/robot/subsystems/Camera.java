@@ -3,12 +3,17 @@ package org.usfirst.frc.team1895.robot.subsystems;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
- *
+ * Function: Camera will be used for vision, both for autonomously aligning and to give the driver sight of the field. 
+ * Motors: 
+ * Sensors: 
+ * Last Updated: 1/13/2018 by Maddy
  */
+
 public class Camera extends Subsystem {
 
-    // Put methods for controlling this subsystem
-    // here. Call these from Commands.
+    public Camera() {
+    	
+    }
 
     public void initDefaultCommand() {
         // Set the default command for a subsystem here.

@@ -1,13 +1,13 @@
-package org.usfirst.frc.team1895.robot.commands.intake;
+package org.usfirst.frc.team1895.robot.commands.arm;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class DeployCube extends Command {
+public class RotateWristDown extends Command {
 
-    public DeployCube() {
+    public RotateWristDown() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     }
