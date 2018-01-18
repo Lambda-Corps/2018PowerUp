@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1895.robot.subsystems;
 
+import org.usfirst.frc.team1895.robot.RobotMap;
 import org.usfirst.frc.team1895.robot.commands.arm.Default_Arm;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -30,6 +31,7 @@ public class Arm extends Subsystem {
     	// motors
     	
     	//pneumatics
+    	telescoping_solenoid = new DoubleSolenoid(RobotMap.ARM_TELESCOPING_SOLENOID_A_PORT, RobotMap.ARM_TELESCOPING_SOLENOID_B_PORT);
     }
     
     public void initDefaultCommand() {
