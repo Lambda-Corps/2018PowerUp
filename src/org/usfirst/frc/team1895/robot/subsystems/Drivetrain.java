@@ -1,10 +1,8 @@
 package org.usfirst.frc.team1895.robot.subsystems;
 
-import com.ctre.TalonSRX;
-
+import com.ctre.phoenix.motorcontrol.can.*;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.TalonSRX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
