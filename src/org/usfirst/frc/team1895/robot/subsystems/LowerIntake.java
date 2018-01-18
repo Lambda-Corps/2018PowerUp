@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1895.robot.subsystems;
 
+import org.usfirst.frc.team1895.robot.RobotMap;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.Default_LowerIntake;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -27,7 +28,7 @@ public class LowerIntake extends Subsystem {
 		//motors
 		
 		//pneumatics
-		
+		lower_intake_solenoid = new DoubleSolenoid(RobotMap.LOWER_INTAKE_SOLENOID_A_PORT, RobotMap.LOWER_INTAKE_SOLENOID_B_PORT);
 	}
 	
     public void initDefaultCommand() {
