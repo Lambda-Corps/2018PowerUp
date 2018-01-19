@@ -2,7 +2,7 @@ package org.usfirst.frc.team1895.robot.subsystems;
 
 import org.usfirst.frc.team1895.robot.commands.claw.Default_Claw;
 
-import edu.wpi.first.wpilibj.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.*;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
