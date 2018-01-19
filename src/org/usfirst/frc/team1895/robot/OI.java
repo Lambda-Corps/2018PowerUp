@@ -1,8 +1,6 @@
 package org.usfirst.frc.team1895.robot;
 
-import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithPID;
-
-import edu.wpi.first.wpilibj.buttons.Button;
+import org.usfirst.frc.team1895.robot.oi.F310;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -38,4 +36,9 @@ public class OI {
 	// button.whenReleased(new ExampleCommand());
 	
 	//remember to add secret button
+	public F310 gamepad;
+	
+	public OI() {
+		gamepad = new F310(RobotMap.GAMEPAD_PORT);
+	}
 }

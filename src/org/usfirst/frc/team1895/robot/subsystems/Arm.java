@@ -4,7 +4,7 @@ import org.usfirst.frc.team1895.robot.RobotMap;
 import org.usfirst.frc.team1895.robot.commands.arm.Default_Arm;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.*;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
 /**
@@ -24,14 +24,14 @@ public class Arm extends Subsystem {
     private TalonSRX arm_rotation_motor2;
     
     // pneumatics
-    private final DoubleSolenoid telescoping_solenoid;
+    //private final DoubleSolenoid telescoping_solenoid;
     
     
     public Arm() {
     	// motors
     	
     	//pneumatics
-    	telescoping_solenoid = new DoubleSolenoid(RobotMap.ARM_TELESCOPING_SOLENOID_A_PORT, RobotMap.ARM_TELESCOPING_SOLENOID_B_PORT);
+    	//telescoping_solenoid = new DoubleSolenoid(RobotMap.ARM_TELESCOPING_SOLENOID_A_PORT, RobotMap.ARM_TELESCOPING_SOLENOID_B_PORT);
     }
     
     public void initDefaultCommand() {

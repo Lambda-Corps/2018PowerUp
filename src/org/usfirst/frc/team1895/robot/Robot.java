@@ -20,7 +20,7 @@ import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
  */
 public class Robot extends IterativeRobot {
 
-	public static final Drivetrain exampleSubsystem = new Drivetrain();
+	public static Drivetrain drivetrain = new Drivetrain();
 	public static OI oi;
 
 	Command autonomousCommand;
@@ -94,6 +94,7 @@ public class Robot extends IterativeRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
+		
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 	}
@@ -104,6 +105,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		
 	}
 
 	/**

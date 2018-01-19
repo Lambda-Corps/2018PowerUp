@@ -8,6 +8,7 @@ package org.usfirst.frc.team1895.robot;
  */
 public class RobotMap {
 	
+	public static final int GAMEPAD_PORT = 0;
 	// CAN Bus
 	public static final int LEFT_DT_MOTOR1_PORT = 1;
 	public static final int LEFT_DT_MOTOR2_PORT = 2;
