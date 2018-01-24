@@ -67,9 +67,13 @@ public class Drivetrain extends Subsystem {
 		right_dt_motor1.set(ControlMode.PercentOutput, right_speed);
     	right_dt_motor2.follow(right_dt_motor1);
 	}
+    public void resetGyro() {
+    	gyro.reset();
+    }
     
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		setDefaultCommand(new Default_Drivetrain());
 	}
+	
 }
