@@ -1,33 +1,30 @@
-package org.usfirst.frc.team1895.robot.commands.climbing;
+package org.usfirst.frc.team1895.robot.commands.drivetrain;
 
 import org.usfirst.frc.team1895.robot.Robot;
-import org.usfirst.frc.team1895.robot.oi.F310;
 
 import edu.wpi.first.wpilibj.command.Command;
+
 /**
  *
  */
-public class Default_ManuallyClimb extends Command {
-
-    public Default_ManuallyClimb() {
+public class TurnWithGyro extends Command {
+	private double goalAngle = 0.0;
+	
+    public TurnWithGyro(double givenAngle) {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	requires(Robot.climber);
+    	requires(Robot.drivetrain);
+    	goalAngle = givenAngle;
     	
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	Robot.drivetrain.resetGyro();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if(Robot.oi.gamepad.getAxis(F310.RT)>.2) {
-    		Robot.climber.manualClimbing(Robot.oi.gamepad.getAxis(F310.RT));
-    	}
-    	else {
-    		Robot.climber.manualClimbing(0);
-    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()

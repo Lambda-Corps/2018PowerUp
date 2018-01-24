@@ -6,6 +6,7 @@ import org.usfirst.frc.team1895.robot.commands.drivetrain.Default_Drivetrain;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.command.Subsystem;
 /**
  * Function: Drives around. Can gear shift into high and low gear. I am also including the Compressor here. 
@@ -25,7 +26,10 @@ public class Drivetrain extends Subsystem {
     // pneumatics
     //private final Compressor compressor;
     //private final DoubleSolenoid transmission_solenoid;
-    
+   
+    //Gyro
+    private AnalogGyro gyro;
+    //private AHRS ahrs;
     public Drivetrain() {
     	//motors
     	left_dt_motor1 = new TalonSRX(RobotMap.LEFT_DT_MOTOR1_PORT);
@@ -42,6 +46,8 @@ public class Drivetrain extends Subsystem {
     	//pneumatics
     	//compressor = new Compressor();
     	//transmission_solenoid = new DoubleSolenoid(RobotMap.DRIVETRAIN_SOLENOID_A_PORT, RobotMap.DRIVETRAIN_SOLENOID_B_PORT);
+    	gyro = new AnalogGyro(RobotMap.GYRO_PORT);
+    	
     }
 
     // Testing current limiting
