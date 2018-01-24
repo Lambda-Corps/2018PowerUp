@@ -1,7 +1,9 @@
 package org.usfirst.frc.team1895.robot.commands.climbing;
 
-import edu.wpi.first.wpilibj.command.Command;
+import org.usfirst.frc.team1895.robot.Robot;
+import org.usfirst.frc.team1895.robot.oi.F310;
 
+import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
@@ -10,6 +12,8 @@ public class Default_ManuallyClimb extends Command {
     public Default_ManuallyClimb() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
+    	requires(Robot.climber);
+    	
     }
 
     // Called just before this Command runs the first time
@@ -18,6 +22,12 @@ public class Default_ManuallyClimb extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	if(Robot.oi.gamepad.getAxis(F310.RY)>.2) {
+    		Robot.climber.manualClimbing(Robot.oi.gamepad.getAxis(F310.RY));
+    	}
+    	else {
+    		Robot.climber.manualClimbing(0);
+    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()
