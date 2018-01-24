@@ -16,11 +16,11 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 
 public class Drivetrain extends Subsystem {
 	
-	// motors
-    private TalonSRX left_dt_motor1;
-    private TalonSRX left_dt_motor2;
-    private TalonSRX right_dt_motor1;
-    private TalonSRX right_dt_motor2;
+	// motors                           CAN ID #
+    private TalonSRX left_dt_motor1;  //1
+    private TalonSRX left_dt_motor2;  //2
+    private TalonSRX right_dt_motor1; //4
+    private TalonSRX right_dt_motor2; //5
     
     // pneumatics
     //private final Compressor compressor;
@@ -46,20 +46,20 @@ public class Drivetrain extends Subsystem {
 
     // Testing current limiting
     public void arcadeDrive(double trans_speed, double yaw) {
-		yaw *= -1.0;
-		trans_speed *= -1.0;
-		double left_speed = yaw - trans_speed;
-		double right_speed = yaw + trans_speed;
+		double left_speed = trans_speed + yaw;
+		double right_speed = yaw - trans_speed;
 
 		double max_speed = Math.max(Math.abs(left_speed), Math.abs(right_speed));
 		if (Math.abs(max_speed) > 1.0) {
 			left_speed /= max_speed;
 			right_speed /= max_speed;
 		}
-		
-		//motorgroup stuffs
-		left_dt_motor2.set(ControlMode.Current, left_speed);
-    	right_dt_motor2.set(ControlMode.Current, left_speed);
+    	
+		//motorgroup stuffs - CHANGED TO LEADER FOLLOWER TESTING		
+		left_dt_motor1.set(ControlMode.PercentOutput, left_speed);
+    	left_dt_motor2.follow(left_dt_motor1);
+		right_dt_motor1.set(ControlMode.PercentOutput, right_speed);
+    	right_dt_motor2.follow(right_dt_motor1);
 	}
     
 	public void initDefaultCommand() {
