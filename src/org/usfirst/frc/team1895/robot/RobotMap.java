@@ -8,7 +8,9 @@ package org.usfirst.frc.team1895.robot;
  */
 public class RobotMap {
 	
+	// Gamepads
 	public static final int GAMEPAD_PORT = 0;
+	
 	// CAN Bus
 	public static final int LEFT_DT_MOTOR1_PORT = 1;
 	public static final int LEFT_DT_MOTOR2_PORT = 2;
@@ -31,6 +33,14 @@ public class RobotMap {
 	public static final int ARM_TELESCOPING_SOLENOID_A_PORT = 5;
 	public static final int ARM_TELESCOPING_SOLENOID_B_PORT = 6;
 
-	//Gyro
+	
+	// Digital IO
+	public static final int RIGHT_ENCODER_A_PORT = 0;
+	public static final int RIGHT_ENCODER_B_PORT = 1;
+	public static final int LEFT_ENCODER_A_PORT = 3;
+	public static final int LEFT_ENCODER_B_PORT = 2;
+	
+	// Analog
 	public static final int GYRO_PORT = 0;
+	public static final int RANGEFINDER_PORT = 1;
 }
