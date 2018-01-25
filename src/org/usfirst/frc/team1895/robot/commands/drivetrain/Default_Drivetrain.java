@@ -38,7 +38,7 @@ public class Default_Drivetrain extends Command {
     		}
     		if(Robot.oi.gamepad.getAxis(F310.RY)<-0.005) {  //if backward
     			angle = Robot.drivetrain.getGyro();
-    			System.out.printf("BW Drive, angle = " + angle + "\n");
+    			System.out.printf("BW Drive, angle = " + angle + "\n"); 
     			if(angle<-tolerance) {  //if drifting left
     				System.out.println("drifting left, correcting");
     				Robot.drivetrain.tankDrive(Robot.oi.gamepad.getAxis(F310.RY), 0.75*Robot.oi.gamepad.getAxis(F310.RY));  //go right  -- TODO: check if correction will work w/arcadedrive this way
