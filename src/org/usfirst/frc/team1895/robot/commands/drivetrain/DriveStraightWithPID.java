@@ -10,7 +10,7 @@ import org.usfirst.frc.team1895.robot.Robot;
 public class DriveStraightWithPID extends Command {
 	public DriveStraightWithPID() {
 		// Use requires() here to declare subsystem dependencies
-		requires(Robot.exampleSubsystem);
+		requires(Robot.drivetrain);
 	}
 
 	// Called just before this Command runs the first time

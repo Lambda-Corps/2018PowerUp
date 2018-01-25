@@ -1,13 +1,13 @@
-package org.usfirst.frc.team1895.robot.commands.drivetrain;
+package org.usfirst.frc.team1895.robot.commands.testcommands;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class DriveUntilDistance extends Command {
+public class TestDriveToObstacle extends Command {
 
-    public DriveUntilDistance() {
+    public TestDriveToObstacle() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
     }

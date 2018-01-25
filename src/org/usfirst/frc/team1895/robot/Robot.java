@@ -1,15 +1,21 @@
 
 package org.usfirst.frc.team1895.robot;
 
+import org.usfirst.frc.team1895.robot.commands.autonomous.Autonomous;
+import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveParallel;
+import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithPID;
+import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithoutPID;
+import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveToObstacle;
+import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithPID;
+import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithoutPID;
+import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
+
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithPID;
-import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -20,7 +26,7 @@ import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
  */
 public class Robot extends IterativeRobot {
 
-	public static final Drivetrain exampleSubsystem = new Drivetrain();
+	public static final Drivetrain drivetrain = new Drivetrain();
 	public static OI oi;
 
 	Command autonomousCommand;
@@ -33,7 +39,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		oi = new OI();
-		chooser.addDefault("Default Auto", new DriveStraightWithPID());
+		chooser.addDefault("Default Auto", new Autonomous());
 		// chooser.addObject("My Auto", new MyAutoCommand());
 		SmartDashboard.putData("Auto mode", chooser);
 	}
@@ -76,8 +82,39 @@ public class Robot extends IterativeRobot {
 		 */
 
 		// schedule the autonomous command (example)
-		if (autonomousCommand != null)
-			autonomousCommand.start();
+		if(!autonomousCommand.getName().contains("Test")){
+			if (autonomousCommand != null) {
+				autonomousCommand.start();
+			}
+		}
+		else{
+			// Testing Turning
+			// Testing Turning
+			SmartDashboard.putNumber("Turn: P value: ", .025);
+			SmartDashboard.putNumber("Turn: I value: ", 0.0);
+			SmartDashboard.putNumber("Turn: D value: ", -.005);
+			SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
+			SmartDashboard.putNumber("Test NP Turn Speed: ", .4);
+				    	
+			SmartDashboard.putData("Test Turn With PID", new TestTurnWithPID());
+			SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
+			       
+			       
+			// Distance Related Testing
+			SmartDashboard.putNumber("Distance: P value: ", .1);
+			SmartDashboard.putNumber("Distance: I value: ", 0.0);
+			SmartDashboard.putNumber("Distance: D value: ", -.01);
+			SmartDashboard.putNumber("Test Drive Distance: ", 20.0);
+			SmartDashboard.putNumber("Test Drive TankDrive Speed: ", .4);
+			SmartDashboard.putNumber("Test Drive Tank Scalar:", .94); //incase of drifting
+			SmartDashboard.putNumber("Test Drive Buffer:", 10);
+				    	
+			SmartDashboard.putData("Test DriveStraight With PID", new TestDriveStraightWithPID());
+			SmartDashboard.putData("Test DriveStraight No PID", new TestDriveStraightWithoutPID());
+			SmartDashboard.putData("Test Drive With RangeFinder", new TestDriveToObstacle());
+			SmartDashboard.putData("Test Drive Parallel", new TestDriveParallel());
+			
+		}
 	}
 
 	/**
