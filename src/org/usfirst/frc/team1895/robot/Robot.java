@@ -3,6 +3,7 @@ package org.usfirst.frc.team1895.robot;
 
 import org.usfirst.frc.team1895.robot.commands.autonomous.Autonomous;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.Default_Drivetrain;
+import org.usfirst.frc.team1895.robot.subsystems.Climber;
 import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -23,7 +24,7 @@ public class Robot extends IterativeRobot {
 
 	public static Drivetrain drivetrain = new Drivetrain();
 	public static OI oi;
-
+	public static Climber climber;
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
 
@@ -37,6 +38,7 @@ public class Robot extends IterativeRobot {
 		chooser.addDefault("Default Auto", new Autonomous());
 		System.out.println("robotInit");
 		SmartDashboard.putData("Auto mode", chooser);
+		climber = new Climber();
 	}
 
 	/**

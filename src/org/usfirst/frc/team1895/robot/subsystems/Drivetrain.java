@@ -23,6 +23,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
 public class Drivetrain extends Subsystem {
 	int index = 0;
 	int index2 = 0;
+	
 	// motors                           CAN ID #
     private TalonSRX left_dt_motor1;  //1
     private TalonSRX left_dt_motor2;  //2
@@ -39,7 +40,7 @@ public class Drivetrain extends Subsystem {
     
     // analog sensors
     private AnalogGyro gyro;
-    AHRS ahrs;
+    private AHRS ahrs;
     private AnalogInput rangefinder;
     
     public Drivetrain() {
@@ -92,7 +93,6 @@ public class Drivetrain extends Subsystem {
 			left_speed /= max_speed;
 			right_speed /= max_speed;
 		}
-    	left_speed = left_speed;
 		//motorgroup stuffs - CHANGED TO LEADER FOLLOWER TESTING		
 		left_dt_motor1.set(ControlMode.PercentOutput, left_speed);
     	left_dt_motor2.follow(left_dt_motor1);
@@ -176,7 +176,7 @@ public class Drivetrain extends Subsystem {
     	return targetReached;
     }
     
-    public void resetGyro() {
+    public void resetAHRSGyro() {
     	ahrs.reset();
     }
     
@@ -209,9 +209,17 @@ public class Drivetrain extends Subsystem {
 		double d = voltage * coefficient;
 		return d;
 	}
+	
+    public void resetGyro() {
+    	gyro.reset();
+    }
+    public double getAngle() {
+    	return gyro.getAngle();
+    }
     
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		setDefaultCommand(new Default_Drivetrain());
 	}
+	
 }
