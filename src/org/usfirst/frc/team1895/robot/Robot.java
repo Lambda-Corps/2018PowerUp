@@ -1,8 +1,9 @@
 
 package org.usfirst.frc.team1895.robot;
 
+import org.usfirst.frc.team1895.robot.commands.autonomous.Autonomous;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.Default_Drivetrain;
-import org.usfirst.frc.team1895.robot.subsystems.Climber;
+
 import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -34,9 +35,8 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		oi = new OI();
-		chooser.addDefault("Default Auto", new Default_Drivetrain());
-		// chooser.addObject("My Auto", new MyAutoCommand());
-		System.out.println("robotInit");
+
+		chooser.addDefault("Default Auto", new Autonomous());
 		SmartDashboard.putData("Auto mode", chooser);
 		climber = new Climber();
 	}
