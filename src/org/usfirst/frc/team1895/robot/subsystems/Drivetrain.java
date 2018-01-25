@@ -5,6 +5,7 @@ import org.usfirst.frc.team1895.robot.commands.drivetrain.Default_Drivetrain;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -29,7 +30,8 @@ public class Drivetrain extends Subsystem {
    
     //Gyro
     private AnalogGyro gyro;
-    //private AHRS ahrs;
+    private AHRS ahrs;
+    
     public Drivetrain() {
     	//motors
     	left_dt_motor1 = new TalonSRX(RobotMap.LEFT_DT_MOTOR1_PORT);
@@ -69,6 +71,9 @@ public class Drivetrain extends Subsystem {
 	}
     public void resetGyro() {
     	gyro.reset();
+    }
+    public double getAngle() {
+    	return gyro.getAngle();
     }
     
 	public void initDefaultCommand() {
