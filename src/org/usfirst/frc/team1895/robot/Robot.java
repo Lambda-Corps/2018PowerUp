@@ -2,11 +2,11 @@
 package org.usfirst.frc.team1895.robot;
 
 import org.usfirst.frc.team1895.robot.commands.autonomous.Autonomous;
-import org.usfirst.frc.team1895.robot.commands.drivetrain.Default_Drivetrain;
 import org.usfirst.frc.team1895.robot.subsystems.Climber;
 import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
+import org.usfirst.frc.team1895.robot.subsystems.FilteredCamera;
 
-import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -20,11 +20,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class Robot extends IterativeRobot {
+public class Robot extends TimedRobot {
 
 	public static Drivetrain drivetrain = new Drivetrain();
 	public static OI oi;
 	public static Climber climber;
+	public static FilteredCamera camera;
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
 
@@ -39,6 +40,10 @@ public class Robot extends IterativeRobot {
 		System.out.println("robotInit");
 		SmartDashboard.putData("Auto mode", chooser);
 		climber = new Climber();
+		setPeriod(0.025);  //update more frequently - every 25ms
+		camera = new FilteredCamera();
+		
+		Robot.camera.startVisionThread();
 	}
 
 	/**
@@ -48,7 +53,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void disabledInit() {
-
+		Robot.camera.putVideo(false);
 	}
 
 	@Override
@@ -81,6 +86,8 @@ public class Robot extends IterativeRobot {
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null)
 			autonomousCommand.start();
+		
+		Robot.camera.putVideo(true);
 	}
 
 	/**
@@ -100,6 +107,7 @@ public class Robot extends IterativeRobot {
 		
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
+		
 	}
 
 	/**

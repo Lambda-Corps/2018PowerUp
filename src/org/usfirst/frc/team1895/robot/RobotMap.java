@@ -32,7 +32,6 @@ public class RobotMap {
 	public static final int LOWER_INTAKE_SOLENOID_B_PORT = 4;
 	public static final int ARM_TELESCOPING_SOLENOID_A_PORT = 5;
 	public static final int ARM_TELESCOPING_SOLENOID_B_PORT = 6;
-<<<<<<< HEAD
 	
 	// Digital IO
 	public static final int RIGHT_ENCODER_A_PORT = 0;
@@ -42,10 +41,11 @@ public class RobotMap {
 	
 	// Analog
 	public static final int GYRO_PORT = 0;
-	public static final int RANGEFINDER_PORT = 1;
-=======
+	public static final int INTAKE_RANGEFINDER_PORT = 1;  //TODO: give numbers
+	public static final int FRONT_RANGEFINDER_PORT = 2;
+	public static final int LEFT_RANGEFINDER_PORT = 3;
+	public static final int RIGHT_RANGEFINDER_PORT = 4;
+	public static final int ACCELEROMETER_PORT = 5;
+	
 
-	//Gyro
-	public static final int GYRO_PORT = 0;
->>>>>>> current_limiting
 }

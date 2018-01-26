@@ -24,7 +24,7 @@ public class Climber extends Subsystem {
     public void manualClimbing(double velocity) {
     	if (velocity > 1.0) velocity = 1.0;
     	if (velocity <-1.0) velocity = -1.0;
-    	climber_motor.set(null, velocity);
+    	//climber_motor.set(, velocity);
     }
     
     public void initDefaultCommand() {

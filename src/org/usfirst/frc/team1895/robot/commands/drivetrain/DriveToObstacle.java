@@ -29,7 +29,7 @@ public class DriveToObstacle extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	done = Robot.drivetrain.driveRFDistance(goalDistance, speed);
+    	done = Robot.drivetrain.drivefr_RFDistance(goalDistance, speed);
     }
 
     // Make this return true when this Command no longer needs to run execute()
