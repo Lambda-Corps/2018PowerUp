@@ -7,37 +7,37 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class DriveStraightSetDistance extends Command {
-
-	boolean finished;
+public class DriveStraightWithoutPID extends Command {
+	
+	double goal;
 	double speed;
-	double distance;
-    public DriveStraightSetDistance(double v, double goalDis) {
+	boolean goalReached;
+
+    public DriveStraightWithoutPID(double s, double g) {
         // Use requires() here to declare subsystem dependencies
         requires(Robot.drivetrain);
-        speed = v;
-        distance = goalDis;
+    	goal = g;
+    	speed = s;
+    	goalReached = false;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
     	Robot.drivetrain.resetEncoders();
-    	System.out.println("encoders have been reset");
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	finished = Robot.drivetrain.driveStraightSetDistance(speed, distance);
+    	goalReached = Robot.drivetrain.driveStraightSetDistance(speed, goal);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return finished;
+        return goalReached;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	System.out.println("orange");
     }
 
     // Called when another command which requires one or more of the same

@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1895.robot;
 
-import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithGyro;
+import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
 import org.usfirst.frc.team1895.robot.oi.F310;
 
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -46,6 +46,7 @@ public class OI {
 		gamepad = new F310(RobotMap.GAMEPAD_PORT);
 		
 		ninetyDegreeRight = new JoystickButton(gamepad, F310.LB);
-		ninetyDegreeRight.whenPressed(new TurnWithGyro(90.0));
+		ninetyDegreeRight.whenPressed(new TurnWithoutPID(0.3, 90.0));
+		
 	}
 }
