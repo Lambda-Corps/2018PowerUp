@@ -9,8 +9,13 @@ package org.usfirst.frc.team1895.robot;
 public class RobotMap {
 	
 	// Gamepads
+<<<<<<< HEAD
 		public static final int GAMEPAD_PORT = 0;
 		
+=======
+	public static final int GAMEPAD_PORT = 0;
+	
+>>>>>>> aea375b60b023ef39887db59ab8a905bfa8ede53
 	// CAN Bus
 	public static final int LEFT_DT_MOTOR1_PORT = 1;
 	public static final int LEFT_DT_MOTOR2_PORT = 2;
@@ -32,7 +37,12 @@ public class RobotMap {
 	public static final int LOWER_INTAKE_SOLENOID_B_PORT = 4;
 	public static final int ARM_TELESCOPING_SOLENOID_A_PORT = 5;
 	public static final int ARM_TELESCOPING_SOLENOID_B_PORT = 6;
+<<<<<<< HEAD
 		
+=======
+
+	
+>>>>>>> aea375b60b023ef39887db59ab8a905bfa8ede53
 	// Digital IO
 	public static final int RIGHT_ENCODER_A_PORT = 0;
 	public static final int RIGHT_ENCODER_B_PORT = 1;
@@ -41,9 +51,13 @@ public class RobotMap {
 	
 	// Analog
 	public static final int GYRO_PORT = 0;
+<<<<<<< HEAD
 	public static final int INTAKE_RANGEFINDER_PORT = 1;  //TODO: give numbers
 	public static final int FRONT_RANGEFINDER_PORT = 1;
 	public static final int LEFT_RANGEFINDER_PORT = 1;
 	public static final int RIGHT_RANGEFINDER_PORT = 1;
 	public static final int ACCELEROMETER_PORT = 1;
+=======
+	public static final int RANGEFINDER_PORT = 1;
+>>>>>>> aea375b60b023ef39887db59ab8a905bfa8ede53
 }

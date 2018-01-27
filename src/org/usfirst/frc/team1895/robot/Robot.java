@@ -1,6 +1,7 @@
 
 package org.usfirst.frc.team1895.robot;
 
+<<<<<<< HEAD
 import org.usfirst.frc.team1895.robot.commands.autonomous.Autonomous1;
 import org.usfirst.frc.team1895.robot.commands.autonomous.Autonomous2;
 import org.usfirst.frc.team1895.robot.commands.autonomous.Autonomous3;
@@ -11,6 +12,11 @@ import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveToObstacle;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestEmptyCommand;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithoutPID;
+=======
+import org.usfirst.frc.team1895.robot.commands.drivetrain.Default_Drivetrain;
+import org.usfirst.frc.team1895.robot.subsystems.Climber;
+import org.usfirst.frc.team1895.robot.commands.autonomous.Autonomous;
+>>>>>>> aea375b60b023ef39887db59ab8a905bfa8ede53
 import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
@@ -29,9 +35,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 
+<<<<<<< HEAD
 	public static final Drivetrain drivetrain = new Drivetrain();
+=======
+	public static Drivetrain drivetrain = new Drivetrain();
+>>>>>>> aea375b60b023ef39887db59ab8a905bfa8ede53
 	public static OI oi;
-
+	public static Climber climber;
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
 
@@ -42,11 +52,17 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		oi = new OI();
+<<<<<<< HEAD
 		chooser.addDefault("Auto 1", new Autonomous1());
 		chooser.addObject("Auto 2", new Autonomous2());
 		chooser.addObject("Auto 3", new Autonomous3());
 		chooser.addObject("Test Commands", new TestEmptyCommand());
+=======
+		chooser.addDefault("Default Auto", new Autonomous());
+		System.out.println("robotInit");
+>>>>>>> aea375b60b023ef39887db59ab8a905bfa8ede53
 		SmartDashboard.putData("Auto mode", chooser);
+		climber = new Climber();
 	}
 
 	/**
@@ -137,6 +153,7 @@ public class Robot extends IterativeRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
+		
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 	}
@@ -147,6 +164,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		
 	}
 
 	/**

@@ -22,13 +22,13 @@ public class LowerIntake extends Subsystem {
 	private TalonSRX right_lower_intake_motor;
 	
 	// pneumatics
-	private final DoubleSolenoid lower_intake_solenoid;
+	//private final DoubleSolenoid lower_intake_solenoid;
 	
 	public LowerIntake() {
 		//motors
 		
 		//pneumatics
-		lower_intake_solenoid = new DoubleSolenoid(RobotMap.LOWER_INTAKE_SOLENOID_A_PORT, RobotMap.LOWER_INTAKE_SOLENOID_B_PORT);
+		//lower_intake_solenoid = new DoubleSolenoid(RobotMap.LOWER_INTAKE_SOLENOID_A_PORT, RobotMap.LOWER_INTAKE_SOLENOID_B_PORT);
 	}
 	
     public void initDefaultCommand() {

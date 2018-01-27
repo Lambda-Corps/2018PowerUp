@@ -24,6 +24,11 @@ public class Drivetrain extends Subsystem {
 	int index = 0;
 	int index2 = 0;
 	
+<<<<<<< HEAD
+=======
+	int index = 0;
+	int index2 = 0;
+>>>>>>> aea375b60b023ef39887db59ab8a905bfa8ede53
 	// motors                           CAN ID #
     private TalonSRX left_dt_motor1;  //1
     private TalonSRX left_dt_motor2;  //2
@@ -41,10 +46,14 @@ public class Drivetrain extends Subsystem {
     // analog sensors
     private AnalogGyro gyro;
     private AHRS ahrs;
+<<<<<<< HEAD
     private AnalogInput fr_rangefinder;
     private AnalogInput l_rangefinder;
     private AnalogInput r_rangefinder;
     private AnalogInput in_rangefinder;
+=======
+    private AnalogInput rangefinder;
+>>>>>>> aea375b60b023ef39887db59ab8a905bfa8ede53
     
     public Drivetrain() {
     	//motors
@@ -62,6 +71,10 @@ public class Drivetrain extends Subsystem {
     	//pneumatics
     	//compressor = new Compressor();
     	//transmission_solenoid = new DoubleSolenoid(RobotMap.DRIVETRAIN_SOLENOID_A_PORT, RobotMap.DRIVETRAIN_SOLENOID_B_PORT);
+<<<<<<< HEAD
+=======
+    	gyro = new AnalogGyro(RobotMap.GYRO_PORT);
+>>>>>>> aea375b60b023ef39887db59ab8a905bfa8ede53
     	
     	//digital IO sensors
     	l_encoder = new Encoder(RobotMap.LEFT_ENCODER_A_PORT, RobotMap.LEFT_ENCODER_B_PORT, true);
@@ -83,10 +96,14 @@ public class Drivetrain extends Subsystem {
 	   		 DriverStation.reportError("Error instantiating navX-MXP: " +
 	   		 ex.getMessage(), true);
    		 }
+<<<<<<< HEAD
     	fr_rangefinder = new AnalogInput(RobotMap.FRONT_RANGEFINDER_PORT);
     	l_rangefinder = new AnalogInput(RobotMap.LEFT_RANGEFINDER_PORT);
     	r_rangefinder = new AnalogInput(RobotMap.RIGHT_RANGEFINDER_PORT);
     	in_rangefinder = new AnalogInput(RobotMap.INTAKE_RANGEFINDER_PORT);
+=======
+    	rangefinder = new AnalogInput(RobotMap.RANGEFINDER_PORT);
+>>>>>>> aea375b60b023ef39887db59ab8a905bfa8ede53
     }
 
     // Testing current limiting
@@ -99,6 +116,10 @@ public class Drivetrain extends Subsystem {
 			left_speed /= max_speed;
 			right_speed /= max_speed;
 		}
+<<<<<<< HEAD
+=======
+		
+>>>>>>> aea375b60b023ef39887db59ab8a905bfa8ede53
 		//motorgroup stuffs - CHANGED TO LEADER FOLLOWER TESTING		
 		left_dt_motor1.set(ControlMode.PercentOutput, left_speed);
     	left_dt_motor2.follow(left_dt_motor1);
@@ -122,12 +143,17 @@ public class Drivetrain extends Subsystem {
 		// Check to see if gear shifting is necessary. if it is, then shift
 		// shiftGears();
 	}
+<<<<<<< HEAD
    
 //=ENCODERS AND DRIVE STRAIGHT==================================================================================================================
+=======
+    
+>>>>>>> aea375b60b023ef39887db59ab8a905bfa8ede53
     public void resetEncoders() {
     	l_encoder.reset();
     	r_encoder.reset();
     }
+<<<<<<< HEAD
     
     public double getLeftEncoder() {
     	return l_encoder.getDistance();
@@ -214,6 +240,72 @@ public class Drivetrain extends Subsystem {
 		double left_speed = speed ;
 		double right_speed = speed;
 		if (fr_rangefinderDist() <= (goaldistance)) {  // if the robot crossed the goal distance + buffer then the code will stop
+=======
+    
+    public boolean driveStraightSetDistance(double speed, double targetDis) {
+    	boolean targetReached = false;
+    	
+    	double leftDis = l_encoder.getDistance();
+    	double rightDis = r_encoder.getDistance();
+    	
+    	index = index +1;
+    	if (index == 5) {
+    		index=0;
+    		
+    		index2 = index2 +1;
+    		System.out.println(String.format("index2: %4d Left: %5.1f right: %5.1f target distance: %5.1f" , index2, leftDis, rightDis, targetDis));
+    	}
+    	double error = leftDis-rightDis;  //if L>R ie needs to go left --> positive and vice versa
+    	double toleranceDis = .1; // inches
+    
+    	if (targetDis > 0) {//moving forward code
+    	//Checking if we still have to keep driving or not. If we haven't reached our target distance, keep driving straight. Otherwise, stop.
+    		if((targetDis > leftDis) && (targetDis > rightDis)) {
+    			if(error < -toleranceDis) { //drifting left, needs to go right
+        			tankDrive(speed*0.75, speed);
+        			System.out.println("drifting left");
+    			}
+    			else if(error > toleranceDis) { //drifting right, needs to go left
+    				tankDrive(speed, speed*0.75);
+    				System.out.println("drifting right");
+    			}
+    			else {
+    				tankDrive(speed, speed);
+    				System.out.println("help i'm not correcting myself");
+    			}
+    		} else {
+    			arcadeDrive(0,0);
+    			targetReached = true;
+    		}
+    	}else { //moving backwards code
+    		if((targetDis < leftDis) && (targetDis < rightDis)) {
+    			if(error < -toleranceDis) { //drifting left, needs to go right
+        			tankDrive(-speed, -speed*0.75);
+    			}
+    			else if(error > toleranceDis) { //drifting right, needs to go left
+    				tankDrive(-speed*0.75, -speed);
+    			}
+    			else {
+    				tankDrive(-speed, -speed);
+    			}
+    		} else {
+    			arcadeDrive(0,0);
+    			targetReached = true;
+    		}
+    	}
+    	return targetReached;
+    }
+    
+
+    public double getGyro() {
+    	return ahrs.getAngle();
+    }
+    
+	public boolean driveRFDistance(double goaldistance, double speed) {
+		double left_speed = speed ;
+		double right_speed = speed;
+		if (checkRFVoltage() <= (goaldistance)) {  // if the robot crossed the goal distance + buffer then the code will stop
+>>>>>>> aea375b60b023ef39887db59ab8a905bfa8ede53
 			tankDrive(0, 0);
 			return true;
 		} else {  // if it hasn't crossed it will run at a determined speed
@@ -222,6 +314,7 @@ public class Drivetrain extends Subsystem {
 		}
 	}
 	
+<<<<<<< HEAD
 	public double fr_rangefinderDist() {  //TODO: check that this is right / T U N E. also check if battery affects output
 		double outputValue = fr_rangefinder.getAverageVoltage();
 		if (outputValue > 2.4 || outputValue < 0.4) { // code currently only
@@ -238,6 +331,10 @@ public class Drivetrain extends Subsystem {
 
 	public double l_rangefinderDist() {  //TODO: check that this is right / T U N E. also check if battery affects output
 		double outputValue = l_rangefinder.getAverageVoltage();
+=======
+	public double checkRFVoltage() {  //TODO: check that this is right / T U N E. also check if battery affects output
+		double outputValue = rangefinder.getAverageVoltage();
+>>>>>>> aea375b60b023ef39887db59ab8a905bfa8ede53
 		if (outputValue > 2.4 || outputValue < 0.4) { // code currently only
 														// accurate from 0.4-2.4
 														// volts
@@ -250,6 +347,7 @@ public class Drivetrain extends Subsystem {
 		return d;
 	}
 	
+<<<<<<< HEAD
 	public double r_rangefinderDist() {  //TODO: check that this is right / T U N E. also check if battery affects output
 		double outputValue = r_rangefinder.getAverageVoltage();
 		if (outputValue > 2.4 || outputValue < 0.4) { // code currently only
@@ -325,6 +423,15 @@ public class Drivetrain extends Subsystem {
 		
 		return done;
 	}
+=======
+    public void resetGyro() {
+        ahrs.reset();
+    	gyro.reset();
+    }
+    public double getAngle() {
+    	return gyro.getAngle();
+    }
+>>>>>>> aea375b60b023ef39887db59ab8a905bfa8ede53
     
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
