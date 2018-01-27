@@ -1,11 +1,14 @@
 
 package org.usfirst.frc.team1895.robot;
 
-import org.usfirst.frc.team1895.robot.commands.autonomous.Autonomous;
+import org.usfirst.frc.team1895.robot.commands.autonomous.Autonomous1;
+import org.usfirst.frc.team1895.robot.commands.autonomous.Autonomous2;
+import org.usfirst.frc.team1895.robot.commands.autonomous.Autonomous3;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveParallel;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithoutPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveToObstacle;
+import org.usfirst.frc.team1895.robot.commands.testcommands.TestEmptyCommand;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithoutPID;
 import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
@@ -39,8 +42,10 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		oi = new OI();
-		chooser.addDefault("Default Auto", new Autonomous());
-		// chooser.addObject("My Auto", new MyAutoCommand());
+		chooser.addDefault("Auto 1", new Autonomous1());
+		chooser.addObject("Auto 2", new Autonomous2());
+		chooser.addObject("Auto 3", new Autonomous3());
+		chooser.addObject("Test Commands", new TestEmptyCommand());
 		SmartDashboard.putData("Auto mode", chooser);
 	}
 
@@ -114,6 +119,7 @@ public class Robot extends IterativeRobot {
 			SmartDashboard.putData("Test Drive With RangeFinder", new TestDriveToObstacle());
 			SmartDashboard.putData("Test Drive Parallel", new TestDriveParallel());
 			
+			SmartDashboard.putBoolean("Test boolean onLeft Value", false);
 		}
 	}
 

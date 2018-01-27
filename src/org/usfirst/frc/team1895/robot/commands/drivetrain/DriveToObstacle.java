@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1895.robot.commands.drivetrain;
 
+import org.usfirst.frc.team1895.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -7,9 +9,18 @@ import edu.wpi.first.wpilibj.command.Command;
  */
 public class DriveToObstacle extends Command {
 
-    public DriveToObstacle() {
+	double goalDistance;
+	boolean done;
+	double speed;
+	
+    public DriveToObstacle(double distancetoObstacle, double speed) {
         // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
+        requires(Robot.drivetrain);
+        //goalDistance = distancetoObstacle;
+//        this.speed = speed;
+        done = false;
+        this.speed = speed;
+        goalDistance = distancetoObstacle;
     }
 
     // Called just before this Command runs the first time
@@ -18,11 +29,12 @@ public class DriveToObstacle extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	done = Robot.drivetrain.drivefr_RFDistance(goalDistance, speed);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        return done;
     }
 
     // Called once after isFinished returns true
