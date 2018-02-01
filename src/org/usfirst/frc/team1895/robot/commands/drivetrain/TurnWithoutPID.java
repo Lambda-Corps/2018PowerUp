@@ -11,7 +11,7 @@ public class TurnWithoutPID extends Command {
 	private double goalAngle = 0.0;
 	private boolean isDone = false;
 	private double speed;
-	private double tolerance = 1.0;
+	private double tolerance = 0.2;
 	private double currentAngle;
 	
     public TurnWithoutPID(double speed, double givenAngle) {
@@ -27,6 +27,7 @@ public class TurnWithoutPID extends Command {
     protected void initialize() {
     	Robot.drivetrain.resetGyro();
     	isDone = false;
+    	//Robot.drivetrain.setAHRSAdjustment(80.0);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -38,9 +39,9 @@ public class TurnWithoutPID extends Command {
     		Robot.drivetrain.arcadeDrive(0, 0);
     		isDone = true;
     	} else if(currentAngle < goalAngle) {  //If left of target angle
-    		Robot.drivetrain.arcadeDrive(0, speed);  //turn clockwise
+    		Robot.drivetrain.arcadeDrive(0, -speed);  //turn clockwise
     	} else if(currentAngle > goalAngle){  //If right of target angle
-    		Robot.drivetrain.arcadeDrive(0, -speed);  //turn counterclockwise
+    		Robot.drivetrain.arcadeDrive(0, speed);  //turn counterclockwise
     	}
     }
 
@@ -51,7 +52,7 @@ public class TurnWithoutPID extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	
+    	Robot.drivetrain.setAHRSAdjustment(0.0);
     }
 
     // Called when another command which requires one or more of the same

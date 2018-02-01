@@ -3,7 +3,6 @@ package org.usfirst.frc.team1895.robot.subsystems;
 import org.usfirst.frc.team1895.robot.Robot;
 import org.usfirst.frc.team1895.robot.RobotMap;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.Default_Drivetrain;
-import org.usfirst.frc.team1895.robot.oi.F310;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
@@ -23,7 +22,9 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 
 public class Drivetrain extends Subsystem {
-
+	
+	boolean isCorrecting = false;  //
+	
 	// motors                           CAN ID #
     private TalonSRX left_dt_motor1;  //1
     private TalonSRX left_dt_motor2;  //2
@@ -90,9 +91,6 @@ public class Drivetrain extends Subsystem {
 	   		 DriverStation.reportError("Error instantiating navX-MXP: " +
 	   		 ex.getMessage(), true);
    		 }
-
-        // TODO -- Why is this 7.0?  We need comments for things like these magic numbers
-    	ahrs.setAngleAdjustment(7.0);
     	
     	//rangefinders
     	fr_rangefinder = new AnalogInput(RobotMap.FRONT_RANGEFINDER_PORT);
@@ -104,42 +102,74 @@ public class Drivetrain extends Subsystem {
     	accelerometer = new AnalogInput(RobotMap.ACCELEROMETER_PORT);
     	
     }
-
-    // TODO -- Fix me, are the comments accurate here?
+    
+    public void setState(boolean s) {
+    	isCorrecting = s;
+    }
+    
+    public boolean getState() {
+    	return isCorrecting;
+    }
+    
     // Testing current limiting
     public void arcadeDrive(double trans_speed, double yaw) {  //0, 0.3
-    	yaw*=-1;
+    	
+    	setAHRSAdjustment(0);
+    	trans_speed*=-1;//Fixes Direction
+    	yaw *= 1;
     	
 		double left_speed = trans_speed + yaw;
 		double right_speed = yaw - trans_speed;
 		
-		boolean isDrivingStraight = false;
 		double angle;
 		double tolerance = 1.0;
-
+		double scalar = 0.75;  //Correlate it with the trans_speed
+		
 		double max_speed = Math.max(Math.abs(left_speed), Math.abs(right_speed));
+		
+		double direction = 0;
+		if(trans_speed<0) {//Forwards
+			direction = 1;
+		}
+		else {
+			direction = -1;
+		}
+		angle = Robot.drivetrain.getGyro();
+		
 		if (Math.abs(max_speed) > 1.0) {
 			left_speed /= max_speed;
 			right_speed /= max_speed;
 		}
-    	
+		
     	if(Math.abs(yaw)<0.005) {  //if no x input --> correcting mode
-    		if(!isDrivingStraight) {  //if correcting mode is not already in progress
-    			isDrivingStraight = true;  //set flag
+    		if(isCorrecting==false) {  //if correcting mode is not already in progress
+    			isCorrecting = true;  //set flag
     			Robot.drivetrain.resetAHRSGyro(); //reset gyro
     		}
-    		angle = Robot.drivetrain.getGyro();
-    		if(angle<-tolerance) {  //if drifting left
-    			left_speed *= 0.75;  //go right
-    		} else if(angle>tolerance) {  //if drifting right
-    			right_speed *= 0.75;  //go left
+    		if(direction > 0) {
+    			
+    			if(angle<(-tolerance)) {  //if drifting left
+    				right_speed *= scalar;  //go right
+    			} else if(angle>(tolerance)) {  //if drifting right
+    				left_speed *= scalar;  //go left
+    			} else {
+    				//don't modify speed
+    			}
+    		}
+    		else {
+    			
+    			if(angle<(-tolerance)) {  //if drifting left
+    				left_speed *= scalar;  //go right
+    			} else if(angle>(tolerance)) {  //if drifting right
+    				right_speed *= scalar;  //go left
+    			} else {
+    				//don't modify speed
+    			}
     		}
     	} else {  //has x input --> normal mode
-    		if(isDrivingStraight) {  //if correcting mode still in progress
-    			isDrivingStraight = false;  //unset flag
-    		}
+    		isCorrecting = false;
     	}
-    	
+		
     	//motorgroup stuffs - CHANGED TO LEADER FOLLOWER TESTING		
     	left_dt_motor1.set(ControlMode.PercentOutput, left_speed);
     	right_dt_motor1.set(ControlMode.PercentOutput, right_speed);
@@ -170,8 +200,8 @@ public class Drivetrain extends Subsystem {
     public boolean driveStraightSetDistance(double speed, double targetDis) {
     	boolean targetReached = false;
     	
-    	double leftDis = l_encoder.getDistance();
-    	double rightDis = r_encoder.getDistance();
+    	double leftDis = -l_encoder.getDistance();
+    	double rightDis = -r_encoder.getDistance();
     	
     	double error = leftDis-rightDis;  //if L>R ie needs to go left --> positive and vice versa
     	double toleranceDis = .1; // inches
@@ -181,33 +211,15 @@ public class Drivetrain extends Subsystem {
     	if (targetDis > 0) {//moving forward code
     	//Checking if we still have to keep driving or not. If we haven't reached our target distance, keep driving straight. Otherwise, stop.
     		if((targetDis > leftDis) && (targetDis > rightDis)) {
-    			if(error < -toleranceDis) { //drifting left, needs to go right
-        			tankDrive(speed*0.75, speed);
-        			//System.out.println("drifting left");
-    			}
-    			else if(error > toleranceDis) { //drifting right, needs to go left
-    				tankDrive(speed, speed*0.75);
-    				//System.out.println("drifting right");
-    			}
-    			else {
-    				tankDrive(speed, speed);
-    				//System.out.println("help i'm not correcting myself");
-    			}
+
+    			arcadeDrive(speed, 0);
     		} else {
     			arcadeDrive(0,0);
     			targetReached = true;
     		}
     	}else { //moving backwards code
     		if((targetDis < leftDis) && (targetDis < rightDis)) {
-    			if(error < -toleranceDis) { //drifting left, needs to go right
-        			tankDrive(-speed, -speed*0.75);
-    			}
-    			else if(error > toleranceDis) { //drifting right, needs to go left
-    				tankDrive(-speed*0.75, -speed);
-    			}
-    			else {
-    				tankDrive(-speed, -speed);
-    			}
+    			arcadeDrive(-speed, 0);
     		} else {
     			arcadeDrive(0,0);
     			targetReached = true;
@@ -237,17 +249,9 @@ public class Drivetrain extends Subsystem {
 	}
 	
 	public double fr_rangefinderDist() {  //TODO: check that this is right / T U N E. also check if battery affects output
-		double outputValue = fr_rangefinder.getAverageVoltage();
-		if (outputValue > 2.4 || outputValue < 0.4) { // code currently only
-														// accurate from 0.4-2.4
-														// volts
-			return -1;
-			// TODO: Add code to handle that -1 so the robot can act accordingly
-		}
-		double voltage = Math.pow(outputValue, -1.16);
-		double coefficient = 10.298;
-		double d = voltage * coefficient;
-		return d;
+		double voltage = fr_rangefinder.getAverageVoltage();
+		double inches = 32.1328*voltage + 17.581;  //from LinReg
+		return inches;
 	}
 
 	public double l_rangefinderDist() {  //TODO: check that this is right / T U N E. also check if battery affects output
@@ -343,6 +347,10 @@ public class Drivetrain extends Subsystem {
 	
     public void resetGyro() {
     	ahrs.reset();
+    }
+    
+    public void setAHRSAdjustment(double adj) {
+    	ahrs.setAngleAdjustment(adj);
     }
     
 	public void initDefaultCommand() {
