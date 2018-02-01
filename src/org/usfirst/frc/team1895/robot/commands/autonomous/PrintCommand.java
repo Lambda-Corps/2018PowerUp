@@ -1,40 +1,32 @@
-package org.usfirst.frc.team1895.robot.commands.drivetrain;
-
-import org.usfirst.frc.team1895.robot.Robot;
+package org.usfirst.frc.team1895.robot.commands.autonomous;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class DriveStraightWithoutPID extends Command {
+public class PrintCommand extends Command {
 	
-	double goal;
-	double speed;
-	boolean goalReached;
+	String msg;
 
-    public DriveStraightWithoutPID(double s, double g) {
+    public PrintCommand(String msg) {
         // Use requires() here to declare subsystem dependencies
-        requires(Robot.drivetrain);
-    	goal = g;
-    	speed = s;
-    	goalReached = false;
+        // eg. requires(chassis);
+    	this.msg = msg;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.drivetrain.resetAHRSGyro(); //reset gyro
-    	Robot.drivetrain.resetEncoders();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	goalReached = Robot.drivetrain.driveStraightSetDistance(speed, goal);
+    	System.out.println(msg);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return goalReached;
+        return true;
     }
 
     // Called once after isFinished returns true

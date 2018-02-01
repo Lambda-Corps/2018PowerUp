@@ -1,7 +1,7 @@
 
 package org.usfirst.frc.team1895.robot;
 
-import org.usfirst.frc.team1895.robot.commands.autonomous.Autonomous;
+import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationB;
 import org.usfirst.frc.team1895.robot.subsystems.Climber;
 import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1895.robot.subsystems.FilteredCamera;
@@ -28,6 +28,9 @@ public class Robot extends TimedRobot {
 	public static FilteredCamera camera;
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
+	int printCount;
+	
+	public static int startPos = 2;
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -36,7 +39,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		oi = new OI();
-		chooser.addDefault("Default Auto", new Autonomous());
+		chooser.addDefault("Default Auto", new DestinationB());
 		System.out.println("robotInit");
 		SmartDashboard.putData("Auto mode", chooser);
 		climber = new Climber();
@@ -44,6 +47,7 @@ public class Robot extends TimedRobot {
 		camera = new FilteredCamera();
 		
 		Robot.camera.startVisionThread();
+		
 	}
 
 	/**
@@ -54,6 +58,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit() {
 		Robot.camera.putVideo(false);
+		
 	}
 
 	@Override
@@ -88,6 +93,8 @@ public class Robot extends TimedRobot {
 			autonomousCommand.start();
 		
 		Robot.camera.putVideo(true);
+		
+		
 	}
 
 	/**
@@ -96,6 +103,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		//if(printCount%10==0)
+			//System.out.println("RF: " + Robot.drivetrain.fr_rangefinderDist());
 	}
 
 	@Override
@@ -104,7 +113,7 @@ public class Robot extends TimedRobot {
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
 		// this line or comment it out.
-		
+		printCount = 0;
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
 		
@@ -113,6 +122,8 @@ public class Robot extends TimedRobot {
 	/**
 	 * This function is called periodically during operator control
 	 */
+	
+	
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();

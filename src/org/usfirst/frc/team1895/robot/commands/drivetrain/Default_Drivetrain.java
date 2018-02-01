@@ -21,12 +21,13 @@ public class Default_Drivetrain extends Command {
 
     // Called just before this Command run.s the first time
     protected void initialize() {
+    	Robot.drivetrain.resetAHRSGyro(); //reset gyro
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	
-    	Robot.drivetrain.arcadeDrive(Robot.oi.gamepad.getAxis(F310.LY), Robot.oi.gamepad.getAxis(F310.RX));
+    	//Robot.drivetrain.arcadeDrive(-0.25, 0);
+    	Robot.drivetrain.arcadeDrive(-Robot.oi.gamepad.getAxis(F310.LY), -Robot.oi.gamepad.getAxis(F310.RX));
     
     }
 
