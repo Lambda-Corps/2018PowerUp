@@ -1,0 +1,104 @@
+Local Git Setup
+
+We have a local git server running to easily share code between all of the development 
+computers during the build season.  We will continue to use Github as our cloud backup
+but during a build session, we should not have code that is diverging too far one from 
+another because we can always be frequently committing and pushing changes to the git
+server.
+
+What follows are the setup instructions needed to get this setup on each computer. The 
+pre-requisite is that the system being setup to connect must have Git installed.
+
+In simple terms what we want to do is:
+
+1) Configure each computer to connect to the git server securely, but not requiring a password for each connection.
+2) Setup the git server to accept the password-less connection
+
+Mini-steps required to do this on the development system:
+1) Create a cryptographic key pair used to login into the machine.
+	- $ cd ~/.ssh
+	- $ ssh-keygen
+
+	The ssh-keygen program will prompt you for the filename, and a password. Name the 
+	file whatever you'd like to identify it (e.g. scott_local_key) and just leave the
+	password blank.
+	$ ssh-keygen 
+		Generating public/private rsa key pair.
+		Enter file in which to save the key (/Users/scottp/.ssh/id_rsa): scott_local_key
+		Enter passphrase (empty for no passphrase): 
+		Enter same passphrase again: 
+
+2) Copy the public key to the git server to configure password-less login to the pi
+	- $ ssh-copy-id -i scott_local_key pi@10.18.95.6
+		Enter the password for the pi user to login
+		This command allows you to login as the 'pi' user on the server 10.18.95.6
+
+3) Configure the development system to set the key pair for the host
+	- vi config 
+		Enter the following information in the config file:
+		Host 10.18.95.6
+			IdentityFile ~/.ssh/scott_local_key
+
+		Save and exit the file.  This is the example config, change the file name to 
+		match the key file you just generated.
+
+4) Copy the public key file to the server
+	- $ scp scott_local_key.pub pi@10.18.95.6:/tmp/
+
+5) Log in to the git server as the 'pi' user and create your user
+	- $ ssh pi@10.18.95.6
+			You should login as the pi user without being prompted for a password
+
+	- $ sudo adduser <your username>
+
+	Change to your new user
+	- $ su <your username>
+
+6) Create your user's SSH files 
+	- $ cd 
+	- $ mkdir .ssh
+	- $ chmod 700 .ssh
+	- $ touch .ssh/authorized_keys
+	- $ chmod 600 .ssh/authorized_keys
+
+7) Configure SSH to use the key file
+	- $ cat /tmp/scott_local_key.pub >> .ssh/authorized_keys
+
+8) Switch back to the 'pi' user
+	- $ exit
+
+9) Change your user's shell to execute only the git commands
+	Find the path to the git-shell
+	- $ cat /etc/shells 
+		Take note of the path to the git-shell on the system
+		It will probably be something like /bin/git-shell
+	- $ which git-shell
+		This will return the path to the shell as well, just doing this 
+		to double check that the git-shell is on the system
+	- $ sudo chsh <your username> -s <path to git-shell>
+
+10) Exit the session back to the development computer
+	- $ exit
+
+11) Navigate back to the directory where you want to check out the files
+	- $ cd <path back to projects directory>
+
+At this point you should not be able to SSH into the server and get an 
+interactive shell, but you should be able to interact with the git 
+repositories being hosted.
+
+$ ssh <your username>@10.18.95.6
+	fatal: Interactive git shell is not enabled.
+  	hint: ~/git-shell-commands should exist and have read and execute access. 
+  	Connection to gitserver closed.
+
+
+$ git clone <your username>@10.18.95.6:/opt/git-store/2018PowerUp.git
+
+
+
+
+
+		
+
+
