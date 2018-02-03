@@ -17,6 +17,10 @@ In simple terms what we want to do is:
 Mini-steps required to do this on the development system:
 1) Create a cryptographic key pair used to login into the machine.
 	- $ cd ~/.ssh
+		If you get an error here about the directory not existing then create it.
+			$ cd
+			$ mkdir .ssh
+			$ cd .ssh
 	- $ ssh-keygen
 
 	The ssh-keygen program will prompt you for the filename, and a password. Name the 
@@ -45,11 +49,11 @@ Mini-steps required to do this on the development system:
 4) Copy the public key file to the server
 	- $ scp scott_local_key.pub pi@10.18.95.6:/tmp/
 
-5) Log in to the git server as the 'pi' user and create your user
+5) Log in to the git server as the 'pi' user and create a user
 	- $ ssh pi@10.18.95.6
 			You should login as the pi user without being prompted for a password
 
-	- $ sudo adduser <your username>
+	- $ sudo adduser --group git <your username>
 
 	Change to your new user
 	- $ su <your username>

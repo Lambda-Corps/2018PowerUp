@@ -44,8 +44,6 @@ public class Drivetrain extends Subsystem {
     private Encoder r_encoder;
     
     // analog sensors
-    private AnalogGyro gyro;
-    private AHRS ahrs;
     private AnalogInput fr_rangefinder;
     private AnalogInput l_rangefinder;
     private AnalogInput r_rangefinder;
