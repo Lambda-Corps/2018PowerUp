@@ -25,14 +25,14 @@ public class TurnWithoutPID extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.drivetrain.resetGyro();
+    	Robot.drivetrain.resetAHRSGyro();
     	isDone = false;
     	//Robot.drivetrain.setAHRSAdjustment(80.0);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	currentAngle = Robot.drivetrain.getGyro();
+    	currentAngle = Robot.drivetrain.getAHRSGyro();
     	System.out.println("angle: " + currentAngle);
     	if(Math.abs(goalAngle - currentAngle) < tolerance) {  //if within tolerance
     		System.out.println("Done!");
