@@ -10,8 +10,10 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Subsystem;
 /**
@@ -32,7 +34,7 @@ public class Drivetrain extends Subsystem {
     private TalonSRX right_dt_motor2; //5
     
     // pneumatics
-    //private final Compressor compressor;
+    private final Compressor compressor;
     //private final DoubleSolenoid transmission_solenoid;
    
     //Gyro
@@ -49,6 +51,18 @@ public class Drivetrain extends Subsystem {
     private AnalogInput r_rangefinder;
     private AnalogInput in_rangefinder;
     private AnalogInput accelerometer;
+    
+    // PID 
+ 	private MyPIDOutput myPIDOutputDriving;
+ 	private MyPIDOutput myPIDOutputTurning;
+ 	private PIDController pidControllerDriving; 
+ 	private PIDController pidControllerTurning;
+ 	
+ 	//final double pGainDriv = .00075, iGainDriv = 0, dGainDriv = -.0015;
+ 	final double pGainDriv = .08, iGainDriv = 0, dGainDriv = 0.0;
+ 	final double pGainTurn = .025, iGainTurn = 0, dGainTurn = -.005;	//d smaller = positive
+ 	boolean pid_done = false;
+ 	int printCounter = 0;
     
     public Drivetrain() {
     	//motors
@@ -67,7 +81,7 @@ public class Drivetrain extends Subsystem {
     	//left_dt_motor1.enableCurrentLimit(true);
     	
     	//pneumatics
-    	//compressor = new Compressor();
+    	compressor = new Compressor();
     	//transmission_solenoid = new DoubleSolenoid(RobotMap.DRIVETRAIN_SOLENOID_A_PORT, RobotMap.DRIVETRAIN_SOLENOID_B_PORT);
     	
     	//digital IO sensors
@@ -99,6 +113,14 @@ public class Drivetrain extends Subsystem {
     	//accelerometer
     	accelerometer = new AnalogInput(RobotMap.ACCELEROMETER_PORT);
     	
+    	//PID
+    	myPIDOutputDriving = new MyPIDOutput();
+        myPIDOutputTurning = new MyPIDOutput();
+        pidControllerDriving = new PIDController(pGainDriv, iGainTurn, dGainDriv, l_encoder, myPIDOutputDriving);   // Input are P, I, D, Input , output
+		//pidControllerTurning = new PIDController(pGainTurn, iGainTurn, dGainTurn, gyro, myPIDOutputTurning);
+		pidControllerTurning = new PIDController(pGainTurn, iGainTurn, dGainTurn, ahrs, myPIDOutputTurning);
+		
+    	
     }
     
     public void setState(boolean s) {
@@ -113,7 +135,7 @@ public class Drivetrain extends Subsystem {
     public void arcadeDrive(double trans_speed, double yaw) {  //0, 0.3
     	
     	setAHRSAdjustment(0);
-    	trans_speed*=-1;//Fixes Direction
+    	//trans_speed*=-1;//Fixes Direction
     	yaw *= 1;
     	
 		double left_speed = trans_speed + yaw;
@@ -132,7 +154,7 @@ public class Drivetrain extends Subsystem {
 		else {
 			direction = -1;
 		}
-		angle = Robot.drivetrain.getGyro();
+		angle = Robot.drivetrain.getAHRSGyro();
 		
 		if (Math.abs(max_speed) > 1.0) {
 			left_speed /= max_speed;
@@ -198,8 +220,8 @@ public class Drivetrain extends Subsystem {
     public boolean driveStraightSetDistance(double speed, double targetDis) {
     	boolean targetReached = false;
     	
-    	double leftDis = -l_encoder.getDistance();
-    	double rightDis = -r_encoder.getDistance();
+    	double leftDis = l_encoder.getDistance();
+    	double rightDis = r_encoder.getDistance();
     	
     	double error = leftDis-rightDis;  //if L>R ie needs to go left --> positive and vice versa
     	double toleranceDis = .1; // inches
@@ -226,11 +248,11 @@ public class Drivetrain extends Subsystem {
     	return targetReached;
     }
     
-    public void resetGyro() {
+    public void resetAHRSGyro() {
     	ahrs.reset();
     }
     
-    public double getGyro() {
+    public double getAHRSGyro() {
     	return ahrs.getAngle();
     }
     
@@ -342,14 +364,95 @@ public class Drivetrain extends Subsystem {
 	public void resetAccelerometer() {
 		accelerometer.resetAccumulator();
 	}
-	
-    public void resetGyro() {
-    	ahrs.reset();
-    }
     
     public void setAHRSAdjustment(double adj) {
     	ahrs.setAngleAdjustment(adj);
     }
+    
+//==PID DRIVING===============================================================================
+  //to reset encoders and set the PID setpoints
+  	public void setPIDSetpoints(double setpoint) {
+  		l_encoder.reset();
+  		r_encoder.reset();
+  		pidControllerDriving.setSetpoint(setpoint);
+  		pidControllerDriving.enable();
+  	}
+
+  	public boolean driveStraightWithPID(double desiredMoveDistance) {
+  		double speedfactor = 0.1;   // This is the "P" factor to scale the error between encoders values to the motor drive bias
+  		double maxErrorValue = 0.0;   // Limits the control the error has on driving	
+  		double error = speedfactor*(l_encoder.getDistance() - r_encoder.getDistance()); 
+  		if (error >= maxErrorValue) error = maxErrorValue;
+  		if (error <= -maxErrorValue) error = -maxErrorValue;
+  		
+  		pidControllerDriving.setAbsoluteTolerance(1);
+  		//SmartDashboard.putNumber("MyPIDOutput.get value", myPIDOutputDriving.get());
+  		if(++printCounter % 10 == 0){
+  			System.out.println("my PID output   " + myPIDOutputDriving.get());
+  			System.out.println("ERROR in drive straight with pid    " + error);
+  		}
+  		
+  		double pidOutput = myPIDOutputDriving.get();
+  		if(Double.isNaN(pidOutput)){
+  			System.out.println("Got invalid PID output for driving");
+  		}
+  		else{
+  			arcadeDrive(0.8*(myPIDOutputDriving.get()), error);
+  		}
+  		
+  		pid_done = pidControllerDriving.onTarget();
+  		
+  		if (pid_done){
+  			pidControllerDriving.disable();
+  			printCounter = 0;
+  		}
+  		return pid_done;
+  	}	
+  	
+  	public void setUpPIDTurning(double angle){
+    	pidControllerTurning.setSetpoint(angle);
+    	pidControllerTurning.enable();
+    }
+    
+    protected double returnPIDInput() {
+        // Return your input value for the PID loop
+        // e.g. a sensor, like a potentiometer:
+        // yourPot.getAverageVoltage() / kYourMaxVoltage
+        //return gyro.getAngle();
+    	return ahrs.getAngle();
+    }
+    
+    public boolean turnWithPID(double desiredTurnAngle) {
+		
+		pidControllerTurning.setAbsoluteTolerance(2.0);		
+		
+		//basicArcadeDrive uses x, y inputs so it should be 0 for y and whatever the PIDcontroller calculates as x
+		double pidOuput = myPIDOutputTurning.get();
+		if (Double.isNaN(pidOuput)){
+			System.out.println("Got invalid output from Turn PID Controller");
+		}
+		else{
+			arcadeDrive(0.0, pidOuput);
+		}
+				
+		printCounter++;
+		
+		// Every tenth iteration, print to the log
+		if (printCounter % 10 == 0)  {		
+			System.out.println(String.format("Left Encoder: %5.1f    Right Encoder: %5.1f    SetPointTurning:  %5.1f     Gyro Angle:   %5.1f     PIDOutputTurning: %5.1f", 
+				l_encoder.getDistance(), 
+				r_encoder.getDistance(), pidControllerTurning.getSetpoint(), gyro.getAngle(), myPIDOutputTurning.get()));
+		}
+		
+		pid_done = pidControllerTurning.onTarget();
+	
+		if (pid_done)   {
+			pidControllerTurning.disable();
+			printCounter = 0; 
+		}
+		
+		return pid_done;
+	}
     
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
