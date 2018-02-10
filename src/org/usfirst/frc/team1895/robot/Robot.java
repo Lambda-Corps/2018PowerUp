@@ -1,10 +1,12 @@
 
 package org.usfirst.frc.team1895.robot;
 
-import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationB;
+import org.usfirst.frc.team1895.robot.commands.autonomous.KevinSequence;
+import org.usfirst.frc.team1895.robot.subsystems.Claw;
 import org.usfirst.frc.team1895.robot.subsystems.Climber;
 import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1895.robot.subsystems.FilteredCamera;
+import org.usfirst.frc.team1895.robot.subsystems.LowerIntake;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -26,6 +28,8 @@ public class Robot extends TimedRobot {
 	public static OI oi;
 	public static Climber climber;
 	public static FilteredCamera camera;
+	public static Claw claw;
+	public static LowerIntake lowerIntake;
 	Command autonomousCommand;
 	SendableChooser<Command> chooser = new SendableChooser<>();
 	int printCount;
@@ -39,7 +43,9 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		oi = new OI();
-		chooser.addDefault("Default Auto", new DestinationB());
+		claw = new Claw();
+		lowerIntake = new LowerIntake();
+		chooser.addDefault("Default Auto", new KevinSequence());
 		System.out.println("robotInit");
 		SmartDashboard.putData("Auto mode", chooser);
 		climber = new Climber();

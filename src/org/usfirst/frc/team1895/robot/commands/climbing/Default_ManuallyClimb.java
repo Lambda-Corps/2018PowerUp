@@ -22,8 +22,8 @@ public class Default_ManuallyClimb extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if(Robot.oi.gamepad.getAxis(F310.RT)>.2) {
-    		Robot.climber.manualClimbing(Robot.oi.gamepad.getAxis(F310.RT));
+    	if(Robot.oi.gamepad2.getAxis(F310.RT)>.2) {
+    		Robot.climber.manualClimbing(Robot.oi.gamepad2.getAxis(F310.RT));
     	}
     	else {
     		Robot.climber.manualClimbing(0);

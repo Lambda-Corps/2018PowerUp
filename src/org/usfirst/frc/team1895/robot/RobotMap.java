@@ -10,6 +10,7 @@ public class RobotMap {
 	
 	// Gamepads
 	public static final int GAMEPAD_PORT = 0;
+	public static final int GAMEPAD2_PORT = 1;
 	
 	// CAN Bus
 	public static final int LEFT_DT_MOTOR1_PORT = 1;

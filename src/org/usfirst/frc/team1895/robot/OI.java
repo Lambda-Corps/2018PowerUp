@@ -1,6 +1,10 @@
 package org.usfirst.frc.team1895.robot;
 
+import org.usfirst.frc.team1895.robot.commands.claw.DeployCube_Claw;
+import org.usfirst.frc.team1895.robot.commands.claw.GrabCube_Claw;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
+import org.usfirst.frc.team1895.robot.commands.lowerIntake.DeployCube_LowerIntake;
+import org.usfirst.frc.team1895.robot.commands.lowerIntake.GrabCube_LowerIntake;
 import org.usfirst.frc.team1895.robot.oi.F310;
 
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -39,14 +43,34 @@ public class OI {
 	// button.whenReleased(new ExampleCommand());
 	
 	//remember to add secret button
-	public F310 gamepad;
+	public F310 gamepad1;
+	public F310 gamepad2;
+
 	public JoystickButton ninetyDegreeRight;
+	public JoystickButton lowerIntakeGrabCube;
+	public JoystickButton lowerIntakeDeployCube;
+	public JoystickButton ClawIn;
+	public JoystickButton ClawOut;
+	
 	
 	public OI() {
-		gamepad = new F310(RobotMap.GAMEPAD_PORT);
+		gamepad1 = new F310(RobotMap.GAMEPAD_PORT);
+		gamepad2 = new F310(RobotMap.GAMEPAD2_PORT);
 		
-		ninetyDegreeRight = new JoystickButton(gamepad, F310.LB);
+		ninetyDegreeRight = new JoystickButton(gamepad1, F310.LB);
 		ninetyDegreeRight.whenPressed(new TurnWithoutPID(0.3, 90.0));
+						
+		ClawIn = new JoystickButton (gamepad2, F310.X);
+		ClawOut = new JoystickButton (gamepad2, F310.B);
+		ClawIn.whenPressed(new GrabCube_Claw ());
+		ClawOut.whenPressed(new DeployCube_Claw ());
+		
+		lowerIntakeGrabCube = new JoystickButton (gamepad2, F310.LB);
+		lowerIntakeDeployCube = new JoystickButton (gamepad2, F310.RB);
+		lowerIntakeGrabCube.whenPressed(new GrabCube_LowerIntake());
+		lowerIntakeDeployCube.whenPressed(new DeployCube_LowerIntake());
+		
+		
 		
 	}
 }

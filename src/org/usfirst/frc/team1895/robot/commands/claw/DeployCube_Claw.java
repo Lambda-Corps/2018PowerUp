@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1895.robot.commands.claw;
 
+import org.usfirst.frc.team1895.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -10,6 +12,7 @@ public class DeployCube_Claw extends Command {
     public DeployCube_Claw() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
+    	requires(Robot.claw);
     }
 
     // Called just before this Command runs the first time
