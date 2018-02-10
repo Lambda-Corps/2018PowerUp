@@ -39,9 +39,9 @@ public class TurnWithoutPID extends Command {
     		Robot.drivetrain.arcadeDrive(0, 0);
     		isDone = true;
     	} else if(currentAngle < goalAngle) {  //If left of target angle
-    		Robot.drivetrain.arcadeDrive(0, -speed);  //turn clockwise
+    		Robot.drivetrain.arcadeDrive(0, speed);  //turn clockwise
     	} else if(currentAngle > goalAngle){  //If right of target angle
-    		Robot.drivetrain.arcadeDrive(0, speed);  //turn counterclockwise
+    		Robot.drivetrain.arcadeDrive(0, -speed);  //turn counterclockwise
     	}
     }
 

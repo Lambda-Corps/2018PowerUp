@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1895.robot;
 
-import org.usfirst.frc.team1895.robot.OI;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationA;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationB;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationC;
@@ -65,30 +64,21 @@ public class Robot extends TimedRobot {
 		
 		//choosing start position
 		SmartDashboard.putData("Start Position", pos_chooser);
+		pos_chooser.addDefault("Default (drive forward to cross auto line)", 0);
 		pos_chooser.addObject("Position One", 1);
 		pos_chooser.addObject("Position Two", 2);
 		pos_chooser.addObject("Position Three", 3);
-		pos_chooser.addDefault("Default (drive forward to cross auto line)", 0);
 		
 		//choosing destination
-		/*chooser.addObject("Destination A", new DestinationA());
-		chooser.addObject("Destination B", new DestinationB());
-		chooser.addObject("Destination C", new DestinationC());
-		chooser.addObject("Destination D", new DestinationD());
-		chooser.addObject("Destination E", new DestinationE());
-		chooser.addDefault("Test Commands", new TestEmptyCommand());*/
-		
-		//choosing destination
-		chooser.addObject("Destination A", "A");
+		//TODO -- make a new default command that just drives forward to cross the autoline
+		chooser.addDefault("Destination A", "A");
 		chooser.addObject("Destination B", "B");
 		chooser.addObject("Destination C", "C");
 		chooser.addObject("Destination D", "D");
 		chooser.addObject("Destination E", "E");
-		chooser.addDefault("Test Commands", "F");
 		SmartDashboard.putData("Destination", chooser);
 		
 		//climber = new Climber();
-		
 		
 		oi = new OI();
 	}
@@ -171,7 +161,7 @@ public class Robot extends TimedRobot {
 			farSwitchNum = 2;
 		}
 		
-		autonomousCommand = determineAuto();		
+		autonomousCommand = determineAuto();
 		
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null)
@@ -187,6 +177,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
+		//System.out.printf("rangefinder: %5.1f \n", Robot.drivetrain.fr_rangefinderDist());
 	}
 
 	@Override

@@ -13,7 +13,7 @@ public class DriveToObstacle extends Command {
 	boolean done;
 	double speed;
 	
-    public DriveToObstacle(double distancetoObstacle, double speed) {
+    public DriveToObstacle(double speed, double distancetoObstacle) {
         // Use requires() here to declare subsystem dependencies
         requires(Robot.drivetrain);
         //goalDistance = distancetoObstacle;

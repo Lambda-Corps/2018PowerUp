@@ -27,7 +27,7 @@ public class Default_Drivetrain extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	//Robot.drivetrain.arcadeDrive(-0.25, 0);
-    	Robot.drivetrain.arcadeDrive(Robot.oi.gamepad.getAxis(F310.LY), Robot.oi.gamepad.getAxis(F310.RX));
+    	Robot.drivetrain.arcadeDrive(-Robot.oi.gamepad.getAxis(F310.LY), Robot.oi.gamepad.getAxis(F310.RX));
     
     }
 
