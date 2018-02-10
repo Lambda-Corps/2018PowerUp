@@ -1,36 +1,39 @@
-package org.usfirst.frc.team1895.robot.commands.drivetrain;
+package org.usfirst.frc.team1895.robot.commands.testcommands;
 
 import org.usfirst.frc.team1895.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
  */
-public class DriveStraightWithPID extends Command {
+public class TestDriveToObstacle extends Command {
 
-	double goalDistance = 0.0;
-	boolean done = false;
+	double t_speed, t_goalDistance, t_scalar;
+	boolean t_done;
 	
-    public DriveStraightWithPID(double givenDistance) {
+    public TestDriveToObstacle() {
         // Use requires() here to declare subsystem dependencies
-        requires(Robot.drivetrain); 
-        goalDistance = givenDistance;
+        requires(Robot.drivetrain);
+        t_done = false;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.drivetrain.setDrivingPIDSetpoints(goalDistance);
+    	t_speed = SmartDashboard.getNumber("Test Drive TankDrive Speed: ", .4);
+    	t_goalDistance = SmartDashboard.getNumber("Test Drive Distance: ", 13);
+    	t_scalar = SmartDashboard.getNumber("Test Drive Tank Scalar:", .94);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	done = Robot.drivetrain.driveStraightWithPID(goalDistance);
+    	//t_done = Robot.drivetrain.testdriveRangeFinderDistance(t_goalDistance, t_speed, t_scalar); // method needed
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return done;
+        return t_done;
     }
 
     // Called once after isFinished returns true
