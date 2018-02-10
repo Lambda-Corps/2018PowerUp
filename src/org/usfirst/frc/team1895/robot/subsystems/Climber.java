@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  * Last Updated: 1/13/2018 by Maddy
  */
 
+// TODO -- Code will not work with new Talon library, needs to be fixed.
 public class Climber extends Subsystem {
 
     private TalonSRX climber_motor;

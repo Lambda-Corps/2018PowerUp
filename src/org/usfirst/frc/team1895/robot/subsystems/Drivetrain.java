@@ -8,7 +8,6 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -39,7 +38,6 @@ public class Drivetrain extends Subsystem {
 	// private final DoubleSolenoid transmission_solenoid;
 
 	// Gyro
-	private AnalogGyro gyro;
 	private AHRS ahrs;
 
 	// digital IO sensors
@@ -51,6 +49,10 @@ public class Drivetrain extends Subsystem {
 	private AnalogInput l_rangefinder;
 	private AnalogInput r_rangefinder;
 	private AnalogInput in_rangefinder;
+
+	// TODO - We need to determine which accelerometer we are going to use and
+	// change
+	// variable type here.
 	private AnalogInput accelerometer;
 
 	// PID
@@ -60,14 +62,17 @@ public class Drivetrain extends Subsystem {
 	private PIDController pidControllerTurning;
 
 	final double pGainDriv = 0, iGainDriv = 0, dGainDriv = 0;
-	
+
 	final double pGainTurn = 0, iGainTurn = 0, dGainTurn = 0;
-	
+
 	boolean pid_done = false;
 
+	// These values are used as an enumeration to get encoder values
+	// Values are not important, they are only required to be unique.
 	public static final int LEFT_MOTOR_ENCODER = 0;
 	public static final int RIGHT_MOTOR_ENCODER = 1;
-	
+	public static final int ARM_MOTOR_ENCODER = 2;
+
 	public Drivetrain() {
 		// motors
 		left_dt_motor1 = new TalonSRX(RobotMap.LEFT_DT_MOTOR1_PORT);
@@ -78,6 +83,7 @@ public class Drivetrain extends Subsystem {
 		left_dt_motor2.follow(left_dt_motor1);
 		right_dt_motor2.follow(right_dt_motor1);
 
+		// TODO -- Test this code so we can uncomment if it works.
 		// current limited to 10 amps when current is >15amps for 100 milliseconds
 		// left_dt_motor1.configContinuousCurrentLimit(10, 0);
 		// left_dt_motor1.configPeakCurrentLimit(15, 0);
@@ -86,16 +92,17 @@ public class Drivetrain extends Subsystem {
 
 		// pneumatics
 		compressor = new Compressor();
+
 		// transmission_solenoid = new
 		// DoubleSolenoid(RobotMap.DRIVETRAIN_SOLENOID_A_PORT,
 		// RobotMap.DRIVETRAIN_SOLENOID_B_PORT);
 
 		// digital IO sensors
 		l_encoder = new Encoder(RobotMap.LEFT_ENCODER_A_PORT, RobotMap.LEFT_ENCODER_B_PORT, true);
-		r_encoder = new Encoder(RobotMap.RIGHT_ENCODER_A_PORT, RobotMap.RIGHT_ENCODER_B_PORT, true); // third negates
-																										// encoder
-		l_encoder.setDistancePerPulse(.022);
-		r_encoder.setDistancePerPulse(.022);
+		r_encoder = new Encoder(RobotMap.RIGHT_ENCODER_A_PORT, RobotMap.RIGHT_ENCODER_B_PORT, true);
+
+		l_encoder.setDistancePerPulse(.0159);
+		r_encoder.setDistancePerPulse(.0159);
 
 		// analog sensors
 		try {
@@ -119,54 +126,46 @@ public class Drivetrain extends Subsystem {
 		in_rangefinder = new AnalogInput(RobotMap.INTAKE_RANGEFINDER_PORT);
 
 		// accelerometer
+		// TODO -- After we figure out the type, fix this constructor
 		accelerometer = new AnalogInput(RobotMap.ACCELEROMETER_PORT);
 
 	}
 
-	public void setState(boolean s) {
-		isCorrecting = s;
-	}
-
-	public boolean getState() {
-		return isCorrecting;
-	}
-
-//==Manual driving============================================================================
+	// ==Manual
+	// driving============================================================================
 	public void arcadeDrive(double trans_speed, double yaw) { // 0, 0.3
 
 		setAHRSAdjustment(0);
-		//trans_speed *= -1;// Fixes Direction if you use Steamworks robot
-		yaw *= 1;
 
 		double left_speed = trans_speed + yaw;
 		double right_speed = yaw - trans_speed;
 
+		// These three variables are for self correcting driving. The angle is the
+		// heading
+		// from the gyro, the tolerance is how far we deviate (in degrees) before we
+		// self correct, and the scalar is the percentage we use to reduce the over
+		// corrected side.
 		double angle;
 		double tolerance = 1.0;
 		double scalar = 0.75; // Correlate it with the trans_speed
 
+		// This is to normalize the speed inputs. The Talons require a speed of -1 > x >
+		// 1.
 		double max_speed = Math.max(Math.abs(left_speed), Math.abs(right_speed));
-
-		double direction = 0;
-		if (trans_speed < 0) {// Forwards
-			direction = 1;
-		} else {
-			direction = -1;
-		}
-
-		angle = Robot.drivetrain.getAHRSGyroAngle();
-
 		if (Math.abs(max_speed) > 1.0) {
 			left_speed /= max_speed;
 			right_speed /= max_speed;
 		}
 
 		if (Math.abs(yaw) < 0.005) { // if no x input --> correcting mode
+			angle = Robot.drivetrain.getAHRSGyroAngle();
 			if (isCorrecting == false) { // if correcting mode is not already in progress
 				isCorrecting = true; // set flag
 				Robot.drivetrain.resetAHRSGyro(); // reset gyro
 			}
-			if (direction > 0) {
+
+			// TODO -- This needs to be tested to ensure it's accurate
+			if (trans_speed > 0) {
 
 				if (angle < (-tolerance)) { // if drifting left
 					right_speed *= scalar; // go right
@@ -190,52 +189,51 @@ public class Drivetrain extends Subsystem {
 		}
 
 		// motorgroup stuffs - CHANGED TO LEADER FOLLOWER TESTING
-		left_dt_motor1.set(ControlMode.PercentOutput, left_speed);
+		// The .978 scalar value was determined through testing that our left motors
+		// were outputting
+		// more power than the right.
+
+		left_dt_motor1.set(ControlMode.PercentOutput, left_speed * .978);
 		right_dt_motor1.set(ControlMode.PercentOutput, right_speed);
+
+		// TODO -- Shift gears
+
 	}
 
-	public void tankDrive(double left, double right) {
-		if (left > 1.0)
-			left = 1.0;
-		if (left < -1.0)
-			left = -1.0;
-		if (right > 1.0)
-			right = 1.0;
-		if (right < -1.0)
-			right = -1.0;
-		left_dt_motor1.set(ControlMode.PercentOutput, left);
-		left_dt_motor2.follow(left_dt_motor1);
-		right_dt_motor1.set(ControlMode.PercentOutput, -right);
-		right_dt_motor2.follow(right_dt_motor1);
-		// Check to see if gear shifting is necessary. if it is, then shift
-		// shiftGears();
-	}
-
-//==Driving straight code and encoder code==========================================================================
+	// ==Driving straight code and encoder
+	// code==========================================================================
 	public void resetEncoders() {
 		l_encoder.reset();
 		r_encoder.reset();
 	}
-	
-	public double getLeftEncoder() {
-		return l_encoder.getDistance();
+
+	/*
+	 * This method will return the value from the encoder specified in the argument.
+	 * If the encoder you are looking for does not have an entry here, simply add it
+	 * to the code up above and then add a section to the switch statement.
+	 */
+	public double getEncoderValue(int encoderPort) {
+		double dRet = 0.0;
+		switch (encoderPort) {
+		case LEFT_MOTOR_ENCODER:
+			dRet = l_encoder.getDistance();
+			break;
+		case RIGHT_MOTOR_ENCODER:
+			dRet = r_encoder.getDistance();
+			break;
+		default:
+			break;
+		}
+
+		return dRet;
 	}
 
-	public double getRightEncoder() {
-		return r_encoder.getDistance();
-	}
-	
 	public boolean driveStraightSetDistance(double speed, double targetDis) {
 		boolean targetReached = false;
 
 		double leftDis = l_encoder.getDistance();
 		double rightDis = r_encoder.getDistance();
 
-		double error = leftDis - rightDis; // if L>R ie needs to go left --> positive and vice versa
-		double toleranceDis = .1; // inches
-
-		// TODO -- Fix me, why aren't we just arcade driving all the time? Is there some
-		// need or benefit to tank driving?
 		if (targetDis > 0) {// moving forward code
 			// Checking if we still have to keep driving or not. If we haven't reached our
 			// target distance, keep driving straight. Otherwise, stop.
@@ -257,29 +255,28 @@ public class Drivetrain extends Subsystem {
 		return targetReached;
 	}
 
-//==Rangefinder Code==========================================================================================================
+	// ==Rangefinder
+	// Code==========================================================================================================
 	public boolean drivefr_RFDistance(double goaldistance, double speed) { // TODO: do we need separate methods??? this
-																			// only does front RF
-		double left_speed = speed;
-		double right_speed = speed;
-		if (fr_rangefinderDist() <= (goaldistance)) { // if the robot crossed the goal distance + buffer then the code
-														// will stop
-			tankDrive(0, 0);
+		if (fr_rangefinderDist() <= goaldistance) { // if the robot crossed the goal distance + buffer then the code //
+													// will stop
+			arcadeDrive(0, 0);
 			return true;
 		} else { // if it hasn't crossed it will run at a determined speed
-			tankDrive(left_speed, right_speed);
+			arcadeDrive(speed, 0);
 			return false;
 		}
 	}
 
-	public double fr_rangefinderDist() { // TODO: check that this is right / T U N E. also check if battery affects
+	// TODO -- The range finder code all needs to tested and fixed.
+	public double fr_rangefinderDist() { // TODO: check that this is right / T U N E. also check if battery affects //
 											// output
 		double voltage = fr_rangefinder.getAverageVoltage();
 		double inches = 32.1328 * voltage + 17.581; // from LinReg
 		return inches;
 	}
 
-	public double l_rangefinderDist() { // TODO: check that this is right / T U N E. also check if battery affects
+	public double l_rangefinderDist() { // TODO: check that this is right / T U N E. also check if battery affects //
 										// output
 		double outputValue = l_rangefinder.getAverageVoltage();
 		if (outputValue > 2.4 || outputValue < 0.4) { // code currently only
@@ -324,6 +321,8 @@ public class Drivetrain extends Subsystem {
 		return d;
 	}
 
+	// TODO -- This has not been tested, needs to be done.
+	// Currently all the YAW values are 0, these need to be determined through testing
 	public boolean driveParallel(double speed, double buffer, double goalDistance, boolean onLeft) {
 		boolean done = false;
 
@@ -344,19 +343,19 @@ public class Drivetrain extends Subsystem {
 		if (Math.abs(currentDistance - goalDistance) > goalTolerance) { // if not yet at target
 			if (onLeft) { // wall is on left of robot
 				if (fromWall < buffer - bufferTolerance) { // drifting left (toward wall), needs to go right
-					tankDrive(speed, speed * 0.75);
+					arcadeDrive(speed, 0);
 				} else if (fromWall > buffer + bufferTolerance) { // drifting right (away from wall), needs to go left
-					tankDrive(speed * 0.75, speed);
+					arcadeDrive(speed * 0.75, 0);
 				} else {
-					tankDrive(speed, speed);
+					arcadeDrive(speed, 0);
 				}
 			} else { // wall is on right of robot
 				if (fromWall > buffer + bufferTolerance) { // drifting left (away from wall), needs to go right
-					tankDrive(speed, speed * 0.75);
+					arcadeDrive(speed, 0);
 				} else if (fromWall < buffer - bufferTolerance) { // drifting right (toward wall), needs to go left
-					tankDrive(speed * 0.75, speed);
+					arcadeDrive(speed * 0.75, 0);
 				} else {
-					tankDrive(speed, speed);
+					arcadeDrive(speed, 0);
 				}
 			}
 		} else { // has reached target -- stop
@@ -366,8 +365,9 @@ public class Drivetrain extends Subsystem {
 		return done;
 	}
 
-//==Accelerometer Code==========================================================================
-	public double getAccelerometer() {
+	// ==Accelerometer
+	// Code==========================================================================
+	public double getAccelerometerValue() {
 		return accelerometer.getValue(); // TODO: is this the right method?
 	}
 
@@ -375,11 +375,12 @@ public class Drivetrain extends Subsystem {
 		accelerometer.resetAccumulator();
 	}
 
-//==Gyro Code====================================================================================
+	// ==Gyro
+	// Code====================================================================================
 	public double getAHRSGyroAngle() {
 		return ahrs.getAngle();
 	}
-	
+
 	public void resetAHRSGyro() {
 		ahrs.reset();
 	}
@@ -388,17 +389,20 @@ public class Drivetrain extends Subsystem {
 		ahrs.setAngleAdjustment(adj);
 	}
 
-//==PID Related Driving Code===============================================================================================
-	public void setPIDSetpoints(double setpoint) {
+	// ==PID Related Driving
+	// Code===============================================================================================
+	public void setDrivingPIDSetpoints(double setpoint) {
 		l_encoder.reset();
 		r_encoder.reset();
 		pidControllerDriving.setSetpoint(setpoint);
 		pidControllerDriving.enable();
 	}
 
+	// TODO -- This is last year's code, with the self correcting and updated arcade we may not needs any
+	// speedfactors or scaling here.  Must be tested, and confirmed.
 	public boolean driveStraightWithPID(double desiredMoveDistance) {
 		double speedfactor = 0.1; // This is the "P" factor to scale the error between encoders values to the
-								  // motor drive bias
+									// motor drive bias
 		double maxErrorValue = 0.0; // Limits the control the error has on driving
 		double error = speedfactor * (l_encoder.getDistance() - r_encoder.getDistance());
 		if (error >= maxErrorValue)
@@ -412,18 +416,18 @@ public class Drivetrain extends Subsystem {
 		if (Double.isNaN(pidOutput)) {
 			System.out.println("Got invalid PID output for driving");
 		} else {
-			arcadeDrive(0.8 * (myPIDOutputDriving.get()), error);  //note 0.8 scalar
+			arcadeDrive(0.8 * (myPIDOutputDriving.get()), error); // note 0.8 scalar
 		}
-		
+
 		pid_done = pidControllerDriving.onTarget();
-		
+
 		if (pid_done) {
 			pidControllerDriving.disable();
 		}
 		return pid_done;
 	}
 
-	public void setUpPIDTurning(double angle) {
+	public void setTurningPIDSetPoint(double angle) {
 		resetAHRSGyro();
 		pidControllerTurning.setSetpoint(angle);
 		pidControllerTurning.enable();
@@ -434,7 +438,7 @@ public class Drivetrain extends Subsystem {
 		pidControllerTurning.setAbsoluteTolerance(1.0);
 
 		double pidOutput = myPIDOutputTurning.get();
-		
+
 		if (Double.isNaN(pidOutput)) {
 			System.out.println("Got invalid output from Turn PID Controller");
 		} else {
@@ -449,31 +453,12 @@ public class Drivetrain extends Subsystem {
 
 		return pid_done;
 	}
-//==Default Command==========================================================================
+
+	// ==Default
+	// Command==========================================================================
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		setDefaultCommand(new Default_Drivetrain());
 	}
 
-	/*
-	 * This method will return the value from the encoder specified in the argument.
-	 * If the encoder you are looking for does not have an entry here, simply add
-	 * it to the code up above and then add a section to the switch statement.
-	 */
-	public double getEncoderValue(int encoderPort) {
-		double dRet = 0.0;
-		switch(encoderPort){
-		case LEFT_MOTOR_ENCODER:
-			dRet = l_encoder.getDistance();
-			break;
-		case RIGHT_MOTOR_ENCODER:
-			dRet = r_encoder.getDistance();
-			break;
-		default:
-			break;
-		}
-		
-		return dRet;
-	}
-	
 }
