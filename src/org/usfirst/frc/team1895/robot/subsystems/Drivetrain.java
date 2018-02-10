@@ -65,6 +65,9 @@ public class Drivetrain extends Subsystem {
 	
 	boolean pid_done = false;
 
+	public static final int LEFT_MOTOR_ENCODER = 0;
+	public static final int RIGHT_MOTOR_ENCODER = 1;
+	
 	public Drivetrain() {
 		// motors
 		left_dt_motor1 = new TalonSRX(RobotMap.LEFT_DT_MOTOR1_PORT);
@@ -150,7 +153,7 @@ public class Drivetrain extends Subsystem {
 		} else {
 			direction = -1;
 		}
-		angle = Robot.drivetrain.getAHRSGyro();
+		angle = Robot.drivetrain.getAHRSGyroAngle();
 
 		if (Math.abs(max_speed) > 1.0) {
 			left_speed /= max_speed;
@@ -364,7 +367,7 @@ public class Drivetrain extends Subsystem {
 	}
 
 //==Gyro Code====================================================================================
-	public double getAHRSGyro() {
+	public double getAHRSGyroAngle() {
 		return ahrs.getAngle();
 	}
 	
@@ -441,6 +444,27 @@ public class Drivetrain extends Subsystem {
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		setDefaultCommand(new Default_Drivetrain());
+	}
+
+	/*
+	 * This method will return the value from the encoder specified in the argument.
+	 * If the encoder you are looking for does not have an entry here, simply add
+	 * it to the code up above and then add a section to the switch statement.
+	 */
+	public double getEncoderValue(int encoderPort) {
+		double dRet = 0.0;
+		switch(encoderPort){
+		case LEFT_MOTOR_ENCODER:
+			dRet = l_encoder.getDistance();
+			break;
+		case RIGHT_MOTOR_ENCODER:
+			dRet = r_encoder.getDistance();
+			break;
+		default:
+			break;
+		}
+		
+		return dRet;
 	}
 	
 }

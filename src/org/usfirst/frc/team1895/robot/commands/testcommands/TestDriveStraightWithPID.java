@@ -32,8 +32,8 @@ public class TestDriveStraightWithPID extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	//t_done = Robot.drivetrain.driveStraightWithPID(t_Distance); needs method
-    	SmartDashboard.putNumber("PID Drive L Encoder Value: ", Robot.drivetrain.getLeftEncoder());
-    	SmartDashboard.putNumber("PID Drive R Encoder Value: ", Robot.drivetrain.getRightEncoder());
+    	SmartDashboard.putNumber("PID Drive L Encoder Value: ", Robot.drivetrain.getEncoderValue(Robot.drivetrain.LEFT_MOTOR_ENCODER));
+    	SmartDashboard.putNumber("PID Drive R Encoder Value: ", Robot.drivetrain.getEncoderValue(Robot.drivetrain.RIGHT_MOTOR_ENCODER));
     }
 
     // Make this return true when this Command no longer needs to run execute()
