@@ -150,7 +150,7 @@ public class Drivetrain extends Subsystem {
 		} else {
 			direction = -1;
 		}
-		angle = Robot.drivetrain.getAHRSGyro();
+		angle = Robot.drivetrain.getAHRSAngle();
 
 		if (Math.abs(max_speed) > 1.0) {
 			left_speed /= max_speed;
@@ -211,6 +211,14 @@ public class Drivetrain extends Subsystem {
 	public void resetEncoders() {
 		l_encoder.reset();
 		r_encoder.reset();
+	}
+	
+	public double getLeftEncoder() {
+		return l_encoder.getDistance();
+	}
+	
+	public double getRightEncoder() {
+		return r_encoder.getDistance();
 	}
 
 	public boolean driveStraightSetDistance(double speed, double targetDis) {
@@ -364,7 +372,7 @@ public class Drivetrain extends Subsystem {
 	}
 
 //==Gyro Code====================================================================================
-	public double getAHRSGyro() {
+	public double getAHRSAngle() {
 		return ahrs.getAngle();
 	}
 	

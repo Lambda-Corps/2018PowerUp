@@ -32,7 +32,7 @@ public class TurnWithoutPID extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	currentAngle = Robot.drivetrain.getAHRSGyro();
+    	currentAngle = Robot.drivetrain.getAHRSAngle();
     	System.out.println("angle: " + currentAngle);
     	if(Math.abs(goalAngle - currentAngle) < tolerance) {  //if within tolerance
     		System.out.println("Done!");
