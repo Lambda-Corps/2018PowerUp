@@ -34,7 +34,7 @@ public class TestTurnWithPID extends Command {
     }
 
     protected void execute() {
-    	SmartDashboard.putNumber("Test Turn Gyro Angle: ", Robot.drivetrain.getAHRSAngle());
+    	SmartDashboard.putNumber("Test Turn Gyro Angle: ", Robot.drivetrain.getAHRSGyroAngle());
     	//t_done = Robot.drivetrain; needs method to turn
     }
 

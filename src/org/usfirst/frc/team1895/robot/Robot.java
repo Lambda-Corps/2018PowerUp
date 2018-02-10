@@ -1,6 +1,6 @@
-
 package org.usfirst.frc.team1895.robot;
 
+import org.usfirst.frc.team1895.robot.OI;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationA;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationB;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationC;
@@ -17,12 +17,10 @@ import org.usfirst.frc.team1895.robot.oi.F310;
 import org.usfirst.frc.team1895.robot.subsystems.Climber;
 import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1895.robot.subsystems.FilteredCamera;
-import org.usfirst.frc.team1895.robot.subsystems.MyPIDOutput;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -35,7 +33,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends TimedRobot {
 
-	public static Drivetrain drivetrain = new Drivetrain();
+	public static Drivetrain drivetrain;
 	public static OI oi;
 	public static Climber climber;
 	public static FilteredCamera camera;
@@ -59,10 +57,9 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void robotInit() {
-		oi = new OI();
-		//climber = new Climber();
-		// TODO -- This is less frequent, I think the default is 20 ms
-		setPeriod(0.025);  //update more frequently - every 25ms
+		drivetrain = new Drivetrain();
+		
+		setPeriod(0.015);  //update more frequently - every 25ms
 		//camera = new FilteredCamera();
 		//Robot.camera.startVisionThread();
 		
@@ -90,8 +87,10 @@ public class Robot extends TimedRobot {
 		chooser.addDefault("Test Commands", "F");
 		SmartDashboard.putData("Destination", chooser);
 		
-		climber = new Climber();
-		setPeriod(0.025);  //update more frequently - every 25ms
+		//climber = new Climber();
+		
+		
+		oi = new OI();
 	}
 
 	/**
@@ -110,6 +109,36 @@ public class Robot extends TimedRobot {
 		Scheduler.getInstance().run();
 	}
 
+	@Override
+	public void testInit() {
+		// Testing Turning
+		SmartDashboard.putNumber("Turn: P value: ", .025);
+		SmartDashboard.putNumber("Turn: I value: ", 0.0);
+		SmartDashboard.putNumber("Turn: D value: ", -.005);
+		SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
+		SmartDashboard.putNumber("Test NP Turn Speed: ", .4);
+			    	
+		SmartDashboard.putData("Test Turn With PID", new TestTurnWithPID());
+		SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
+		       
+		       
+		// Distance Related Testing
+		SmartDashboard.putNumber("Distance: P value: ", .1);
+		SmartDashboard.putNumber("Distance: I value: ", 0.0);
+		SmartDashboard.putNumber("Distance: D value: ", -.01);
+		SmartDashboard.putNumber("Test Drive Distance: ", 20.0);
+		SmartDashboard.putNumber("Test Drive TankDrive Speed: ", .4);
+		SmartDashboard.putNumber("Test Drive Tank Scalar:", .94); //incase of drifting
+		SmartDashboard.putNumber("Test Drive Buffer:", 10);
+			    	
+		SmartDashboard.putData("Test DriveStraight With PID", new TestDriveStraightWithPID());
+		SmartDashboard.putData("Test DriveStraight No PID", new TestDriveStraightWithoutPID());
+		SmartDashboard.putData("Test Drive With RangeFinder", new TestDriveToObstacle());
+		SmartDashboard.putData("Test Drive Parallel", new TestDriveParallel());
+		
+		SmartDashboard.putBoolean("Test boolean onLeft Value", false);
+	}
+	
 	/**
 	 * This autonomous (along with the chooser code above) shows how to select
 	 * between different autonomous modes using the dashboard. The sendable
@@ -123,44 +152,6 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		autonomousCommand = determineAuto();
-		
-		
-		if(!autonomousCommand.getName().contains("Test")){
-			if (autonomousCommand != null) {
-				autonomousCommand.start();
-			}
-		}
-		else{
-			// Testing Turning
-			SmartDashboard.putNumber("Turn: P value: ", .025);
-			SmartDashboard.putNumber("Turn: I value: ", 0.0);
-			SmartDashboard.putNumber("Turn: D value: ", -.005);
-			SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
-			SmartDashboard.putNumber("Test NP Turn Speed: ", .4);
-				    	
-			SmartDashboard.putData("Test Turn With PID", new TestTurnWithPID());
-			SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
-			       
-			       
-			// Distance Related Testing
-			SmartDashboard.putNumber("Distance: P value: ", .1);
-			SmartDashboard.putNumber("Distance: I value: ", 0.0);
-			SmartDashboard.putNumber("Distance: D value: ", -.01);
-			SmartDashboard.putNumber("Test Drive Distance: ", 20.0);
-			SmartDashboard.putNumber("Test Drive TankDrive Speed: ", .4);
-			SmartDashboard.putNumber("Test Drive Tank Scalar:", .94); //incase of drifting
-			SmartDashboard.putNumber("Test Drive Buffer:", 10);
-				    	
-			SmartDashboard.putData("Test DriveStraight With PID", new TestDriveStraightWithPID());
-			SmartDashboard.putData("Test DriveStraight No PID", new TestDriveStraightWithoutPID());
-			SmartDashboard.putData("Test Drive With RangeFinder", new TestDriveToObstacle());
-			SmartDashboard.putData("Test Drive Parallel", new TestDriveParallel());
-			
-			SmartDashboard.putBoolean("Test boolean onLeft Value", false);
-		}
-		//Robot.camera.putVideo(true);
-		
 		//access FMS data
 		String colorString;
 		colorString = DriverStation.getInstance().getGameSpecificMessage();
@@ -180,6 +171,8 @@ public class Robot extends TimedRobot {
 			farSwitchNum = 2;
 		}
 		
+		autonomousCommand = determineAuto();		
+		
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null)
 			autonomousCommand.start();
@@ -194,8 +187,6 @@ public class Robot extends TimedRobot {
 	@Override
 	public void autonomousPeriodic() {
 		Scheduler.getInstance().run();
-		//if(printCount%10==0)
-			//System.out.println("RF: " + Robot.drivetrain.fr_rangefinderDist());
 	}
 
 	@Override
@@ -227,9 +218,11 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-		LiveWindow.run();
+		Scheduler.getInstance().run();
 	}
 	
+	// This function will take in the our starting position from the smart dashboard,
+	// and use the desired destination to figure out which command sequence to run.
 	public Command determineAuto() {
 		startPos = pos_chooser.getSelected().intValue();
 		decision = chooser.getSelected();

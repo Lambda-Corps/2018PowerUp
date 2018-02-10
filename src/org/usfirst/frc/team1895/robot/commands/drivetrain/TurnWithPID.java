@@ -19,7 +19,7 @@ public class TurnWithPID extends Command {
 	// Called just before this Command runs the first time
 	protected void initialize() {
 
-		Robot.drivetrain.setUpPIDTurning(goalAngle);
+		Robot.drivetrain.setTurningPIDSetPoint(goalAngle);
 
 	}
 

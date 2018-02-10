@@ -28,7 +28,7 @@ public class TestTurnWithoutPID extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	SmartDashboard.putNumber("Test Turn Gyro Angle: ", Robot.drivetrain.getAHRSAngle());
+    	SmartDashboard.putNumber("Test Turn Gyro Angle: ", Robot.drivetrain.getAHRSGyroAngle());
     	//t_done = Robot.drivetrain. //we need a turning method
     }
 

@@ -19,7 +19,7 @@ public class DriveStraightWithPID extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	Robot.drivetrain.setPIDSetpoints(goalDistance);
+    	Robot.drivetrain.setDrivingPIDSetpoints(goalDistance);
     }
 
     // Called repeatedly when this Command is scheduled to run
