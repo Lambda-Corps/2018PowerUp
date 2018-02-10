@@ -1,42 +1,43 @@
 package org.usfirst.frc.team1895.robot.commands.drivetrain;
 
-import edu.wpi.first.wpilibj.command.Command;
-
 import org.usfirst.frc.team1895.robot.Robot;
+
+import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
 public class DriveStraightWithPID extends Command {
-	public DriveStraightWithPID() {
-		// Use requires() here to declare subsystem dependencies
-		requires(Robot.exampleSubsystem);
-	}
 
-	// Called just before this Command runs the first time
-	@Override
-	protected void initialize() {
-	}
+	double goalDistance = 0.0;
+	boolean done = false;
+    public DriveStraightWithPID(double givenDistance) {
+        // Use requires() here to declare subsystem dependencies
+        requires(Robot.drivetrain); 
+        goalDistance = givenDistance;
+    }
 
-	// Called repeatedly when this Command is scheduled to run
-	@Override
-	protected void execute() {
-	}
+    // Called just before this Command runs the first time
+    protected void initialize() {
+    	Robot.drivetrain.setDrivingPIDSetpoints(goalDistance);
+    }
 
-	// Make this return true when this Command no longer needs to run execute()
-	@Override
-	protected boolean isFinished() {
-		return false;
-	}
+    // Called repeatedly when this Command is scheduled to run
+    protected void execute() {
+    	done = Robot.drivetrain.driveStraightWithPID(goalDistance);
+    }
 
-	// Called once after isFinished returns true
-	@Override
-	protected void end() {
-	}
+    // Make this return true when this Command no longer needs to run execute()
+    protected boolean isFinished() {
+        return done;
+    }
 
-	// Called when another command which requires one or more of the same
-	// subsystems is scheduled to run
-	@Override
-	protected void interrupted() {
-	}
+    // Called once after isFinished returns true
+    protected void end() {
+    }
+
+    // Called when another command which requires one or more of the same
+    // subsystems is scheduled to run
+    protected void interrupted() {
+    }
 }

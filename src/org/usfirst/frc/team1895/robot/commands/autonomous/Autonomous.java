@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1895.robot.commands.autonomous;
 
+import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveToObstacle;
+
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
@@ -8,21 +10,16 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class Autonomous extends CommandGroup {
 
     public Autonomous() {
-        // Add Commands here:
-        // e.g. addSequential(new Command1());
-        //      addSequential(new Command2());
-        // these will run in order.
 
-        // To run multiple commands at the same time,
-        // use addParallel()
-        // e.g. addParallel(new Command1());
-        //      addSequential(new Command2());
-        // Command1 and Command2 will run in parallel.
+//    	System.out.println("1---------------------------");
+//        addSequential(new DriveStraightWithoutPID(0.25, 50)); //units in inches
+//    	System.out.println("2-------------------------------");
+//    	addSequential(new WaitCommand(1));
+//    	System.out.println("3------------------");
+//    	addSequential(new DriveStraightWithoutPID(0.25, -50)); //units in inches
+//    	addSequential(new DriveToObstacle(15, 0.25));
+    	
+    	addSequential(new ConditionalCommand1(new DestinationA(), new DestinationB()));
 
-        // A command group will require all of the subsystems that each member
-        // would require.
-        // e.g. if Command1 requires chassis, and Command2 requires arm,
-        // a CommandGroup containing them would require both the chassis and the
-        // arm.
     }
 }

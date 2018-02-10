@@ -1,38 +1,38 @@
-package org.usfirst.frc.team1895.robot.commands.climbing;
+package org.usfirst.frc.team1895.robot.commands.testcommands;
 
 import org.usfirst.frc.team1895.robot.Robot;
-import org.usfirst.frc.team1895.robot.oi.F310;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 /**
  *
  */
-public class Default_ManuallyClimb extends Command {
+public class TestDriveStraightWithoutPID extends Command {
 
-    public Default_ManuallyClimb() {
-        // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
-    	requires(Robot.climber);
-    	
+	double t_goalDis;
+	double t_speed;
+	boolean t_goalReached;
+    public TestDriveStraightWithoutPID() {
+        requires(Robot.drivetrain);
+        t_goalReached = false;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	t_goalDis = SmartDashboard.getNumber("Test Drive Distance ", 20.0);
+    	t_speed = SmartDashboard.getNumber("Test Drive TankDriveSpeed: ", .4);
+    	Robot.drivetrain.resetEncoders();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if(Robot.oi.gamepad.getAxis(F310.RT)>.2) {
-    		Robot.climber.manualClimbing(Robot.oi.gamepad.getAxis(F310.RT));
-    	}
-    	else {
-    		Robot.climber.manualClimbing(0);
-    	}
+    	t_goalReached = Robot.drivetrain.driveStraightSetDistance(t_speed, t_goalDis);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        return t_goalReached;
     }
 
     // Called once after isFinished returns true
