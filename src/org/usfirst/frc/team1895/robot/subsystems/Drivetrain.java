@@ -38,7 +38,7 @@ public class Drivetrain extends Subsystem {
 
 	// pneumatics
 	private final Compressor compressor;
-	// private final DoubleSolenoid transmission_solenoid;
+	private final DoubleSolenoid transmission_solenoid;
 
 	// Gyro
 	private AHRS ahrs;
@@ -56,7 +56,7 @@ public class Drivetrain extends Subsystem {
 	// TODO - We need to determine which accelerometer we are going to use and
 	// change
 	// variable type here.
-	private AnalogInput accelerometer;
+	//private AnalogInput accelerometer;
 
 	// PID
 	private MyPIDOutput myPIDOutputDriving;
@@ -75,6 +75,10 @@ public class Drivetrain extends Subsystem {
 	public static final int LEFT_MOTOR_ENCODER = 0;
 	public static final int RIGHT_MOTOR_ENCODER = 1;
 	public static final int ARM_MOTOR_ENCODER = 2;
+	
+	// gear-shifting
+	int highgear_count = 0;
+	boolean inHigh = false;
 
 	public Drivetrain() {
 		// motors
@@ -85,7 +89,6 @@ public class Drivetrain extends Subsystem {
 		right_dt_motor1 = new TalonSRX(RobotMap.RIGHT_DT_MOTOR1_PORT);
 		right_dt_motor1.setInverted(true);
 		right_dt_motor2 = new TalonSRX(RobotMap.RIGHT_DT_MOTOR2_PORT);
-		right_dt_motor2.setInverted(true);
 
 		left_dt_motor2.follow(left_dt_motor1);
 		right_dt_motor2.follow(right_dt_motor1);
@@ -100,16 +103,16 @@ public class Drivetrain extends Subsystem {
 		// pneumatics
 		compressor = new Compressor();
 
-		// transmission_solenoid = new
-		// DoubleSolenoid(RobotMap.DRIVETRAIN_SOLENOID_A_PORT,
-		// RobotMap.DRIVETRAIN_SOLENOID_B_PORT);
+		transmission_solenoid = new DoubleSolenoid(RobotMap.DRIVETRAIN_SOLENOID_A_PORT, RobotMap.DRIVETRAIN_SOLENOID_B_PORT);
 
 		// digital IO sensors
 		l_encoder = new Encoder(RobotMap.LEFT_ENCODER_A_PORT, RobotMap.LEFT_ENCODER_B_PORT, true);
 		r_encoder = new Encoder(RobotMap.RIGHT_ENCODER_A_PORT, RobotMap.RIGHT_ENCODER_B_PORT, true);
 
-		l_encoder.setDistancePerPulse(.0159);
-		r_encoder.setDistancePerPulse(.0159);
+		//l_encoder.setDistancePerPulse(.0159); //PowerUp
+		//r_encoder.setDistancePerPulse(.0159); //PowerUp
+		l_encoder.setDistancePerPulse(0.0225); //Steamworks
+		r_encoder.setDistancePerPulse(0.0225); //Steamworks
 
 		// analog sensors
 		try {
@@ -143,8 +146,7 @@ public class Drivetrain extends Subsystem {
 
 	}
 
-	// ==Manual
-	// driving============================================================================
+//==Manual driving============================================================================
 	public void arcadeDrive(double trans_speed, double yaw) {
 
 		setAHRSAdjustment(0);
@@ -209,8 +211,44 @@ public class Drivetrain extends Subsystem {
 		left_dt_motor1.set(ControlMode.PercentOutput, left_speed * .985);  //.978  -- .95
 		right_dt_motor1.set(ControlMode.PercentOutput, right_speed);
 
-		// TODO -- Shift gears
-
+		shiftGears();
+		System.out.println("Am I in high gear? " + inHigh);
+		if(highgear_count % 33 == 0) {
+			System.out.println("LE: " + l_encoder.getDistance() + "RE: " + r_encoder.getDistance());
+		}
+	}
+	
+	public void shiftGears() {
+		//add something so that it doesn't shift gears in autonomous
+		
+		double current_speed = Math.max(Math.abs(l_encoder.getRate()), Math.abs(r_encoder.getRate()));
+		
+		//max speed to be in low gear is 4.71ft/sec (56.52 inches/sec), max high gear is 12.47 ft/sec
+		//unit should be inches per second
+		double downshift_speed = 56.52;
+		
+		// if in high gear..
+		if(inHigh) {
+			// ..and you dropped below the minimum high speed, switch to low gear
+			if(current_speed < downshift_speed) {
+				transmission_solenoid.set(DoubleSolenoid.Value.kReverse);
+				inHigh = false;
+			}
+		}
+		// if in low gear..
+		else {
+			// ..and you went above the max low gear speed..
+			if(current_speed > downshift_speed) {
+				highgear_count++;
+				
+				// ..after ~ 1.5 seconds, shift into high gear
+				if(highgear_count == 100) {
+					transmission_solenoid.set(DoubleSolenoid.Value.kForward); 
+					inHigh = true;
+					highgear_count = 0;
+				}
+			}
+		}
 	}
 
 //==Driving straight code and encoder code==========================================================================
@@ -411,15 +449,14 @@ public class Drivetrain extends Subsystem {
 		return done;
 	}
 
-	// ==Accelerometer
-	// Code==========================================================================
-	public double getAccelerometerValue() {
+//==Accelerometer Code==========================================================================
+	/*public double getAccelerometerValue() {
 		return accelerometer.getValue(); // TODO: is this the right method?
 	}
 
 	public void resetAccelerometer() {
 		accelerometer.resetAccumulator();
-	}
+	}*/
 	
 //==Gyro Code====================================================================================
 	public double getAHRSGyroAngle() {
@@ -499,8 +536,7 @@ public class Drivetrain extends Subsystem {
 		return pid_done;
 	}
 
-	// ==Default
-	// Command==========================================================================
+//==Default Command==========================================================================
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		setDefaultCommand(new Default_Drivetrain());
