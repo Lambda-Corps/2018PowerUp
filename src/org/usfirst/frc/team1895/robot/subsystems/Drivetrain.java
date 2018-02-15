@@ -258,10 +258,14 @@ public class Drivetrain extends Subsystem {
 		boolean done = false;
 		if(!inHigh) {
 			arcadeDrive(0.5, 0);
-			highgear_count_test++;
-			if(highgear_count_test % 100 == 0) {
+			lowgear_count++;
+			if(lowgear_count % 100 == 0) {
 				done = true;
+				lowgear_count = 0;
 			}
+		}
+		else {
+			System.out.println("started in high gear, test failed");
 		}
 		return done;
 	}
@@ -269,12 +273,14 @@ public class Drivetrain extends Subsystem {
 	//for ShiftGearsShiftHighGear command
 	public boolean driveUntilHighGear() {
 		boolean highWasReached = false;
-
 		if (!inHigh) {
 			arcadeDrive(1, 0);
+			System.out.println("trying to shift to high gear");
 		} 
 		//if you are in high gear, and about 3ish seconds have passed, slow down  
 		else {
+			arcadeDrive(1,0);
+			System.out.println("High gear has been reached");
 			if(highgear_count % 190 == 0) {
 				highWasReached = true;
 			}
@@ -287,7 +293,10 @@ public class Drivetrain extends Subsystem {
 		boolean lowWasReached = false;
 		if (inHigh) {
 			arcadeDrive(0.5, 0);
+			System.out.println("trying to shift to low gear");
 		} else {
+			arcadeDrive(0.5, 0);
+			System.out.println("low gear has been reached");
 			lowgear_count++;
 			if(lowgear_count % 190 == 0) {
 				lowWasReached = true;

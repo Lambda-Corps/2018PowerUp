@@ -11,11 +11,11 @@ public class ShiftGearsTestCommand extends CommandGroup {
 
     public ShiftGearsTestCommand() {
     	
+    	addSequential(new PrintCommand("Beginning ShiftGears Test Suite"));
     	addSequential(new ShiftGearsTestStartLG());
     	addSequential(new ShiftGearsShiftHighGear());
     	addSequential(new ShiftGearsTestShiftLG());
     	addSequential(new Default_Drivetrain(0,0));
-    	//add a stoprobot command lolol
-
+    	addSequential(new PrintCommand("Ending ShiftGears Test Suite"));
     }
 }
