@@ -78,6 +78,8 @@ public class Drivetrain extends Subsystem {
 	
 	// gear-shifting
 	int highgear_count = 0;
+	int highgear_count_test = 0;
+	int lowgear_count = 0;
 	boolean inHigh = false;
 
 	public Drivetrain() {
@@ -249,6 +251,49 @@ public class Drivetrain extends Subsystem {
 				}
 			}
 		}
+	}
+	
+	//for ShiftGearsTestStartLG command
+	public boolean testStartLG() {
+		boolean done = false;
+		if(!inHigh) {
+			arcadeDrive(0.5, 0);
+			highgear_count_test++;
+			if(highgear_count_test % 100 == 0) {
+				done = true;
+			}
+		}
+		return done;
+	}
+	
+	//for ShiftGearsShiftHighGear command
+	public boolean driveUntilHighGear() {
+		boolean highWasReached = false;
+
+		if (!inHigh) {
+			arcadeDrive(1, 0);
+		} 
+		//if you are in high gear, and about 3ish seconds have passed, slow down  
+		else {
+			if(highgear_count % 190 == 0) {
+				highWasReached = true;
+			}
+		}
+		return highWasReached;
+	}
+	
+	//for ShiftGearsShiftHighGear command
+	public boolean shiftToLG() {
+		boolean lowWasReached = false;
+		if (inHigh) {
+			arcadeDrive(0.5, 0);
+		} else {
+			lowgear_count++;
+			if(lowgear_count % 190 == 0) {
+				lowWasReached = true;
+			}
+		}
+		return lowWasReached;
 	}
 
 //==Driving straight code and encoder code==========================================================================
