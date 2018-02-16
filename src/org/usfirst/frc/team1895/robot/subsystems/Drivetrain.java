@@ -102,7 +102,7 @@ public class Drivetrain extends Subsystem {
 		// left_dt_motor1.enableCurrentLimit(true);
 
 		// pneumatics
-		//compressor = new Compressor();
+		compressor = new Compressor();
 
 		transmission_solenoid = new DoubleSolenoid(RobotMap.DRIVETRAIN_SOLENOID_A_PORT, RobotMap.DRIVETRAIN_SOLENOID_B_PORT);
 
