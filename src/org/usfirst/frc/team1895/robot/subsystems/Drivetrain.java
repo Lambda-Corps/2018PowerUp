@@ -37,13 +37,9 @@ public class Drivetrain extends Subsystem {
 	private TalonSRX right_dt_motor2; // 5
 
 	// pneumatics
-<<<<<<< Updated upstream
 	private final Compressor compressor;
 	private final DoubleSolenoid transmission_solenoid;
-=======
-	//private final Compressor compressor;
-	// private final DoubleSolenoid transmission_solenoid;
->>>>>>> Stashed changes
+
 
 	// Gyro
 	private AHRS ahrs;
