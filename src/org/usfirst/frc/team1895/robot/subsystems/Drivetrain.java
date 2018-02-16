@@ -40,6 +40,7 @@ public class Drivetrain extends Subsystem {
 	private final Compressor compressor;
 	private final DoubleSolenoid transmission_solenoid;
 
+
 	// Gyro
 	private AHRS ahrs;
 
@@ -437,16 +438,7 @@ public class Drivetrain extends Subsystem {
 	public double in_rangefinderDist() { // TODO: check that this is right / T U N E. also check if battery affects
 		// output
 		double outputValue = in_rangefinder.getAverageVoltage();
-		if (outputValue > 2.4 || outputValue < 0.4) { // code currently only
-			// accurate from 0.4-2.4
-			// volts
-			return -1;
-			// TODO: Add code to handle that -1 so the robot can act accordingly
-		}
-		double voltage = Math.pow(outputValue, -1.16);
-		double coefficient = 10.298;
-		double d = voltage * coefficient;
-		return d;
+		return outputValue;
 	}
 
 	// TODO -- This has not been tested, needs to be done.
@@ -600,7 +592,7 @@ public class Drivetrain extends Subsystem {
 //==Default Command==========================================================================
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
-		setDefaultCommand(new Default_Drivetrain());
+		//setDefaultCommand(new Default_Drivetrain());
 	}
 
 }

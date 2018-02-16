@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1895.robot;
 
+import org.usfirst.frc.team1895.robot.commands.arm.RotateArmDown;
+import org.usfirst.frc.team1895.robot.commands.arm.RotateArmUp;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationA;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationB;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationC;
@@ -14,6 +16,7 @@ import org.usfirst.frc.team1895.robot.commands.testcommands.TestEmptyCommand;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithoutPID;
 import org.usfirst.frc.team1895.robot.oi.F310;
+import org.usfirst.frc.team1895.robot.subsystems.Arm;
 import org.usfirst.frc.team1895.robot.subsystems.Climber;
 import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1895.robot.subsystems.FilteredCamera;
@@ -41,6 +44,8 @@ public class Robot extends TimedRobot {
 	Command autonomousCommand;
 	int printCount;
 	
+	public static Arm arm;
+	
 	//choosers
 	SendableChooser<String> chooser = new SendableChooser<>();
 	SendableChooser<Integer> pos_chooser = new SendableChooser<>();
@@ -59,7 +64,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void robotInit() {
 		drivetrain = new Drivetrain();
-		
+		arm = new Arm();
 		setPeriod(0.015);  //update more frequently - every 25ms
 		//camera = new FilteredCamera();
 		//Robot.camera.startVisionThread();
@@ -84,6 +89,10 @@ public class Robot extends TimedRobot {
 		//climber = new Climber();
 		
 		oi = new OI();
+		
+		System.out.println("Adding command to Dashboard");
+		SmartDashboard.putData("Arm Command", new RotateArmUp());
+		
 	}
 
 	/**
@@ -205,7 +214,8 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 	//	System.out.println("<joy> LY " + Robot.oi.gamepad.getAxis(F310.LY) + " RX " + Robot.oi.gamepad.getAxis(F310.RX));
-    	System.out.printf("<joy> LY: %5.1f    RX: %5.1f", Robot.oi.gamepad.getAxis(F310.LY), Robot.oi.gamepad.getAxis(F310.RX) );
+    	//System.out.printf("<joy> LY: %5.1f    RX: %5.1f", Robot.oi.gamepad.getAxis(F310.LY), Robot.oi.gamepad.getAxis(F310.RX) );
+		
 	}
 
 	/**

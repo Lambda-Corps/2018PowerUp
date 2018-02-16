@@ -40,10 +40,13 @@ public class OI {
 	
 	//remember to add secret button
 	public F310 gamepad;
+	public F310 gamepad2;
 	public JoystickButton ninetyDegreeRight;
+
 	
 	public OI() {
 		gamepad = new F310(RobotMap.GAMEPAD_PORT);
+		gamepad2 =new F310(RobotMap.GAMEPAD2_PORT);
 		
 		ninetyDegreeRight = new JoystickButton(gamepad, F310.LB);
 		ninetyDegreeRight.whenPressed(new TurnWithoutPID(0.3, 90.0));
