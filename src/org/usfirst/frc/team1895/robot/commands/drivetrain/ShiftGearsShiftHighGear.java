@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1895.robot.commands.drivetrain;
 
+import org.usfirst.frc.team1895.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -29,7 +31,7 @@ public class ShiftGearsShiftHighGear extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	System.out.println("High gear command end");
+    	System.out.println("Has been in high gear for a few seconds. High gear command end");
     }
 
     // Called when another command which requires one or more of the same

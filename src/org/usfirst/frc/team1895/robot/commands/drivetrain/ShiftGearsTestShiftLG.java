@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1895.robot.commands.drivetrain;
 
+import org.usfirst.frc.team1895.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 /**

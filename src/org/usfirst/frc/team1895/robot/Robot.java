@@ -5,6 +5,7 @@ import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationB;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationC;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationD;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationE;
+import org.usfirst.frc.team1895.robot.commands.autonomous.ShiftGearsTestCommand;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveParallel;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithoutPID;
@@ -16,6 +17,7 @@ import org.usfirst.frc.team1895.robot.oi.F310;
 import org.usfirst.frc.team1895.robot.subsystems.Climber;
 import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1895.robot.subsystems.FilteredCamera;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
@@ -76,6 +78,7 @@ public class Robot extends TimedRobot {
 		chooser.addObject("Destination C", "C");
 		chooser.addObject("Destination D", "D");
 		chooser.addObject("Destination E", "E");
+		chooser.addObject("Gear Shifting Test Suite", "T");
 		SmartDashboard.putData("Destination", chooser);
 		
 		//climber = new Climber();
@@ -233,6 +236,9 @@ public class Robot extends TimedRobot {
 		}
 		else if(decision.equals("E")) {
 			return new DestinationE();
+		}
+		else if(decision.equals("T")) {
+			return new ShiftGearsTestCommand();
 		}
 		else {
 			return new TestEmptyCommand();

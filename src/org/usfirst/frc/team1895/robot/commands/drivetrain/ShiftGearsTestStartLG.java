@@ -1,14 +1,16 @@
 package org.usfirst.frc.team1895.robot.commands.drivetrain;
 
+import org.usfirst.frc.team1895.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class AlignToCube extends Command {
+public class ShiftGearsTestStartLG extends Command {
 
 	boolean done = false;
-    public AlignToCube() {
+    public ShiftGearsTestStartLG() {
         // Use requires() here to declare subsystem dependencies
         requires(Robot.drivetrain);
     }

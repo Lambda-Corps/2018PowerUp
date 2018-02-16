@@ -91,7 +91,8 @@ public class Drivetrain extends Subsystem {
 		right_dt_motor1 = new TalonSRX(RobotMap.RIGHT_DT_MOTOR1_PORT);
 		right_dt_motor1.setInverted(true);
 		right_dt_motor2 = new TalonSRX(RobotMap.RIGHT_DT_MOTOR2_PORT);
-
+		right_dt_motor2.setInverted(true);
+		
 		left_dt_motor2.follow(left_dt_motor1);
 		right_dt_motor2.follow(right_dt_motor1);
 
@@ -214,10 +215,10 @@ public class Drivetrain extends Subsystem {
 		right_dt_motor1.set(ControlMode.PercentOutput, right_speed);
 
 		shiftGears();
-		System.out.println("Am I in high gear? " + inHigh);
-		if(highgear_count % 33 == 0) {
-			System.out.println("LE: " + l_encoder.getDistance() + "RE: " + r_encoder.getDistance());
-		}
+		//if(highgear_count % 100 == 0) {
+			//System.out.println("Am I in high gear? " + inHigh);
+			//System.out.println("LE: " + l_encoder.getDistance() + "RE: " + r_encoder.getDistance());
+		//}
 	}
 	
 	public void shiftGears() {
@@ -280,8 +281,12 @@ public class Drivetrain extends Subsystem {
 		//if you are in high gear, and about 3ish seconds have passed, slow down  
 		else {
 			arcadeDrive(1,0);
+			highgear_count_test++;
+			if(highgear_count_test % 40 == 0) {
+				System.out.println("High gear has been reached");
+			}
 			System.out.println("High gear has been reached");
-			if(highgear_count % 190 == 0) {
+			if(highgear_count_test % 190 == 0) {
 				highWasReached = true;
 			}
 		}
@@ -296,7 +301,9 @@ public class Drivetrain extends Subsystem {
 			System.out.println("trying to shift to low gear");
 		} else {
 			arcadeDrive(0.5, 0);
-			System.out.println("low gear has been reached");
+			if(lowgear_count % 40 == 0) {
+				System.out.println("low gear has been reached");
+			}
 			lowgear_count++;
 			if(lowgear_count % 190 == 0) {
 				lowWasReached = true;
