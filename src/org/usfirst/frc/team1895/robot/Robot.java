@@ -92,9 +92,7 @@ public class Robot extends TimedRobot {
 		chooser.addObject("Destination E", "E");
 		chooser.addObject("Gear Shifting Test Suite", "T");
 		SmartDashboard.putData("Destination", chooser);
-
-		// climber = new Climber();
-
+		climber = new Climber();
 		oi = new OI();
 
 		System.out.println("Adding command to Dashboard");
