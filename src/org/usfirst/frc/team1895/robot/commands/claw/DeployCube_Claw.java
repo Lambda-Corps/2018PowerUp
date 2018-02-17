@@ -24,7 +24,7 @@ public class DeployCube_Claw extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	hasCube = Robot.claw.cubeIsIn();
-    	Robot.claw.DeployCube_Claw();
+    	Robot.claw.deployCube_Claw();
     }
 
     // Make this return true when this Command no longer needs to run execute()

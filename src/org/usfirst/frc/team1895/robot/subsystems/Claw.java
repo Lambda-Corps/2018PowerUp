@@ -31,14 +31,14 @@ public class Claw extends Subsystem {
 		in_rangefinder = new AnalogInput(RobotMap.INTAKE_RANGEFINDER_PORT);
 	}
 
-	public void GrabCube_Claw() {
+	public void grabCube_Claw() {
 		double velocity = CLAW_SPEED;
 	    if (velocity > 1.0) velocity = 1.0;
 	    if (velocity <-1.0) velocity = -1.0;
 	    claw_intake_motor1.set(ControlMode.PercentOutput, velocity);
 	}
 
-	public void DeployCube_Claw() {
+	public void deployCube_Claw() {
 		double velocity = -1;
 	    if (velocity > 1.0) velocity = 1.0;
 	    if (velocity <-1.0) velocity = -1.0;

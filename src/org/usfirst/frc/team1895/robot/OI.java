@@ -3,6 +3,7 @@ package org.usfirst.frc.team1895.robot;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArmUp;
 import org.usfirst.frc.team1895.robot.commands.claw.DeployCube_Claw;
 import org.usfirst.frc.team1895.robot.commands.claw.GrabCube_Claw;
+import org.usfirst.frc.team1895.robot.commands.drivetrain.AlignToCube;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.DeployCube_LowerIntake;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.GrabCube_LowerIntake;
@@ -47,36 +48,47 @@ public class OI {
 
 	public F310 gamepad1;
 	public F310 gamepad2;
+	
 	public JoystickButton ninetyDegreeRight;
+	public JoystickButton ninetyDegreeLeft;
 	public JoystickButton deployCube_Claw;
 	public JoystickButton grabCube_Claw;
 	public JoystickButton deployCube_LowerIntake;
 	public JoystickButton grabCube_LowerIntake;
 	public JoystickButton ninetyUp;
 	public JoystickButton ninetyDown;
+	public JoystickButton alignToCube;
 
 	public OI() {
 		gamepad1 = new F310(RobotMap.GAMEPAD_PORT);
 		gamepad2 = new F310(RobotMap.GAMEPAD2_PORT);
 
-		ninetyDegreeRight = new JoystickButton(gamepad1, F310.LB);
+		//drivetrain buttons
+		ninetyDegreeRight = new JoystickButton(gamepad1, F310.B);
 		ninetyDegreeRight.whenPressed(new TurnWithoutPID(0.3, 90.0));
+		ninetyDegreeLeft = new JoystickButton(gamepad1, F310.X);
+		ninetyDegreeLeft.whenPressed(new TurnWithoutPID(0.3, -90.0));
 		
-		grabCube_Claw = new JoystickButton(gamepad2, F310.X);
-		deployCube_Claw = new JoystickButton(gamepad2, F310.B);
+		alignToCube = new JoystickButton(gamepad1, F310.A);
+		alignToCube.whenPressed(new AlignToCube());
+		
+		//claw buttons 
+		grabCube_Claw = new JoystickButton(gamepad2, F310.LB);
+		deployCube_Claw = new JoystickButton(gamepad2, F310.RB);
 		grabCube_Claw.whenPressed(new GrabCube_Claw());
 		deployCube_Claw.whenPressed(new DeployCube_Claw());
 
-		grabCube_LowerIntake = new JoystickButton(gamepad2, F310.LB);
-		deployCube_LowerIntake = new JoystickButton(gamepad2, F310.RB);
+		//lower intake buttons
+		grabCube_LowerIntake = new JoystickButton(gamepad1, F310.LB);
+		deployCube_LowerIntake = new JoystickButton(gamepad1, F310.RB);
 		grabCube_LowerIntake.whenPressed(new GrabCube_LowerIntake());
 		deployCube_LowerIntake.whenPressed(new DeployCube_LowerIntake());
 		
-		//armButtons
+		//arm buttons
 		ninetyUp = new JoystickButton(gamepad2, F310.Y);
 		ninetyUp.whenPressed(new RotateArmUp(90));
-		
 		ninetyDown = new JoystickButton(gamepad2, F310.A);
 		ninetyDown.whenPressed(new RotateArmUp(135));
+		
 	}
 }
