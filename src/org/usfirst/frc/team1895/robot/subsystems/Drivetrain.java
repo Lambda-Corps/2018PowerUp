@@ -89,6 +89,7 @@ public class Drivetrain extends Subsystem {
 		right_dt_motor1 = new TalonSRX(RobotMap.RIGHT_DT_MOTOR1_PORT);
 		right_dt_motor1.setInverted(true);
 		right_dt_motor2 = new TalonSRX(RobotMap.RIGHT_DT_MOTOR2_PORT);
+		right_dt_motor2.setInverted(true);
 
 		left_dt_motor2.follow(left_dt_motor1);
 		right_dt_motor2.follow(right_dt_motor1);
@@ -212,10 +213,10 @@ public class Drivetrain extends Subsystem {
 		right_dt_motor1.set(ControlMode.PercentOutput, right_speed);
 
 		shiftGears();
-		System.out.println("Am I in high gear? " + inHigh);
-		if(highgear_count % 33 == 0) {
-			System.out.println("LE: " + l_encoder.getDistance() + "RE: " + r_encoder.getDistance());
-		}
+//		System.out.println("Am I in high gear? " + inHigh);
+//		if(highgear_count % 33 == 0) {
+//			System.out.println("LE: " + l_encoder.getDistance() + "RE: " + r_encoder.getDistance());
+//		}
 	}
 	
 	public void shiftGears() {
@@ -534,6 +535,23 @@ public class Drivetrain extends Subsystem {
 		}
 
 		return pid_done;
+	}
+	
+	//temp
+	public double getLMCurrent() {
+		return left_dt_motor1.getOutputCurrent();
+	}
+	
+	public double getRMCurrent() {
+		return right_dt_motor1.getOutputCurrent();
+	}
+	
+	public double getLM2Current() {
+		return left_dt_motor2.getOutputCurrent();
+	}
+	
+	public double getRM2Current() {
+		return right_dt_motor2.getOutputCurrent();
 	}
 
 //==Default Command==========================================================================

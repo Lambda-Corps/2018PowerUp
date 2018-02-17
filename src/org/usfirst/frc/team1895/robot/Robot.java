@@ -202,7 +202,7 @@ public class Robot extends TimedRobot {
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
 	//	System.out.println("<joy> LY " + Robot.oi.gamepad.getAxis(F310.LY) + " RX " + Robot.oi.gamepad.getAxis(F310.RX));
-    	System.out.printf("<joy> LY: %5.1f    RX: %5.1f", Robot.oi.gamepad.getAxis(F310.LY), Robot.oi.gamepad.getAxis(F310.RX) );
+    	//System.out.printf("<joy> LY: %5.1f    RX: %5.1f", Robot.oi.gamepad.getAxis(F310.LY), Robot.oi.gamepad.getAxis(F310.RX) );
 	}
 
 	/**
