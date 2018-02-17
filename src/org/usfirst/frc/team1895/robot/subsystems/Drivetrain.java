@@ -1,5 +1,8 @@
 package org.usfirst.frc.team1895.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.can.*;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import org.usfirst.frc.team1895.robot.Robot;
 import org.usfirst.frc.team1895.robot.RobotMap;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.Default_Drivetrain;
@@ -35,7 +38,8 @@ public class Drivetrain extends Subsystem {
 
 	// pneumatics
 	private final Compressor compressor;
-	// private final DoubleSolenoid transmission_solenoid;
+	private final DoubleSolenoid transmission_solenoid;
+
 
 	// Gyro
 	private AHRS ahrs;
@@ -72,14 +76,24 @@ public class Drivetrain extends Subsystem {
 	public static final int LEFT_MOTOR_ENCODER = 0;
 	public static final int RIGHT_MOTOR_ENCODER = 1;
 	public static final int ARM_MOTOR_ENCODER = 2;
+	
+	// gear-shifting
+	int highgear_count = 0;
+	int highgear_count_test = 0;
+	int lowgear_count = 0;
+	boolean inHigh = false;
 
 	public Drivetrain() {
 		// motors
 		left_dt_motor1 = new TalonSRX(RobotMap.LEFT_DT_MOTOR1_PORT);
+		left_dt_motor1.setInverted(true);
 		left_dt_motor2 = new TalonSRX(RobotMap.LEFT_DT_MOTOR2_PORT);
+		left_dt_motor2.setInverted(true);
 		right_dt_motor1 = new TalonSRX(RobotMap.RIGHT_DT_MOTOR1_PORT);
+		right_dt_motor1.setInverted(true);
 		right_dt_motor2 = new TalonSRX(RobotMap.RIGHT_DT_MOTOR2_PORT);
-
+		right_dt_motor2.setInverted(true);
+		
 		left_dt_motor2.follow(left_dt_motor1);
 		right_dt_motor2.follow(right_dt_motor1);
 
@@ -93,16 +107,16 @@ public class Drivetrain extends Subsystem {
 		// pneumatics
 		compressor = new Compressor();
 
-		// transmission_solenoid = new
-		// DoubleSolenoid(RobotMap.DRIVETRAIN_SOLENOID_A_PORT,
-		// RobotMap.DRIVETRAIN_SOLENOID_B_PORT);
+		transmission_solenoid = new DoubleSolenoid(RobotMap.DRIVETRAIN_SOLENOID_A_PORT, RobotMap.DRIVETRAIN_SOLENOID_B_PORT);
 
 		// digital IO sensors
 		l_encoder = new Encoder(RobotMap.LEFT_ENCODER_A_PORT, RobotMap.LEFT_ENCODER_B_PORT, true);
 		r_encoder = new Encoder(RobotMap.RIGHT_ENCODER_A_PORT, RobotMap.RIGHT_ENCODER_B_PORT, true);
 
-		l_encoder.setDistancePerPulse(.0159);
-		r_encoder.setDistancePerPulse(.0159);
+		//l_encoder.setDistancePerPulse(.0159); //PowerUp
+		//r_encoder.setDistancePerPulse(.0159); //PowerUp
+		l_encoder.setDistancePerPulse(0.0225); //Steamworks
+		r_encoder.setDistancePerPulse(0.0225); //Steamworks
 
 		// analog sensors
 		try {
@@ -123,17 +137,21 @@ public class Drivetrain extends Subsystem {
 		fr_rangefinder = new AnalogInput(RobotMap.FRONT_RANGEFINDER_PORT);
 		l_rangefinder = new AnalogInput(RobotMap.LEFT_RANGEFINDER_PORT);
 		r_rangefinder = new AnalogInput(RobotMap.RIGHT_RANGEFINDER_PORT);
-		in_rangefinder = new AnalogInput(RobotMap.INTAKE_RANGEFINDER_PORT);
+		//in_rangefinder = new AnalogInput(RobotMap.INTAKE_RANGEFINDER_PORT);
 
 		// accelerometer
 		// TODO -- After we figure out the type, fix this constructor
-		accelerometer = new AnalogInput(RobotMap.ACCELEROMETER_PORT);
+		// accelerometer = new AnalogInput(RobotMap.ACCELEROMETER_PORT);
+		
+		myPIDOutputDriving = new MyPIDOutput();
+		myPIDOutputTurning = new MyPIDOutput();
+		pidControllerDriving = new PIDController(pGainDriv, iGainTurn, dGainDriv, l_encoder, myPIDOutputDriving); // Input																		// output
+		pidControllerTurning = new PIDController(pGainTurn, iGainTurn, dGainTurn, ahrs, myPIDOutputTurning);
 
 	}
 
-	// ==Manual
-	// driving============================================================================
-	public void arcadeDrive(double trans_speed, double yaw) { // 0, 0.3
+//==Manual driving============================================================================
+	public void arcadeDrive(double trans_speed, double yaw) {
 
 		setAHRSAdjustment(0);
 
@@ -194,18 +212,119 @@ public class Drivetrain extends Subsystem {
 		// were outputting
 		// more power than the right.
 
-		left_dt_motor1.set(ControlMode.PercentOutput, left_speed * .978);
+		left_dt_motor1.set(ControlMode.PercentOutput, left_speed * .985);  //.978  -- .95
 		right_dt_motor1.set(ControlMode.PercentOutput, right_speed);
 
-		// TODO -- Shift gears
-
+		shiftGears();
+		//if(highgear_count % 100 == 0) {
+			//System.out.println("Am I in high gear? " + inHigh);
+			//System.out.println("LE: " + l_encoder.getDistance() + "RE: " + r_encoder.getDistance());
+		//}
+	}
+	
+	public void shiftGears() {
+		//add something so that it doesn't shift gears in autonomous
+		
+		double current_speed = Math.max(Math.abs(l_encoder.getRate()), Math.abs(r_encoder.getRate()));
+		
+		//max speed to be in low gear is 4.71ft/sec (56.52 inches/sec), max high gear is 12.47 ft/sec
+		//unit should be inches per second
+		double downshift_speed = 56.52;
+		
+		// if in high gear..
+		if(inHigh) {
+			// ..and you dropped below the minimum high speed, switch to low gear
+			if(current_speed < downshift_speed) {
+				transmission_solenoid.set(DoubleSolenoid.Value.kReverse);
+				inHigh = false;
+			}
+		}
+		// if in low gear..
+		else {
+			// ..and you went above the max low gear speed..
+			if(current_speed > downshift_speed) {
+				highgear_count++;
+				
+				// ..after ~ 1.5 seconds, shift into high gear
+				if(highgear_count == 100) {
+					transmission_solenoid.set(DoubleSolenoid.Value.kForward); 
+					inHigh = true;
+					highgear_count = 0;
+				}
+			}
+		}
+	}
+	
+	//for ShiftGearsTestStartLG command
+	public boolean testStartLG() {
+		boolean done = false;
+		if(!inHigh) {
+			arcadeDrive(0.5, 0);
+			lowgear_count++;
+			if(lowgear_count % 100 == 0) {
+				done = true;
+				lowgear_count = 0;
+			}
+		}
+		else {
+			System.out.println("started in high gear, test failed");
+		}
+		return done;
+	}
+	
+	//for ShiftGearsShiftHighGear command
+	public boolean driveUntilHighGear() {
+		boolean highWasReached = false;
+		if (!inHigh) {
+			arcadeDrive(1, 0);
+			System.out.println("trying to shift to high gear");
+		} 
+		//if you are in high gear, and about 3ish seconds have passed, slow down  
+		else {
+			arcadeDrive(1,0);
+			highgear_count_test++;
+			if(highgear_count_test % 40 == 0) {
+				System.out.println("High gear has been reached");
+			}
+			System.out.println("High gear has been reached");
+			if(highgear_count_test % 190 == 0) {
+				highWasReached = true;
+			}
+		}
+		return highWasReached;
+	}
+	
+	//for ShiftGearsShiftHighGear command
+	public boolean shiftToLG() {
+		boolean lowWasReached = false;
+		if (inHigh) {
+			arcadeDrive(0.5, 0);
+			System.out.println("trying to shift to low gear");
+		} else {
+			arcadeDrive(0.5, 0);
+			if(lowgear_count % 40 == 0) {
+				System.out.println("low gear has been reached");
+			}
+			lowgear_count++;
+			if(lowgear_count % 190 == 0) {
+				lowWasReached = true;
+			}
+		}
+		return lowWasReached;
 	}
 
-	// ==Driving straight code and encoder
-	// code==========================================================================
+//==Driving straight code and encoder code==========================================================================
 	public void resetEncoders() {
 		l_encoder.reset();
 		r_encoder.reset();
+	}
+	
+	public double getLeftEncoder() {
+		return l_encoder.getDistance();
+	}
+	
+	public double getRightEncoder() {
+		return r_encoder.getDistance();
 	}
 
 	/*
@@ -255,12 +374,17 @@ public class Drivetrain extends Subsystem {
 		}
 		return targetReached;
 	}
-
  // ==Rangefinder Code==========================================================================================================
+
 	public boolean drivefr_RFDistance(double goaldistance, double speed) { // TODO: do we need separate methods??? this
-		if (fr_rangefinderDist() <= goaldistance) { // if the robot crossed the goal distance + buffer then the code //
-													// will stop
+		// only does front RF
+		System.out.printf("rangefinder: %5.1f \n", fr_rangefinderDist());
+		if (fr_rangefinderDist() <= (goaldistance)) { // if the robot crossed the goal distance + buffer then the code
+			// will stop
 			arcadeDrive(0, 0);
+			System.out.printf("rangefinder distance achieved: %5.1f \n", fr_rangefinderDist());
+			System.out.println(" for goal of " + goaldistance);
+
 			return true;
 		} else { // if it hasn't crossed it will run at a determined speed
 			arcadeDrive(speed, 0);
@@ -268,71 +392,69 @@ public class Drivetrain extends Subsystem {
 		}
 	}
 
-	// TODO -- The range finder code all needs to tested and fixed.
-	public double fr_rangefinderDist() { // TODO: check that this is right / T U N E. also check if battery affects //
-											// output
+	public double fr_rangefinderDist() {
 		double voltage = fr_rangefinder.getAverageVoltage();
-		double inches = 32.1328 * voltage + 17.581; // from LinReg
+		double inches = 40 * voltage; // from LinReg
 		return inches;
 	}
 
-	public double l_rangefinderDist() { // TODO: check that this is right / T U N E. also check if battery affects //
-										// output
-		double outputValue = l_rangefinder.getAverageVoltage();
-		if (outputValue > 2.4 || outputValue < 0.4) { // code currently only
-														// accurate from 0.4-2.4
-														// volts
-			return -1;
-			// TODO: Add code to handle that -1 so the robot can act accordingly
-		}
-		double voltage = Math.pow(outputValue, -1.16);
-		double coefficient = 10.298;
-		double d = voltage * coefficient;
-		return d;
+	public double l_rangefinderDist() { // TODO: check that this is right / T U N E. also check if battery affects
+		// output
+		// double outputValue = l_rangefinder.getAverageVoltage();
+		// if (outputValue > 2.4 || outputValue < 0.4) { // code currently only
+		//// accurate from 0.4-2.4
+		//// volts
+		// return -1;
+		//// TODO: Add code to handle that -1 so the robot can act accordingly
+		// }
+		// double voltage = Math.pow(outputValue, -1.16);
+		// double coefficient = 10.298;
+		// double d = voltage * coefficient;
+		// return d;
+		double voltage = l_rangefinder.getAverageVoltage();
+		double inches = 40 * voltage; // from LinReg
+		return inches;
 	}
 
 	public double r_rangefinderDist() { // TODO: check that this is right / T U N E. also check if battery affects
-										// output
-		double outputValue = r_rangefinder.getAverageVoltage();
-		if (outputValue > 2.4 || outputValue < 0.4) { // code currently only
-														// accurate from 0.4-2.4
-														// volts
-			return -1;
-			// TODO: Add code to handle that -1 so the robot can act accordingly
-		}
-		double voltage = Math.pow(outputValue, -1.16);
-		double coefficient = 10.298;
-		double d = voltage * coefficient;
-		return d;
+		// output
+		// double outputValue = r_rangefinder.getAverageVoltage();
+		// if (outputValue > 2.4 || outputValue < 0.4) { // code currently only
+		//// accurate from 0.4-2.4
+		//// volts
+		// return -1;
+		//// TODO: Add code to handle that -1 so the robot can act accordingly
+		// }
+		// double voltage = Math.pow(outputValue, -1.16);
+		// double coefficient = 10.298;
+		// double d = voltage * coefficient;
+		// return d;
+
+		double voltage = r_rangefinder.getAverageVoltage();
+		double inches = 40 * voltage; // from LinReg
+		return inches;
 	}
 
 	public double in_rangefinderDist() { // TODO: check that this is right / T U N E. also check if battery affects
-											// output
+		// output
 		double outputValue = in_rangefinder.getAverageVoltage();
-		if (outputValue > 2.4 || outputValue < 0.4) { // code currently only
-														// accurate from 0.4-2.4
-														// volts
-			return -1;
-			// TODO: Add code to handle that -1 so the robot can act accordingly
-		}
-		double voltage = Math.pow(outputValue, -1.16);
-		double coefficient = 10.298;
-		double d = voltage * coefficient;
-		return d;
+		return outputValue;
 	}
 
 	// TODO -- This has not been tested, needs to be done.
-	// Currently all the YAW values are 0, these need to be determined through testing
+	// Currently all the YAW values are 0, these need to be determined through
+	// testing
 	public boolean driveParallel(double speed, double buffer, double goalDistance, boolean onLeft) {
 		boolean done = false;
 
 		double fromWall;
+
 		if (onLeft) {
 			fromWall = l_rangefinderDist();
 		} else {
 			fromWall = r_rangefinderDist();
 		}
-
+		// System.out.println("distance; "+ fromWall);
 		double currentDistance = l_encoder.getDistance() + r_encoder.getDistance();
 
 		double goalTolerance = 1.0; // inches
@@ -340,22 +462,37 @@ public class Drivetrain extends Subsystem {
 
 		// Checking if we still have to keep driving or not. If we haven't reached our
 		// target distance, keep driving along the wall. Otherwise, stop.
+
+		// Feb 10, 2018, Kevin and Mr Frederick testing and revising
+
 		if (Math.abs(currentDistance - goalDistance) > goalTolerance) { // if not yet at target
 			if (onLeft) { // wall is on left of robot
 				if (fromWall < buffer - bufferTolerance) { // drifting left (toward wall), needs to go right
-					arcadeDrive(speed, 0);
+					arcadeDrive(speed, 0.1);
+					System.out.printf("[wall is on left of robot] drifting left, toward wall -- correcting %5.1f \n",
+							fromWall);
 				} else if (fromWall > buffer + bufferTolerance) { // drifting right (away from wall), needs to go left
-					arcadeDrive(speed * 0.75, 0);
+					arcadeDrive(speed, -0.1);
+					System.out.printf(
+							"[wall is on left of robot] drifting right, away from wall -- correcting  %5.1f \n",
+							fromWall);
 				} else {
 					arcadeDrive(speed, 0);
+					System.out.printf("[wall is on left of robot] I am already parallel %5.1f \n", fromWall);
 				}
 			} else { // wall is on right of robot
 				if (fromWall > buffer + bufferTolerance) { // drifting left (away from wall), needs to go right
-					arcadeDrive(speed, 0);
+					arcadeDrive(speed, 0.1);
+					System.out.printf(
+							"[wall is on right of robot] drifting left, away from wall -- correcting %5.1f \n",
+							fromWall);
 				} else if (fromWall < buffer - bufferTolerance) { // drifting right (toward wall), needs to go left
-					arcadeDrive(speed * 0.75, 0);
+					arcadeDrive(speed, -0.1);
+					System.out.printf("[wall is on right of robot] drifting right, toward wall -- correcting  %5.1f \n",
+							fromWall);
 				} else {
 					arcadeDrive(speed, 0);
+					System.out.printf("[wall is on right of robot] I am already parallel %5.1f \n", fromWall);
 				}
 			}
 		} else { // has reached target -- stop
@@ -374,11 +511,12 @@ public class Drivetrain extends Subsystem {
 		accelerometer.resetAccumulator();
 	}
 
+	
 //==Gyro Code====================================================================================
-    public double getAHRSGyroAngle() {
-    	return ahrs.getAngle();
-    }
-    
+	public double getAHRSGyroAngle() {
+		return ahrs.getAngle();
+	}
+
 	public void resetAHRSGyro() {
 		ahrs.reset();
 	}
@@ -395,8 +533,9 @@ public class Drivetrain extends Subsystem {
 		pidControllerDriving.enable();
 	}
 
-	// TODO -- This is last year's code, with the self correcting and updated arcade we may not needs any
-	// speedfactors or scaling here.  Must be tested, and confirmed.
+	// TODO -- This is last year's code, with the self correcting and updated arcade
+	// we may not needs any
+	// speedfactors or scaling here. Must be tested, and confirmed.
 	public boolean driveStraightWithPID(double desiredMoveDistance) {
 		double speedfactor = 0.1; // This is the "P" factor to scale the error between encoders values to the
 									// motor drive bias
@@ -454,7 +593,7 @@ public class Drivetrain extends Subsystem {
 //==Default Command==========================================================================
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
-		setDefaultCommand(new Default_Drivetrain());
+		//setDefaultCommand(new Default_Drivetrain());
 	}
 
 }

@@ -41,36 +41,33 @@ public class OI {
 	// Start the command when the button is released and let it run the command
 	// until it is finished as determined by it's isFinished method.
 	// button.whenReleased(new ExampleCommand());
-	
-	//remember to add secret button
+
+	// remember to add secret button
+
 	public F310 gamepad1;
 	public F310 gamepad2;
-
 	public JoystickButton ninetyDegreeRight;
-	public JoystickButton lowerIntakeGrabCube;
-	public JoystickButton lowerIntakeDeployCube;
-	public JoystickButton ClawIn;
-	public JoystickButton ClawOut;
-	
-	
+	public JoystickButton deployCube_Claw;
+	public JoystickButton grabCube_Claw;
+	public JoystickButton deployCube_LowerIntake;
+	public JoystickButton grabCube_LowerIntake;
+
 	public OI() {
 		gamepad1 = new F310(RobotMap.GAMEPAD_PORT);
 		gamepad2 = new F310(RobotMap.GAMEPAD2_PORT);
-		
+
 		ninetyDegreeRight = new JoystickButton(gamepad1, F310.LB);
 		ninetyDegreeRight.whenPressed(new TurnWithoutPID(0.3, 90.0));
-						
-		ClawIn = new JoystickButton (gamepad2, F310.X);
-		ClawOut = new JoystickButton (gamepad2, F310.B);
-		ClawIn.whenPressed(new GrabCube_Claw ());
-		ClawOut.whenPressed(new DeployCube_Claw ());
-		
-		lowerIntakeGrabCube = new JoystickButton (gamepad2, F310.LB);
-		lowerIntakeDeployCube = new JoystickButton (gamepad2, F310.RB);
-		lowerIntakeGrabCube.whenPressed(new GrabCube_LowerIntake());
-		lowerIntakeDeployCube.whenPressed(new DeployCube_LowerIntake());
-		
-		
-		
+
+		grabCube_Claw = new JoystickButton(gamepad2, F310.X);
+		deployCube_Claw = new JoystickButton(gamepad2, F310.B);
+		grabCube_Claw.whenPressed(new GrabCube_Claw());
+		deployCube_Claw.whenPressed(new DeployCube_Claw());
+
+		grabCube_LowerIntake = new JoystickButton(gamepad2, F310.LB);
+		deployCube_LowerIntake = new JoystickButton(gamepad2, F310.RB);
+		grabCube_LowerIntake.whenPressed(new GrabCube_LowerIntake());
+		deployCube_LowerIntake.whenPressed(new DeployCube_LowerIntake());
+
 	}
 }

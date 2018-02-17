@@ -30,6 +30,7 @@ public class DriveStraightWithoutPID extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	goalReached = Robot.drivetrain.driveStraightSetDistance(speed, goal);
+    	System.out.println("left: " + Robot.drivetrain.getEncoderValue(0) + ", " + Robot.drivetrain.getEncoderValue(1));
     }
 
     // Make this return true when this Command no longer needs to run execute()

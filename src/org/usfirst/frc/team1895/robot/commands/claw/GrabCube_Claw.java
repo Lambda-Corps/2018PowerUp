@@ -8,29 +8,33 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class GrabCube_Claw extends Command {
+	
+	public boolean hasCube;
 
     public GrabCube_Claw() {
         // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
     	requires(Robot.claw);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	hasCube = false;
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    
+    	hasCube = Robot.claw.cubeIsIn();
+    	Robot.claw.GrabCube_Claw();
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return false;
+        return hasCube;
     }
 
     // Called once after isFinished returns true
     protected void end() {
+    	Robot.claw.stopClaw();
     }
 
     // Called when another command which requires one or more of the same
