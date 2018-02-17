@@ -613,7 +613,7 @@ public class Drivetrain extends Subsystem {
 //==Default Command==========================================================================
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
-		//setDefaultCommand(new Default_Drivetrain());
+		setDefaultCommand(new Default_Drivetrain());
 	}
 
 }
