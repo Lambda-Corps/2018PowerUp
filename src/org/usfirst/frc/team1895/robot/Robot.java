@@ -83,7 +83,7 @@ public class Robot extends TimedRobot {
 		chooser.addObject("Destination E", "E");
 		SmartDashboard.putData("Destination", chooser);
 		
-		//climber = new Climber();
+		climber = new Climber();
 		
 		oi = new OI();
 		

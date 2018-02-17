@@ -77,7 +77,7 @@ public class Arm extends Subsystem {
     	bot_arm_rotation_motor.set(ControlMode.PercentOutput, armSpeed );
     
     	
-    	System.out.println("Arm Encoder: " + armEncoderValue + "  Arm Speed;" + armSpeed);
+    ///	System.out.println(String.format("Arm Encoder:  %5d     Arm Speed:   %6.2f ",armEncoderValue, armSpeed));
     }
     
     public void setArmToZero() {
@@ -106,6 +106,7 @@ public class Arm extends Subsystem {
 	}
     
     public String getAllAxesString(){
+    	System.out.println (String.format("X =  %6.2f   Y =  %6.2f  Z =  %6.2f ", accel.getX(), accel.getY(), accel.getZ()));
 		return String.format("X =  %6.2f   Y =  %6.2f  Z =  %6.2f ", accel.getX(), accel.getY(), accel.getZ());
 	}
 	
