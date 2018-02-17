@@ -4,6 +4,8 @@ import org.usfirst.frc.team1895.robot.RobotMap;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.Default_LowerIntake;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.*;
 import edu.wpi.first.wpilibj.command.Subsystem;
 
@@ -26,9 +28,17 @@ public class LowerIntake extends Subsystem {
 	
 	public LowerIntake() {
 		//motors
+		left_lower_intake_motor = new TalonSRX(RobotMap.LEFT_LOWER_INTAKE_MOTOR_PORT);
+		right_lower_intake_motor = new TalonSRX(RobotMap.RIGHT_LOWER_INTAKE_MOTOR_PORT);
 		
 		//pneumatics
 		//lower_intake_solenoid = new DoubleSolenoid(RobotMap.LOWER_INTAKE_SOLENOID_A_PORT, RobotMap.LOWER_INTAKE_SOLENOID_B_PORT);
+	}
+	
+	//check signs
+	public void setLowerIntakeMotors(double speed) {
+		left_lower_intake_motor.set(ControlMode.PercentOutput, -speed);
+		right_lower_intake_motor.set(ControlMode.PercentOutput, speed);
 	}
 	
     public void initDefaultCommand() {

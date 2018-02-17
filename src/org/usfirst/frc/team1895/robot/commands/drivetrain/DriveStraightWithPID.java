@@ -11,6 +11,7 @@ public class DriveStraightWithPID extends Command {
 
 	double goalDistance = 0.0;
 	boolean done = false;
+	
     public DriveStraightWithPID(double givenDistance) {
         // Use requires() here to declare subsystem dependencies
         requires(Robot.drivetrain); 

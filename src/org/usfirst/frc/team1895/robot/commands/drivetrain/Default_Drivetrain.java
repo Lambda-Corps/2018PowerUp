@@ -27,11 +27,7 @@ public class Default_Drivetrain extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	//Robot.drivetrain.arcadeDrive(-0.25, 0);
-    	Robot.drivetrain.arcadeDrive(-Robot.oi.gamepad.getAxis(F310.LY), Robot.oi.gamepad.getAxis(F310.RX));
-    	System.out.println("L1: " + Robot.drivetrain.getLMCurrent());
-    	System.out.println("R1: " + Robot.drivetrain.getRMCurrent());
-    	System.out.println("L2: " + Robot.drivetrain.getLM2Current());
-    	System.out.println("R2: " + Robot.drivetrain.getRM2Current());
+    	Robot.drivetrain.arcadeDrive(Robot.oi.gamepad1.getAxis(F310.LY), Robot.oi.gamepad1.getAxis(F310.RX));
     }
 
     // Make this return true when this Command no longer needs to runexecute()

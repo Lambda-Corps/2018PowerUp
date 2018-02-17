@@ -3,6 +3,7 @@ package org.usfirst.frc.team1895.robot.subsystems;
 import org.usfirst.frc.team1895.robot.RobotMap;
 import org.usfirst.frc.team1895.robot.commands.climbing.Default_ManuallyClimb;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
@@ -25,7 +26,7 @@ public class Climber extends Subsystem {
     public void manualClimbing(double velocity) {
     	if (velocity > 1.0) velocity = 1.0;
     	if (velocity <-1.0) velocity = -1.0;
-    	//climber_motor.set(, velocity);
+    	//climber_motor.set(ControlMode.PercentOutput, velocity);
     }
     
     public void initDefaultCommand() {

@@ -40,6 +40,7 @@ public class Drivetrain extends Subsystem {
 	private final Compressor compressor;
 	private final DoubleSolenoid transmission_solenoid;
 
+
 	// Gyro
 	private AHRS ahrs;
 
@@ -56,7 +57,7 @@ public class Drivetrain extends Subsystem {
 	// TODO - We need to determine which accelerometer we are going to use and
 	// change
 	// variable type here.
-	//private AnalogInput accelerometer;
+	private AnalogInput accelerometer;
 
 	// PID
 	private MyPIDOutput myPIDOutputDriving;
@@ -78,6 +79,8 @@ public class Drivetrain extends Subsystem {
 	
 	// gear-shifting
 	int highgear_count = 0;
+	int highgear_count_test = 0;
+	int lowgear_count = 0;
 	boolean inHigh = false;
 
 	public Drivetrain() {
@@ -90,7 +93,6 @@ public class Drivetrain extends Subsystem {
 		right_dt_motor1.setInverted(true);
 		right_dt_motor2 = new TalonSRX(RobotMap.RIGHT_DT_MOTOR2_PORT);
 		right_dt_motor2.setInverted(true);
-
 		left_dt_motor2.follow(left_dt_motor1);
 		right_dt_motor2.follow(right_dt_motor1);
 
@@ -134,7 +136,7 @@ public class Drivetrain extends Subsystem {
 		fr_rangefinder = new AnalogInput(RobotMap.FRONT_RANGEFINDER_PORT);
 		l_rangefinder = new AnalogInput(RobotMap.LEFT_RANGEFINDER_PORT);
 		r_rangefinder = new AnalogInput(RobotMap.RIGHT_RANGEFINDER_PORT);
-		in_rangefinder = new AnalogInput(RobotMap.INTAKE_RANGEFINDER_PORT);
+		//in_rangefinder = new AnalogInput(RobotMap.INTAKE_RANGEFINDER_PORT);
 
 		// accelerometer
 		// TODO -- After we figure out the type, fix this constructor
@@ -217,6 +219,10 @@ public class Drivetrain extends Subsystem {
 //		if(highgear_count % 33 == 0) {
 //			System.out.println("LE: " + l_encoder.getDistance() + "RE: " + r_encoder.getDistance());
 //		}
+		//if(highgear_count % 100 == 0) {
+			//System.out.println("Am I in high gear? " + inHigh);
+			//System.out.println("LE: " + l_encoder.getDistance() + "RE: " + r_encoder.getDistance());
+		//}
 	}
 	
 	public void shiftGears() {
@@ -250,6 +256,64 @@ public class Drivetrain extends Subsystem {
 				}
 			}
 		}
+	}
+	
+	//for ShiftGearsTestStartLG command
+	public boolean testStartLG() {
+		boolean done = false;
+		if(!inHigh) {
+			arcadeDrive(0.5, 0);
+			lowgear_count++;
+			if(lowgear_count % 100 == 0) {
+				done = true;
+				lowgear_count = 0;
+			}
+		}
+		else {
+			System.out.println("started in high gear, test failed");
+		}
+		return done;
+	}
+	
+	//for ShiftGearsShiftHighGear command
+	public boolean driveUntilHighGear() {
+		boolean highWasReached = false;
+		if (!inHigh) {
+			arcadeDrive(1, 0);
+			System.out.println("trying to shift to high gear");
+		} 
+		//if you are in high gear, and about 3ish seconds have passed, slow down  
+		else {
+			arcadeDrive(1,0);
+			highgear_count_test++;
+			if(highgear_count_test % 40 == 0) {
+				System.out.println("High gear has been reached");
+			}
+			System.out.println("High gear has been reached");
+			if(highgear_count_test % 190 == 0) {
+				highWasReached = true;
+			}
+		}
+		return highWasReached;
+	}
+	
+	//for ShiftGearsShiftHighGear command
+	public boolean shiftToLG() {
+		boolean lowWasReached = false;
+		if (inHigh) {
+			arcadeDrive(0.5, 0);
+			System.out.println("trying to shift to low gear");
+		} else {
+			arcadeDrive(0.5, 0);
+			if(lowgear_count % 40 == 0) {
+				System.out.println("low gear has been reached");
+			}
+			lowgear_count++;
+			if(lowgear_count % 190 == 0) {
+				lowWasReached = true;
+			}
+		}
+		return lowWasReached;
 	}
 
 //==Driving straight code and encoder code==========================================================================
@@ -313,8 +377,8 @@ public class Drivetrain extends Subsystem {
 		}
 		return targetReached;
 	}
+ // ==Rangefinder Code==========================================================================================================
 
-//==Rangefinder Code==========================================================================================================
 	public boolean drivefr_RFDistance(double goaldistance, double speed) { // TODO: do we need separate methods??? this
 		// only does front RF
 		System.out.printf("rangefinder: %5.1f \n", fr_rangefinderDist());
@@ -377,16 +441,7 @@ public class Drivetrain extends Subsystem {
 	public double in_rangefinderDist() { // TODO: check that this is right / T U N E. also check if battery affects
 		// output
 		double outputValue = in_rangefinder.getAverageVoltage();
-		if (outputValue > 2.4 || outputValue < 0.4) { // code currently only
-			// accurate from 0.4-2.4
-			// volts
-			return -1;
-			// TODO: Add code to handle that -1 so the robot can act accordingly
-		}
-		double voltage = Math.pow(outputValue, -1.16);
-		double coefficient = 10.298;
-		double d = voltage * coefficient;
-		return d;
+		return outputValue;
 	}
 
 	// TODO -- This has not been tested, needs to be done.
@@ -451,13 +506,14 @@ public class Drivetrain extends Subsystem {
 	}
 
 //==Accelerometer Code==========================================================================
-	/*public double getAccelerometerValue() {
+	public double getAccelerometerValue() {
 		return accelerometer.getValue(); // TODO: is this the right method?
 	}
 
 	public void resetAccelerometer() {
 		accelerometer.resetAccumulator();
-	}*/
+	}
+
 	
 //==Gyro Code====================================================================================
 	public double getAHRSGyroAngle() {
@@ -557,7 +613,7 @@ public class Drivetrain extends Subsystem {
 //==Default Command==========================================================================
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
-		setDefaultCommand(new Default_Drivetrain());
+		//setDefaultCommand(new Default_Drivetrain());
 	}
 
 }
