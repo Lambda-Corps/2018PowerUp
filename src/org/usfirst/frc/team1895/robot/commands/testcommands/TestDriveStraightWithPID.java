@@ -20,13 +20,15 @@ public class TestDriveStraightWithPID extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	t_p = SmartDashboard.getNumber("P value: ", .1);
-    	t_i = SmartDashboard.getNumber("I value: ", 0.0);
-    	t_d = SmartDashboard.getNumber("D value: ", -.01);
+    	t_p = SmartDashboard.getNumber("Distance: P value: ", .1);
+    	t_i = SmartDashboard.getNumber("Distance: I value: ", 0.0);
+    	t_d = SmartDashboard.getNumber("Distance: D value: ", -.01);
     	t_Distance = SmartDashboard.getNumber("Test Drive Distance: ", 20.0);
     	
-    	//Robot.drivetrain.makeNewPidDriving(t_p, t_i, t_d); //get p,i,d from smartdashboard
-    	//Robot.drivetrain.setPIDSetpoints(t_Distance);
+    	Robot.drivetrain.setDrivingPIDSetpoints(t_Distance);
+    	Robot.drivetrain.makeNewPidDriving(t_p, t_i, t_d); //get p,i,d from smartdashboard
+    	Robot.drivetrain.setDrivingPIDSetpoints(t_Distance);
+    	System.out.println("P = " + t_p + " I = " + t_i + " D = " + t_d + " dist = " + t_Distance);
     }
 
     // Called repeatedly when this Command is scheduled to run
@@ -34,6 +36,9 @@ public class TestDriveStraightWithPID extends Command {
     	//t_done = Robot.drivetrain.driveStraightWithPID(t_Distance); needs method
     	SmartDashboard.putNumber("PID Drive L Encoder Value: ", Robot.drivetrain.getEncoderValue(Robot.drivetrain.LEFT_MOTOR_ENCODER));
     	SmartDashboard.putNumber("PID Drive R Encoder Value: ", Robot.drivetrain.getEncoderValue(Robot.drivetrain.RIGHT_MOTOR_ENCODER));
+    	
+    	t_done = Robot.drivetrain.driveStraightWithPID(t_Distance);
+    	
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -43,6 +48,8 @@ public class TestDriveStraightWithPID extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+    	System.out.println("finished");
+    	//System.out.println("LE: " + Robot.drivetrain.getLeftEncoder() + " RE: " + Robot.drivetrain.getRightEncoder());
     	t_Distance = 0.0;
     }
 
