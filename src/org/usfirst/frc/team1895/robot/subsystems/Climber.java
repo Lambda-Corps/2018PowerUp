@@ -34,7 +34,7 @@ public class Climber extends Subsystem {
     	//Get encoder value
     	//System.out.println(String.format("encoder: %6.2f", climber_motor.getSensorCollection().getQuadraturePosition()));
     	//System.out.println (String.format("velocity: %6.2f ", velocity));
-
+    	//climber_motor.set(ControlMode.PercentOutput, velocity);
     }
     
     public void initDefaultCommand() {

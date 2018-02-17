@@ -78,6 +78,7 @@ public class Arm extends Subsystem {
     
     	
     ///	System.out.println(String.format("Arm Encoder:  %5d     Arm Speed:   %6.2f ",armEncoderValue, armSpeed));
+    	//System.out.println("Arm Encoder: " + armEncoderValue + "  Arm Speed;" + armSpeed);
     }
     
     public void setArmToZero() {

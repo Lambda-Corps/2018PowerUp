@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class DestinationC extends CommandGroup {
 
     public DestinationC() {
+		addSequential(new PrintCommand("C"));
     	addSequential(new PrintCommand("StartPos" + Robot.startPos));
         if(Robot.startPos == 1) {
         	addSequential(new PrintCommand("position 1, destination c"));

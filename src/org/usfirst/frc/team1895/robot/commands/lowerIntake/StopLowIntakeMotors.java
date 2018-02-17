@@ -7,34 +7,30 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class DeployCube_LowerIntake extends Command {
-	
-	public boolean hasCube;
+public class StopLowIntakeMotors extends Command {
 
-    public DeployCube_LowerIntake() {
+    public StopLowIntakeMotors() {
         // Use requires() here to declare subsystem dependencies
-        requires(Robot.lowerIntake);
-        requires(Robot.claw);
+        //requires(Robot);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	hasCube = Robot.claw.cubeIsIn();
-    	Robot.lowerIntake.setLowerIntakeMotors(-1);
+    	//Robot.lowerIntake.setIntakeMotors(0);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return !hasCube;
+        return true;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.lowerIntake.setLowerIntakeMotors(0);
     }
 
     // Called when another command which requires one or more of the same

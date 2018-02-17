@@ -22,7 +22,6 @@ public class Default_ManuallyClimb extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	
     	//  Read the Operator joy stick right side 
     	double WinchcontrolAxis = Robot.oi.gamepad2.getAxis(F310.RY);
     	//System.out.println (String.format("WinchcontrolAxis: %6.2f ", WinchcontrolAxis));
