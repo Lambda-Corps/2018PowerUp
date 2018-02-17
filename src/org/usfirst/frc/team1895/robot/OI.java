@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1895.robot;
 
+import org.usfirst.frc.team1895.robot.commands.arm.RotateArmUp;
 import org.usfirst.frc.team1895.robot.commands.claw.DeployCube_Claw;
 import org.usfirst.frc.team1895.robot.commands.claw.GrabCube_Claw;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
@@ -51,6 +52,8 @@ public class OI {
 	public JoystickButton grabCube_Claw;
 	public JoystickButton deployCube_LowerIntake;
 	public JoystickButton grabCube_LowerIntake;
+	public JoystickButton ninetyUp;
+	public JoystickButton ninetyDown;
 
 	public OI() {
 		gamepad1 = new F310(RobotMap.GAMEPAD_PORT);
@@ -58,7 +61,7 @@ public class OI {
 
 		ninetyDegreeRight = new JoystickButton(gamepad1, F310.LB);
 		ninetyDegreeRight.whenPressed(new TurnWithoutPID(0.3, 90.0));
-
+		
 		grabCube_Claw = new JoystickButton(gamepad2, F310.X);
 		deployCube_Claw = new JoystickButton(gamepad2, F310.B);
 		grabCube_Claw.whenPressed(new GrabCube_Claw());
@@ -68,6 +71,12 @@ public class OI {
 		deployCube_LowerIntake = new JoystickButton(gamepad2, F310.RB);
 		grabCube_LowerIntake.whenPressed(new GrabCube_LowerIntake());
 		deployCube_LowerIntake.whenPressed(new DeployCube_LowerIntake());
-
+		
+		//armButtons
+		ninetyUp = new JoystickButton(gamepad2, F310.Y);
+		ninetyUp.whenPressed(new RotateArmUp(90));
+		
+		ninetyDown = new JoystickButton(gamepad2, F310.A);
+		ninetyDown.whenPressed(new RotateArmUp(135));
 	}
 }
