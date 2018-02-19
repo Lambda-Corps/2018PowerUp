@@ -1,10 +1,10 @@
 package org.usfirst.frc.team1895.robot.subsystems;
 
-import org.usfirst.frc.team1895.robot.Robot;
 import org.usfirst.frc.team1895.robot.RobotMap;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.Default_Drivetrain;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
@@ -63,7 +63,7 @@ public class Drivetrain extends Subsystem {
 	private PIDController pidControllerDriving;
 	private PIDController pidControllerTurning;
 
-	final double pGainDriv = 0, iGainDriv = 0, dGainDriv = 0;
+	final double pGainDriv = 1, iGainDriv = 0, dGainDriv = 0;
 
 	final double pGainTurn = 0, iGainTurn = 0, dGainTurn = 0;
 
@@ -112,12 +112,14 @@ public class Drivetrain extends Subsystem {
 
 		// digital IO sensors
 		l_encoder = new Encoder(RobotMap.LEFT_ENCODER_A_PORT, RobotMap.LEFT_ENCODER_B_PORT, true);
+//		l_encoder.setReverseDirection(true);
 		r_encoder = new Encoder(RobotMap.RIGHT_ENCODER_A_PORT, RobotMap.RIGHT_ENCODER_B_PORT, true);
+//		l_encoder.setReverseDirection(true);
 
-		l_encoder.setDistancePerPulse(.0159); // PowerUp
-		r_encoder.setDistancePerPulse(.0159); // PowerUp
-		// l_encoder.setDistancePerPulse(0.0225); //Steamworks
-		// r_encoder.setDistancePerPulse(0.0225); //Steamworks
+//		l_encoder.setDistancePerPulse(.0159); // PowerUp
+//		r_encoder.setDistancePerPulse(.0159); // PowerUp
+		 l_encoder.setDistancePerPulse(0.0225); //Steamworks
+		 r_encoder.setDistancePerPulse(0.0225); //Steamworks
 
 		// analog sensors
 		try {
@@ -158,7 +160,7 @@ public class Drivetrain extends Subsystem {
 	// ==Manual
 	// driving============================================================================
 	public void arcadeDrive(double trans_speed, double yaw) {
-
+		
 		setAHRSAdjustment(0);
 
 		double left_speed = trans_speed + yaw;
@@ -199,20 +201,20 @@ public class Drivetrain extends Subsystem {
 					// determine whether drifting left or right
 					if (l_distance > r_distance) { // drifting right, need to go left
 						System.out.println("drifting right");
-						//left_speed *= scalar; // go left
+						left_speed *= scalar; // go left
 					} else { // drifting left, need to go right
 						System.out.println("drifting left");
-						//right_speed *= scalar; // go right
+						right_speed *= scalar; // go right
 					}
 				} else { // backward
 					System.out.println("bwd");
 					// determine whether drifting left or right
 					if (l_distance > r_distance) { // drifting right, need to go left
 						System.out.println("drifting left");
-						//right_speed *= scalar; // go left
+						right_speed *= scalar; // go left
 					} else { // drifting left, need to go right
 						System.out.println("drifting right");
-						//left_speed *= scalar; // go right
+						left_speed *= scalar; // go right
 					}
 				}
 			}
@@ -662,6 +664,20 @@ public class Drivetrain extends Subsystem {
 
 	public double getRM2Current() {
 		return right_dt_motor2.getOutputCurrent();
+	}
+	
+	public void setCoastMode() {
+		left_dt_motor1.setNeutralMode(NeutralMode.Coast);
+		left_dt_motor2.setNeutralMode(NeutralMode.Coast);
+		right_dt_motor1.setNeutralMode(NeutralMode.Coast);
+		right_dt_motor2.setNeutralMode(NeutralMode.Coast);
+	}
+	
+	public void setBrakeMode() {
+		left_dt_motor1.setNeutralMode(NeutralMode.Brake);
+		left_dt_motor2.setNeutralMode(NeutralMode.Brake);
+		right_dt_motor1.setNeutralMode(NeutralMode.Brake);
+		right_dt_motor2.setNeutralMode(NeutralMode.Brake);
 	}
 
 	// ==Default

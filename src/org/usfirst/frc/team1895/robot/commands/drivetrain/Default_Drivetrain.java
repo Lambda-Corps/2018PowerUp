@@ -27,6 +27,7 @@ public class Default_Drivetrain extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	//Robot.drivetrain.arcadeDrive(-0.25, 0);
+    	//NOTE: LY SHOULD BE INVERTED ON POWER UP****************
     	Robot.drivetrain.arcadeDrive(-Robot.oi.gamepad1.getAxis(F310.LY), Robot.oi.gamepad1.getAxis(F310.RX));
     }
 

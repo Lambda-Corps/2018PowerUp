@@ -134,10 +134,17 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+		
+		Robot.drivetrain.setBrakeMode();
 
 		// access FMS data
 		String colorString;
-		colorString = DriverStation.getInstance().getGameSpecificMessage();
+		System.out.println("auto init");
+		do {
+			colorString = DriverStation.getInstance().getGameSpecificMessage();
+			System.out.println("string: " + colorString);
+		} while (colorString.length() == 0);
+		System.out.println("finished do while");
 		if (colorString.charAt(0) == 'L') { // if switch closest to us has our color on the left, we are 1
 			closeSwitchNum = 1;
 		} else {
@@ -177,8 +184,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopInit() {
 		
-		
-		
+		Robot.drivetrain.setCoastMode();
+
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
 		// continue until interrupted by another command, remove
@@ -188,33 +195,33 @@ public class Robot extends TimedRobot {
 			autonomousCommand.cancel();
 
 		Robot.drivetrain.resetEncoders();
-		
+
 		// Testing Turning
-				SmartDashboard.putNumber("Turn: P value: ", .025);
-				SmartDashboard.putNumber("Turn: I value: ", 0.0);
-				SmartDashboard.putNumber("Turn: D value: ", -.005);
-				SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
-				SmartDashboard.putNumber("Test NP Turn Speed: ", .4);
+		SmartDashboard.putNumber("Turn: P value: ", .025);
+		SmartDashboard.putNumber("Turn: I value: ", 0.0);
+		SmartDashboard.putNumber("Turn: D value: ", -.005);
+		SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
+		SmartDashboard.putNumber("Test NP Turn Speed: ", .4);
 
-				SmartDashboard.putData("Test Turn With PID", new TestTurnWithPID());
-				SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
+		SmartDashboard.putData("Test Turn With PID", new TestTurnWithPID());
+		SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
 
-				// Distance Related Testing
-				SmartDashboard.putNumber("Distance: P value: ", .1);
-				SmartDashboard.putNumber("Distance: I value: ", 0.0);
-				SmartDashboard.putNumber("Distance: D value: ", -.01);
-				SmartDashboard.putNumber("Test Drive Distance:", 30.0);
-				SmartDashboard.putNumber("Test Drive Speed: ", .4);
-				SmartDashboard.putNumber("Test Drive Tank Scalar:", .94); // incase of drifting
-				SmartDashboard.putNumber("Test Drive Buffer:", 10);
+		// Distance Related Testing
+		SmartDashboard.putNumber("Distance: P value: ", .1);
+		SmartDashboard.putNumber("Distance: I value: ", 0.0);
+		SmartDashboard.putNumber("Distance: D value: ", -.01);
+		SmartDashboard.putNumber("Test Drive Distance:", 30.0);
+		SmartDashboard.putNumber("Test Drive Speed: ", .4);
+		SmartDashboard.putNumber("Test Drive Tank Scalar:", .94); // incase of drifting
+		SmartDashboard.putNumber("Test Drive Buffer:", 10);
 
-				SmartDashboard.putData("Test DriveStraight With PID", new TestDriveStraightWithPID());
-				SmartDashboard.putData("Test DriveStraight No PID", new TestDriveStraightWithoutPID());
-				SmartDashboard.putData("Test Drive With RangeFinder", new TestDriveToObstacle());
-				SmartDashboard.putData("Test Drive Parallel", new TestDriveParallel());
+		SmartDashboard.putData("Test DriveStraight With PID", new TestDriveStraightWithPID());
+		SmartDashboard.putData("Test DriveStraight No PID", new TestDriveStraightWithoutPID());
+		SmartDashboard.putData("Test Drive With RangeFinder", new TestDriveToObstacle());
+		SmartDashboard.putData("Test Drive Parallel", new TestDriveParallel());
 
-				SmartDashboard.putBoolean("Test boolean onLeft Value", false);
-				
+		SmartDashboard.putBoolean("Test boolean onLeft Value", false);
+
 	}
 
 	/**
@@ -233,8 +240,10 @@ public class Robot extends TimedRobot {
 
 		// System.out.printf("<joy> LY: %5.1f RX: %5.1f",
 		// Robot.oi.gamepad.getAxis(F310.LY), Robot.oi.gamepad.getAxis(F310.RX) );
-		
-		//System.out.println("gyro teleop: " + Robot.drivetrain.getAHRSGyroAngle());
+
+		// System.out.println("gyro teleop: " + Robot.drivetrain.getAHRSGyroAngle());
+
+		System.out.println("LE " + Robot.drivetrain.getLeftEncoder() + " RE " + Robot.drivetrain.getRightEncoder());
 	}
 
 	/**
