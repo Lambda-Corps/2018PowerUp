@@ -3,18 +3,15 @@ package org.usfirst.frc.team1895.robot.subsystems;
 import org.usfirst.frc.team1895.robot.RobotMap;
 import org.usfirst.frc.team1895.robot.commands.arm.Default_Arm;
 
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.can.*;
-import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.Encoder;
+import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.ADXL345_I2C;
-import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
+import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C;
-import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
@@ -36,11 +33,13 @@ public class Arm extends Subsystem {
     
     private Encoder armUpEncoder;
     
+    private DigitalOutput led1;
+    
     public final Accelerometer accel;
 	public final BuiltInAccelerometer BIA;
     
     // pneumatics
-    //private final DoubleSolenoid telescoping_solenoid;
+    private final DoubleSolenoid telescoping_solenoid;
     
     
     public Arm() {
@@ -48,7 +47,7 @@ public class Arm extends Subsystem {
     	arm_intake1 = new TalonSRX(7);
     	top_arm_rotation_motor = new TalonSRX(RobotMap.TOP_ARM_ROTATION_MOTOR_PORT);
     	bot_arm_rotation_motor = new TalonSRX(RobotMap.BOT_ARM_ROTATION_MOTOR_PORT);
-    	
+    	wrist_motor = new TalonSRX(RobotMap.WRIST_MOTOR_PORT);
     	top_arm_rotation_motor.follow(bot_arm_rotation_motor);
     	resetEncoder();
     	
@@ -56,30 +55,83 @@ public class Arm extends Subsystem {
     	BIA = new BuiltInAccelerometer();
 		accel = new ADXL345_I2C(I2C.Port.kOnboard, Accelerometer.Range.k4G);
 		
+		//led
+		led1 = new DigitalOutput(9);
 		//TODO:find out if there is range finder on arm if not delete later
 		//range_finder = new AnalogInput(0);	
 		LiveWindow.add(this);
 		LiveWindow.addChild(this, accel);
 
     	//pneumatics
-    	//telescoping_solenoid = new DoubleSolenoid(RobotMap.ARM_TELESCOPING_SOLENOID_A_PORT, RobotMap.ARM_TELESCOPING_SOLENOID_B_PORT);
+    	telescoping_solenoid = new DoubleSolenoid(RobotMap.ARM_TELESCOPING_SOLENOID_A_PORT, RobotMap.ARM_TELESCOPING_SOLENOID_B_PORT);
     }
     
     public void driveArm(double armSpeed) {
-    	int armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
+    	double armEncoderValue = (double) bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
     	int armEncoderUpperLimit = 14000;
-    	int armEncoderLowerLimit = 0;
+    	int armEncoderLowerLimit = -14000;
+    	//These variable control the angle at which the piston will extend
+    	int upperArmLimit = 135;
+    	int lowerArmLimit = 45;
+    	double anglex = (double)armEncoderValue*180/14000;
+    	System.out.println("This is the encoder value2 "+ anglex);
     	
     	if (((armEncoderValue > armEncoderUpperLimit) && (armSpeed < 0)) ||
     	((armEncoderValue < armEncoderLowerLimit) && (armSpeed > 0))){
     		armSpeed = 0;
     	}
     	bot_arm_rotation_motor.set(ControlMode.PercentOutput, armSpeed );
-    
-    	
+    	if(anglex>lowerArmLimit && anglex<upperArmLimit) {
+    		led1.set(true);
+    		telescoping_solenoid.set(DoubleSolenoid.Value.kReverse);
+
+    	}
+    	else {
+    		led1.set(false);
+    		telescoping_solenoid.set(DoubleSolenoid.Value.kForward);
+    	}
+    	//wrist_motor.set(ControlMode.PercentOutput, armSpeed);
+    	//System.out.println(wrist_motor.getSensorCollection().getQuadraturePosition());
     ///	System.out.println(String.format("Arm Encoder:  %5d     Arm Speed:   %6.2f ",armEncoderValue, armSpeed));
     	//System.out.println("Arm Encoder: " + armEncoderValue + "  Arm Speed;" + armSpeed);
     }
+    
+    public boolean setPosition(double goalangle) {
+    	double accelValue = accel.getX();
+    	double tolerance = 200; //encoder
+    	//0<angle<180
+    	//Error checking
+    	if(goalangle < 0) {
+    		goalangle = 0;
+    	}
+    	
+    	if(goalangle > 180) {
+    		goalangle = 180;
+    	}
+    	//convert angle to 0-14000
+    	goalangle = goalangle*(14000/180);
+    	
+    	double armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
+    	//System.out.println("This is the encoder value "+ armEncoderValue);
+    	
+    	if(armEncoderValue< goalangle && Math.abs(armEncoderValue  - goalangle)> tolerance){
+    		driveArm(-.25);
+    	}
+    	else if(armEncoderValue > goalangle && Math.abs(armEncoderValue - goalangle)> tolerance) {
+    		driveArm(.25);
+    	}
+    	else{
+    		driveArm(0);
+    		return true;
+    	}
+    	return false;
+    }
+    public double getArmEncoder() {
+    	double armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
+    	System.out.print(armEncoderValue);
+    	return armEncoderValue;
+    }
+    
     
     public void setArmToZero() {
     	arm_intake1.set(ControlMode.PercentOutput, 0);
