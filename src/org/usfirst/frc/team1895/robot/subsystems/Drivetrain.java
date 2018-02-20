@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1895.robot.subsystems;
 
+import org.usfirst.frc.team1895.robot.Robot;
 import org.usfirst.frc.team1895.robot.RobotMap;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.Default_Drivetrain;
 
@@ -121,10 +122,10 @@ public class Drivetrain extends Subsystem {
 		r_encoder = new Encoder(RobotMap.RIGHT_ENCODER_A_PORT, RobotMap.RIGHT_ENCODER_B_PORT, true);
 //		l_encoder.setReverseDirection(true);
 
-//		l_encoder.setDistancePerPulse(.0159); // PowerUp
-//		r_encoder.setDistancePerPulse(.0159); // PowerUp
-		 l_encoder.setDistancePerPulse(0.0225); //Steamworks
-		 r_encoder.setDistancePerPulse(0.0225); //Steamworks
+		l_encoder.setDistancePerPulse(.0159); // PowerUp
+		r_encoder.setDistancePerPulse(.0159); // PowerUp
+//		 l_encoder.setDistancePerPulse(0.0225); //Steamworks
+//		 r_encoder.setDistancePerPulse(0.0225); //Steamworks
 
 		// analog sensors
 		try {
@@ -165,8 +166,6 @@ public class Drivetrain extends Subsystem {
 	// driving============================================================================
 	public void arcadeDrive(double trans_speed, double yaw) {
 		
-		trans_speed*=-1;
-
 		double left_speed = trans_speed + yaw;
 		double right_speed = yaw - trans_speed;
 
@@ -278,6 +277,7 @@ public class Drivetrain extends Subsystem {
 		left_dt_motor2.setNeutralMode(NeutralMode.Coast);
 		right_dt_motor1.setNeutralMode(NeutralMode.Coast);
 		right_dt_motor2.setNeutralMode(NeutralMode.Coast);
+		System.out.println("set coast mode");
 	}
 	
 	public void setBrakeMode() {
@@ -285,6 +285,7 @@ public class Drivetrain extends Subsystem {
 		left_dt_motor2.setNeutralMode(NeutralMode.Brake);
 		right_dt_motor1.setNeutralMode(NeutralMode.Brake);
 		right_dt_motor2.setNeutralMode(NeutralMode.Brake);
+		System.out.println("set brake mode");
 	}
 	
 	public void shiftGears() {
@@ -651,7 +652,7 @@ public class Drivetrain extends Subsystem {
 		if (Double.isNaN(pidOutput)) {
 //			System.out.println("Got invalid PID output for driving");
 		} else {
-			arcadeDrive(0.5 * pidOutput, error); // note 0.8 scalar
+			arcadeDrive(pidOutput, error); // note 0.8 scalar
 			System.out.println("trying to drive (not accounting for scalar) " + pidOutput);
 		}
 

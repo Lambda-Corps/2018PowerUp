@@ -29,14 +29,14 @@ public class DestinationE extends CommandGroup {
 			switch (Robot.startPos) {
 			case 1:
 				addSequential(new PrintCommand("Position 1"));
-				addSequential(new DriveStraightWithPID(300));
+				addSequential(new DriveStraightWithPID(220));
 				addSequential(new TurnWithoutPID(0.5, 90));
 				// addSequential(new DriveToObstacle(0.5, 5)); // accurate within this distance?
 				// addSequential(new DeployCube_Claw());
 				break;
 			case 2:
 				addSequential(new PrintCommand("Position 2"));
-				addSequential(new DriveStraightWithPID(55));
+				addSequential(new DriveStraightWithPID(50));
 				addSequential(new TurnWithoutPID(0.5, -90));
 				addSequential(new DriveStraightWithPID(80));
 				addSequential(new TurnWithoutPID(0.5, 90));
@@ -68,7 +68,7 @@ public class DestinationE extends CommandGroup {
 				break;
 			case 2:
 				addSequential(new PrintCommand("Position 2"));
-				addSequential(new DriveStraightWithPID(55));
+				addSequential(new DriveStraightWithPID(50));
 				addSequential(new TurnWithoutPID(0.5, 90));
 				addSequential(new DriveStraightWithPID(60));
 				addSequential(new TurnWithoutPID(0.5, -90));
@@ -79,7 +79,7 @@ public class DestinationE extends CommandGroup {
 				break;
 			case 3:
 				addSequential(new PrintCommand("Position 3"));
-				addSequential(new DriveStraightWithPID(300));
+				addSequential(new DriveStraightWithPID(220));
 				addSequential(new TurnWithoutPID(0.5, -90));
 				// addSequential(new DriveToObstacle(0.5, 5)); // accurate within this distance?
 				// addSequential(new DeployCube_Claw());

@@ -27,35 +27,37 @@ public class DestinationC extends CommandGroup {
 			switch (Robot.startPos) {
 			case 1:
 				addSequential(new PrintCommand("Position 1"));
-				addSequential(new DriveStraightWithoutPID(0.7, 190));
+				addSequential(new DriveStraightWithPID(190));
 				addSequential(new TurnWithoutPID(0.3, 90.0));
-				addSequential(new DriveStraightWithoutPID(0.7, 40));
+				addSequential(new DriveStraightWithPID(40));
 				addSequential(new TurnWithoutPID(0.3, 90.0));
+				addSequential(new DriveStraightWithPID(30));
 //				addSequential(new DriveToObstacle(0.5, 5)); // accurate within this distance?
 //				addSequential(new DeployCube_Claw());
 				break;
 			case 2:
 				addSequential(new PrintCommand("Position 2"));
-				addSequential(new DriveStraightWithoutPID(0.7, 55));
+				addSequential(new DriveStraightWithPID(55));
 				addSequential(new TurnWithoutPID(0.3, -90.0));
-				addSequential(new DriveStraightWithoutPID(0.7, 160));
+				addSequential(new DriveStraightWithPID(160));
 				addSequential(new TurnWithoutPID(0.3, 90.0));
-				addSequential(new DriveStraightWithoutPID(0.7, 75));
+				addSequential(new DriveStraightWithPID(75));
 				addSequential(new TurnWithoutPID(0.3, 90.0));
-				addSequential(new DriveStraightWithoutPID(0.7, 75));
+				addSequential(new DriveStraightWithPID(75));
 				addSequential(new TurnWithoutPID(0.3, 90.0));
+				addSequential(new DriveStraightWithPID(30));
 //				addSequential(new DriveToObstacle(0.5, 5)); // accurate within this distance?
 //				addSequential(new DeployCube_Claw());
 				break;
 			case 3:
 //				addSequential(new PrintCommand("Position 3"));
-//				addSequential(new DriveStraightWithoutPID(0.7, 55));
+//				addSequential(new DriveStraightWithPID(55));
 //				addSequential(new TurnWithoutPID(0.3, -90.0));
-//				addSequential(new DriveStraightWithoutPID(0.7, 298));
+//				addSequential(new DriveStraightWithPID(298));
 //				addSequential(new TurnWithoutPID(0.3, 90.0));
-//				addSequential(new DriveStraightWithoutPID(0.7, 225));
+//				addSequential(new DriveStraightWithPID(225));
 //				addSequential(new TurnWithoutPID(0.3, 90.0));
-//				addSequential(new DriveStraightWithoutPID(0.7, 60));
+//				addSequential(new DriveStraightWithPID(60));
 //				addSequential(new TurnWithoutPID(0.3, 90.0));
 ////				addSequential(new DriveToObstacle(0.5, 5)); // accurate within this distance?
 ////				addSequential(new DeployCube_Claw());
@@ -64,6 +66,7 @@ public class DestinationC extends CommandGroup {
 				addSequential(new TurnWithoutPID(0.3, -90.0));
 				addSequential(new DriveStraightWithPID(232));
 				addSequential(new TurnWithoutPID(0.3, -90.0));
+				addSequential(new DriveStraightWithPID(30));
 //				addSequential(new DriveToObstacle(0.5, 5)); // accurate within this distance?
 //				addSequential(new DeployCube_Claw());
 				break;
@@ -72,36 +75,39 @@ public class DestinationC extends CommandGroup {
 			switch (Robot.startPos) {
 			case 1:   //goes the far way
 				addSequential(new PrintCommand("Position 1"));
-				addSequential(new DriveStraightWithoutPID(0.7, 55));
+				addSequential(new DriveStraightWithPID(55));
 				addSequential(new TurnWithoutPID(0.3, 90.0));
-				addSequential(new DriveStraightWithoutPID(0.7, 298));
+				addSequential(new DriveStraightWithPID(298));
 				addSequential(new TurnWithoutPID(0.3, -90.0));
-				addSequential(new DriveStraightWithoutPID(0.7, 225));
+				addSequential(new DriveStraightWithPID(225));
 				addSequential(new TurnWithoutPID(0.3, -90.0));
-				addSequential(new DriveStraightWithoutPID(0.7, 50));
+				addSequential(new DriveStraightWithPID(50));
 				addSequential(new TurnWithoutPID(0.3, -90.0));
+				addSequential(new DriveStraightWithPID(30));
 //				addSequential(new DriveToObstacle(0.5, 5)); // accurate within this distance?
 //				addSequential(new DeployCube_Claw());
 				break;
 			case 2:
 				addSequential(new PrintCommand("Position 2"));
-				addSequential(new DriveStraightWithoutPID(0.7, 55));
+				addSequential(new DriveStraightWithPID(55));
 				addSequential(new TurnWithoutPID(0.3, 90.0));
-				addSequential(new DriveStraightWithoutPID(0.7, 70));
+				addSequential(new DriveStraightWithPID(70));
 				addSequential(new TurnWithoutPID(0.3, -90.0));
-				addSequential(new DriveStraightWithoutPID(0.7, 100));
+				addSequential(new DriveStraightWithPID(100));
 				addSequential(new TurnWithoutPID(0.3, -90.0));
-				addSequential(new DriveStraightWithoutPID(0.7, 50));
+				addSequential(new DriveStraightWithPID(50));
 				addSequential(new TurnWithoutPID(0.3, -90.0));
+				addSequential(new DriveStraightWithPID(30));
 //				addSequential(new DriveToObstacle(0.5, 5)); // accurate within this distance?
 //				addSequential(new DeployCube_Claw());
 				break;
 			case 3:
 				addSequential(new PrintCommand("Position 3"));
-				addSequential(new DriveStraightWithoutPID(0.7, 190));
+				addSequential(new DriveStraightWithPID(190));
 				addSequential(new TurnWithoutPID(0.3, -90.0));
-				addSequential(new DriveStraightWithoutPID(0.7, 40));
+				addSequential(new DriveStraightWithPID(40));
 				addSequential(new TurnWithoutPID(0.3, -90.0));
+				addSequential(new DriveStraightWithPID(30));
 //				addSequential(new DriveToObstacle(0.5, 5)); // accurate within this distance?
 //				addSequential(new DeployCube_Claw());
 				break;
