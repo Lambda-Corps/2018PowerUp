@@ -27,9 +27,9 @@ public class DestinationC extends CommandGroup {
 			switch (Robot.startPos) {
 			case 1:
 				addSequential(new PrintCommand("Position 1"));
-				addSequential(new DriveStraightWithoutPID(0.7, 260));
+				addSequential(new DriveStraightWithoutPID(0.7, 190));
 				addSequential(new TurnWithoutPID(0.3, 90.0));
-				addSequential(new DriveStraightWithoutPID(0.7, 50));
+				addSequential(new DriveStraightWithoutPID(0.7, 40));
 				addSequential(new TurnWithoutPID(0.3, 90.0));
 //				addSequential(new DriveToObstacle(0.5, 5)); // accurate within this distance?
 //				addSequential(new DeployCube_Claw());
@@ -98,9 +98,9 @@ public class DestinationC extends CommandGroup {
 				break;
 			case 3:
 				addSequential(new PrintCommand("Position 3"));
-				addSequential(new DriveStraightWithoutPID(0.7, 160));
+				addSequential(new DriveStraightWithoutPID(0.7, 190));
 				addSequential(new TurnWithoutPID(0.3, -90.0));
-				addSequential(new DriveStraightWithoutPID(0.7, 75));
+				addSequential(new DriveStraightWithoutPID(0.7, 40));
 				addSequential(new TurnWithoutPID(0.3, -90.0));
 //				addSequential(new DriveToObstacle(0.5, 5)); // accurate within this distance?
 //				addSequential(new DeployCube_Claw());

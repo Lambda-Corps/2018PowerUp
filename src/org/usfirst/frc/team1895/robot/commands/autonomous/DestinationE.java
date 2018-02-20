@@ -21,6 +21,9 @@ public class DestinationE extends CommandGroup {
 		} else { // our switch is on the right
 			ourLeftSwitch = false;
 		}
+		
+//		addSequential(new WaitCommand(3));
+//		addSequential(new PrintCommand("done"));
 
 		if (ourLeftSwitch) {
 			switch (Robot.startPos) {

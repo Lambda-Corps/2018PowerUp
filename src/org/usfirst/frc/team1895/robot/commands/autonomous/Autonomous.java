@@ -19,7 +19,6 @@ public class Autonomous extends CommandGroup {
 //    	addSequential(new DriveStraightWithoutPID(0.25, -50)); //units in inches
 //    	addSequential(new DriveToObstacle(15, 0.25));
     	
-    	addSequential(new ConditionalCommand1(new DestinationA(), new DestinationB()));
 
     }
 }

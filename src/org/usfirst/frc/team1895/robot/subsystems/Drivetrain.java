@@ -165,7 +165,7 @@ public class Drivetrain extends Subsystem {
 	// driving============================================================================
 	public void arcadeDrive(double trans_speed, double yaw) {
 		
-		setAHRSAdjustment(0);
+		trans_speed*=-1;
 
 		double left_speed = trans_speed + yaw;
 		double right_speed = yaw - trans_speed;
@@ -194,30 +194,30 @@ public class Drivetrain extends Subsystem {
 			}
 			double l_distance = l_encoder.getDistance();
 			double r_distance = r_encoder.getDistance();
-			System.out.println(Math.abs(l_distance-r_distance));
+//			System.out.println("L " + l_distance + "R " + r_distance);
 			if (Math.abs(l_distance - r_distance) < tolerance) {
 				// already straight
-				System.out.println("im good");
+				//System.out.println("im good");
 			} else {
 				// forward
 				if (trans_speed > 0) {
-					System.out.println("fwd");
+					//System.out.println("fwd");
 					// determine whether drifting left or right
 					if (l_distance > r_distance) { // drifting right, need to go left
-						System.out.println("drifting right");
+						//System.out.println("drifting right");
 						left_speed *= scalar; // go left
 					} else { // drifting left, need to go right
-						System.out.println("drifting left");
+						//System.out.println("drifting left");
 						right_speed *= scalar; // go right
 					}
 				} else { // backward
-					System.out.println("bwd");
+					//System.out.println("bwd");
 					// determine whether drifting left or right
 					if (l_distance > r_distance) { // drifting right, need to go left
-						System.out.println("drifting left");
+						//System.out.println("drifting left");
 						right_speed *= scalar; // go left
 					} else { // drifting left, need to go right
-						System.out.println("drifting right");
+						//System.out.println("drifting right");
 						left_speed *= scalar; // go right
 					}
 				}
@@ -329,6 +329,10 @@ public class Drivetrain extends Subsystem {
 		}
 
 	}
+	
+	public void shiftToLowGear() {
+		transmission_solenoid.set(DoubleSolenoid.Value.kReverse);
+	}
 
 	// for ShiftGearsTestStartLG command
 	public boolean testStartLG() {
@@ -341,7 +345,7 @@ public class Drivetrain extends Subsystem {
 				lowgear_count = 0;
 			}
 		} else {
-			System.out.println("started in high gear, test failed");
+			//System.out.println("started in high gear, test failed");
 		}
 		return done;
 	}
@@ -351,16 +355,16 @@ public class Drivetrain extends Subsystem {
 		boolean highWasReached = false;
 		if (!inHigh) {
 			arcadeDrive(1, 0);
-			System.out.println("trying to shift to high gear");
+			//System.out.println("trying to shift to high gear");
 		}
 		// if you are in high gear, and about 3ish seconds have passed, slow down
 		else {
 			arcadeDrive(1, 0);
 			highgear_count_test++;
 			if (highgear_count_test % 40 == 0) {
-				System.out.println("High gear has been reached");
+				//System.out.println("High gear has been reached");
 			}
-			System.out.println("High gear has been reached");
+			//System.out.println("High gear has been reached");
 			if (highgear_count_test % 190 == 0) {
 				highWasReached = true;
 			}
@@ -373,11 +377,11 @@ public class Drivetrain extends Subsystem {
 		boolean lowWasReached = false;
 		if (inHigh) {
 			arcadeDrive(0.5, 0);
-			System.out.println("trying to shift to low gear");
+			//System.out.println("trying to shift to low gear");
 		} else {
 			arcadeDrive(0.5, 0);
 			if (lowgear_count % 40 == 0) {
-				System.out.println("low gear has been reached");
+				//System.out.println("low gear has been reached");
 			}
 			lowgear_count++;
 			if (lowgear_count % 190 == 0) {
@@ -454,12 +458,12 @@ public class Drivetrain extends Subsystem {
 
 	public boolean drivefr_RFDistance(double goaldistance, double speed) { // TODO: do we need separate methods??? this
 		// only does front RF
-		System.out.printf("rangefinder: %5.1f \n", fr_rangefinderDist());
+		//System.out.printf("rangefinder: %5.1f \n", fr_rangefinderDist());
 		if (fr_rangefinderDist() <= (goaldistance)) { // if the robot crossed the goal distance + buffer then the code
 			// will stop
 			arcadeDrive(0, 0);
-			System.out.printf("rangefinder distance achieved: %5.1f \n", fr_rangefinderDist());
-			System.out.println(" for goal of " + goaldistance);
+			//System.out.printf("rangefinder distance achieved: %5.1f \n", fr_rangefinderDist());
+			//System.out.println(" for goal of " + goaldistance);
 
 			return true;
 		} else { // if it hasn't crossed it will run at a determined speed
@@ -545,30 +549,30 @@ public class Drivetrain extends Subsystem {
 			if (onLeft) { // wall is on left of robot
 				if (fromWall < buffer - bufferTolerance) { // drifting left (toward wall), needs to go right
 					arcadeDrive(speed, 0.1);
-					System.out.printf("[wall is on left of robot] drifting left, toward wall -- correcting %5.1f \n",
-							fromWall);
+//					System.out.printf("[wall is on left of robot] drifting left, toward wall -- correcting %5.1f \n",
+//							fromWall);
 				} else if (fromWall > buffer + bufferTolerance) { // drifting right (away from wall), needs to go left
 					arcadeDrive(speed, -0.1);
-					System.out.printf(
-							"[wall is on left of robot] drifting right, away from wall -- correcting  %5.1f \n",
-							fromWall);
+//					System.out.printf(
+//							"[wall is on left of robot] drifting right, away from wall -- correcting  %5.1f \n",
+//							fromWall);
 				} else {
 					arcadeDrive(speed, 0);
-					System.out.printf("[wall is on left of robot] I am already parallel %5.1f \n", fromWall);
+//					System.out.printf("[wall is on left of robot] I am already parallel %5.1f \n", fromWall);
 				}
 			} else { // wall is on right of robot
 				if (fromWall > buffer + bufferTolerance) { // drifting left (away from wall), needs to go right
 					arcadeDrive(speed, 0.1);
-					System.out.printf(
-							"[wall is on right of robot] drifting left, away from wall -- correcting %5.1f \n",
-							fromWall);
+//					System.out.printf(
+//							"[wall is on right of robot] drifting left, away from wall -- correcting %5.1f \n",
+//							fromWall);
 				} else if (fromWall < buffer - bufferTolerance) { // drifting right (toward wall), needs to go left
 					arcadeDrive(speed, -0.1);
-					System.out.printf("[wall is on right of robot] drifting right, toward wall -- correcting  %5.1f \n",
-							fromWall);
+//					System.out.printf("[wall is on right of robot] drifting right, toward wall -- correcting  %5.1f \n",
+//							fromWall);
 				} else {
 					arcadeDrive(speed, 0);
-					System.out.printf("[wall is on right of robot] I am already parallel %5.1f \n", fromWall);
+//					System.out.printf("[wall is on right of robot] I am already parallel %5.1f \n", fromWall);
 				}
 			}
 		} else { // has reached target -- stop
@@ -642,18 +646,18 @@ public class Drivetrain extends Subsystem {
 
 		pidControllerDriving.setAbsoluteTolerance(1);
 
-		System.out.println("l_encoder.getDistance() " + l_encoder.getDistance() + " target " + desiredMoveDistance);
+//		System.out.println("l_encoder.getDistance() " + l_encoder.getDistance() + " target " + desiredMoveDistance);
 
 		double pidOutput = myPIDOutputDriving.get();
 		if (Double.isNaN(pidOutput)) {
-			System.out.println("Got invalid PID output for driving");
+//			System.out.println("Got invalid PID output for driving");
 		} else {
-			arcadeDrive(0.8 * pidOutput, error); // note 0.8 scalar
-			System.out.println("trying to drive " + pidOutput);
+			arcadeDrive(0.5 * pidOutput, error); // note 0.8 scalar
+			System.out.println("trying to drive (not accounting for scalar) " + pidOutput);
 		}
 
 		pid_done = pidControllerDriving.onTarget();
-		System.out.println(pid_done);
+//		System.out.println(pid_done);
 
 		if (pid_done) {
 			pidControllerDriving.disable();
@@ -674,10 +678,10 @@ public class Drivetrain extends Subsystem {
 		double pidOutput = myPIDOutputTurning.get();
 
 		if (Double.isNaN(pidOutput)) {
-			System.out.println("Got invalid output from Turn PID Controller");
+			//System.out.println("Got invalid output from Turn PID Controller");
 		} else {
 			arcadeDrive(0.0, pidOutput);
-			System.out.println("trying to drive " + pidOutput);
+			//System.out.println("trying to drive " + pidOutput);
 		}
 
 		pid_done = pidControllerTurning.onTarget();
@@ -686,7 +690,7 @@ public class Drivetrain extends Subsystem {
 			pidControllerTurning.disable();
 		}
 
-		System.out.println("gyro: " + ahrs.getAngle());
+		//System.out.println("gyro: " + ahrs.getAngle());
 
 		return pid_done;
 	}
