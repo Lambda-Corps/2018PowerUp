@@ -33,7 +33,7 @@ public class Arm extends Subsystem {
     
     private Encoder armUpEncoder;
     
-    private DigitalOutput led1;
+    //private DigitalOutput led1;
     
     public final Accelerometer accel;
 	public final BuiltInAccelerometer BIA;
@@ -56,7 +56,7 @@ public class Arm extends Subsystem {
 		accel = new ADXL345_I2C(I2C.Port.kOnboard, Accelerometer.Range.k4G);
 		
 		//led
-		led1 = new DigitalOutput(9);
+		//led1 = new DigitalOutput(9); //COMMENTED OUT FOR STEAMWORKS BOT
 		//TODO:find out if there is range finder on arm if not delete later
 		//range_finder = new AnalogInput(0);	
 		LiveWindow.add(this);
@@ -74,7 +74,7 @@ public class Arm extends Subsystem {
     	int upperArmLimit = 135;
     	int lowerArmLimit = 45;
     	double anglex = (double)armEncoderValue*180/14000;
-    	System.out.println("This is the encoder value2 "+ anglex);
+//    	System.out.println("This is the encoder value2 "+ anglex);
     	
     	if (((armEncoderValue > armEncoderUpperLimit) && (armSpeed < 0)) ||
     	((armEncoderValue < armEncoderLowerLimit) && (armSpeed > 0))){
@@ -82,12 +82,12 @@ public class Arm extends Subsystem {
     	}
     	bot_arm_rotation_motor.set(ControlMode.PercentOutput, armSpeed );
     	if(anglex>lowerArmLimit && anglex<upperArmLimit) {
-    		led1.set(true);
+    		//led1.set(true);
     		telescoping_solenoid.set(DoubleSolenoid.Value.kReverse);
 
     	}
     	else {
-    		led1.set(false);
+    		//led1.set(false);
     		telescoping_solenoid.set(DoubleSolenoid.Value.kForward);
     	}
     	//wrist_motor.set(ControlMode.PercentOutput, armSpeed);

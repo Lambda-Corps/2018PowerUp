@@ -95,7 +95,7 @@ public class Robot extends TimedRobot {
 		climber = new Climber();
 		oi = new OI();
 
-		System.out.println("Adding command to Dashboard");
+//		System.out.println("Adding command to Dashboard");
 		// SmartDashboard.putData("Arm Command", new RotateArmUp());
 
 	}
@@ -139,12 +139,12 @@ public class Robot extends TimedRobot {
 
 		// access FMS data
 		String colorString;
-		System.out.println("auto init");
+//		System.out.println("auto init");
 		do {
 			colorString = DriverStation.getInstance().getGameSpecificMessage();
-			System.out.println("string: " + colorString);
+//			System.out.println("string: " + colorString);
 		} while (colorString.length() == 0);
-		System.out.println("finished do while");
+//		System.out.println("finished do while");
 		if (colorString.charAt(0) == 'L') { // if switch closest to us has our color on the left, we are 1
 			closeSwitchNum = 1;
 		} else {
@@ -243,7 +243,7 @@ public class Robot extends TimedRobot {
 
 		// System.out.println("gyro teleop: " + Robot.drivetrain.getAHRSGyroAngle());
 
-		System.out.println("LE " + Robot.drivetrain.getLeftEncoder() + " RE " + Robot.drivetrain.getRightEncoder());
+//		System.out.println("LE " + Robot.drivetrain.getLeftEncoder() + " RE " + Robot.drivetrain.getRightEncoder());
 	}
 
 	/**
