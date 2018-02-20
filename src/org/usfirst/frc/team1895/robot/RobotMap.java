@@ -41,6 +41,7 @@ public class RobotMap {
 	public static final int LEFT_ENCODER_B_PORT = 2;
 	public static final int ARM_UP_ENCODER_A = 4;
 	public static final int ARM_UP_ENCODER_B = 5;
+	public static final int GEAR_LED_PORT = 9;
 	
 	// Analog
 	public static final int INTAKE_RANGEFINDER_PORT = 0;

@@ -1,21 +1,20 @@
 package org.usfirst.frc.team1895.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.can.*;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import org.usfirst.frc.team1895.robot.Robot;
 import org.usfirst.frc.team1895.robot.RobotMap;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.Default_Drivetrain;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
 import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DigitalOutput;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
@@ -30,8 +29,8 @@ import edu.wpi.first.wpilibj.command.Subsystem;
  */
 
 public class Drivetrain extends Subsystem {
-
-	boolean isCorrecting = false; //
+	
+	public static boolean amCorrecting;
 
 	// motors CAN ID #
 	private TalonSRX left_dt_motor1; // 1
@@ -42,7 +41,6 @@ public class Drivetrain extends Subsystem {
 	// pneumatics
 	private final Compressor compressor;
 	private final DoubleSolenoid transmission_solenoid;
-
 
 	// Gyro
 	private AHRS ahrs;
@@ -68,7 +66,7 @@ public class Drivetrain extends Subsystem {
 	private PIDController pidControllerDriving;
 	private PIDController pidControllerTurning;
 
-	final double pGainDriv = 0, iGainDriv = 0, dGainDriv = 0;
+	final double pGainDriv = 1, iGainDriv = 0, dGainDriv = 0;
 
 	final double pGainTurn = 0, iGainTurn = 0, dGainTurn = 0;
 
@@ -79,13 +77,17 @@ public class Drivetrain extends Subsystem {
 	public static final int LEFT_MOTOR_ENCODER = 0;
 	public static final int RIGHT_MOTOR_ENCODER = 1;
 	public static final int ARM_MOTOR_ENCODER = 2;
-	
+
 	// gear-shifting
 	int highgear_count = 0;
 	int highgear_count_test = 0;
 	int lowgear_count = 0;
 	boolean inHigh = false;
+
 	int current_count = 0;
+	DigitalOutput redLED; // 7
+	DigitalOutput yellowLED; // 8
+	DigitalOutput greenLED; // 9
 
 	public Drivetrain() {
 		// motors
@@ -110,16 +112,19 @@ public class Drivetrain extends Subsystem {
 		// pneumatics
 		compressor = new Compressor();
 
-		transmission_solenoid = new DoubleSolenoid(RobotMap.DRIVETRAIN_SOLENOID_A_PORT, RobotMap.DRIVETRAIN_SOLENOID_B_PORT);
+		transmission_solenoid = new DoubleSolenoid(RobotMap.DRIVETRAIN_SOLENOID_A_PORT,
+				RobotMap.DRIVETRAIN_SOLENOID_B_PORT);
 
 		// digital IO sensors
 		l_encoder = new Encoder(RobotMap.LEFT_ENCODER_A_PORT, RobotMap.LEFT_ENCODER_B_PORT, true);
+//		l_encoder.setReverseDirection(true);
 		r_encoder = new Encoder(RobotMap.RIGHT_ENCODER_A_PORT, RobotMap.RIGHT_ENCODER_B_PORT, true);
+//		l_encoder.setReverseDirection(true);
 
-		//l_encoder.setDistancePerPulse(.0159); //PowerUp
-		//r_encoder.setDistancePerPulse(.0159); //PowerUp
-		l_encoder.setDistancePerPulse(0.0225); //Steamworks
-		r_encoder.setDistancePerPulse(0.0225); //Steamworks
+//		l_encoder.setDistancePerPulse(.0159); // PowerUp
+//		r_encoder.setDistancePerPulse(.0159); // PowerUp
+		 l_encoder.setDistancePerPulse(0.0225); //Steamworks
+		 r_encoder.setDistancePerPulse(0.0225); //Steamworks
 
 		// analog sensors
 		try {
@@ -140,21 +145,26 @@ public class Drivetrain extends Subsystem {
 		fr_rangefinder = new AnalogInput(RobotMap.FRONT_RANGEFINDER_PORT);
 		l_rangefinder = new AnalogInput(RobotMap.LEFT_RANGEFINDER_PORT);
 		r_rangefinder = new AnalogInput(RobotMap.RIGHT_RANGEFINDER_PORT);
-		//in_rangefinder = new AnalogInput(RobotMap.INTAKE_RANGEFINDER_PORT);
+		// in_rangefinder = new AnalogInput(RobotMap.INTAKE_RANGEFINDER_PORT);
 
 		// accelerometer
 		// TODO -- After we figure out the type, fix this constructor
 		// accelerometer = new AnalogInput(RobotMap.ACCELEROMETER_PORT);
-		
+
 		myPIDOutputDriving = new MyPIDOutput();
 		myPIDOutputTurning = new MyPIDOutput();
-		pidControllerDriving = new PIDController(pGainDriv, iGainTurn, dGainDriv, l_encoder, myPIDOutputDriving); // Input																		// output
+		pidControllerDriving = new PIDController(pGainDriv, iGainTurn, dGainDriv, l_encoder, myPIDOutputDriving); // Input
+																													// //
+																													// output
 		pidControllerTurning = new PIDController(pGainTurn, iGainTurn, dGainTurn, ahrs, myPIDOutputTurning);
+		greenLED = new DigitalOutput(RobotMap.GEAR_LED_PORT);
+
 	}
 
-//==Manual driving============================================================================
+	// ==Manual
+	// driving============================================================================
 	public void arcadeDrive(double trans_speed, double yaw) {
-
+		
 		setAHRSAdjustment(0);
 
 		double left_speed = trans_speed + yaw;
@@ -165,8 +175,7 @@ public class Drivetrain extends Subsystem {
 		// from the gyro, the tolerance is how far we deviate (in degrees) before we
 		// self correct, and the scalar is the percentage we use to reduce the over
 		// corrected side.
-		double angle;
-		double tolerance = 1.0;
+		double tolerance = 0.1;
 		double scalar = 0.75; // Correlate it with the trans_speed
 
 		// This is to normalize the speed inputs. The Talons require a speed of -1 > x >
@@ -177,45 +186,56 @@ public class Drivetrain extends Subsystem {
 			left_speed /= max_speed;
 			right_speed /= max_speed;
 		}
-
+		
 		if (Math.abs(yaw) < 0.005) { // if no x input --> correcting mode
-			angle = Robot.drivetrain.getAHRSGyroAngle();
-			if (isCorrecting == false) { // if correcting mode is not already in progress
-				isCorrecting = true; // set flag
-				Robot.drivetrain.resetAHRSGyro(); // reset gyro
+			if(!amCorrecting) {
+				amCorrecting = true;
+				resetEncoders();
 			}
-
-			// TODO -- This needs to be tested to ensure it's accurate
-			if (trans_speed > 0) {
-
-				if (angle < (-tolerance)) { // if drifting left
-					right_speed *= scalar; // go right
-				} else if (angle > (tolerance)) { // if drifting right
-					left_speed *= scalar; // go left
-				} else {
-					// don't modify speed
-				}
+			double l_distance = l_encoder.getDistance();
+			double r_distance = r_encoder.getDistance();
+			System.out.println(Math.abs(l_distance-r_distance));
+			if (Math.abs(l_distance - r_distance) < tolerance) {
+				// already straight
+				System.out.println("im good");
 			} else {
-
-				if (angle < (-tolerance)) { // if drifting left
-					left_speed *= scalar; // go right
-				} else if (angle > (tolerance)) { // if drifting right
-					right_speed *= scalar; // go left
-				} else {
-					// don't modify speed
+				// forward
+				if (trans_speed > 0) {
+					System.out.println("fwd");
+					// determine whether drifting left or right
+					if (l_distance > r_distance) { // drifting right, need to go left
+						System.out.println("drifting right");
+						left_speed *= scalar; // go left
+					} else { // drifting left, need to go right
+						System.out.println("drifting left");
+						right_speed *= scalar; // go right
+					}
+				} else { // backward
+					System.out.println("bwd");
+					// determine whether drifting left or right
+					if (l_distance > r_distance) { // drifting right, need to go left
+						System.out.println("drifting left");
+						right_speed *= scalar; // go left
+					} else { // drifting left, need to go right
+						System.out.println("drifting right");
+						left_speed *= scalar; // go right
+					}
 				}
 			}
-		} else { // has x input --> normal mode
-			isCorrecting = false;
+		} else {
+			amCorrecting = false;
+		}
+		// The .985 scalar value was determined through testing that our left motors
+		// were outputting more power than the right.
+		
+		if(trans_speed>0) {  //forward
+			left_dt_motor1.set(ControlMode.PercentOutput, left_speed * .985); // .978 -- .95
+			right_dt_motor1.set(ControlMode.PercentOutput, right_speed);
+		} else {
+			left_dt_motor1.set(ControlMode.PercentOutput, left_speed);
+			right_dt_motor1.set(ControlMode.PercentOutput, right_speed * 0.972);
 		}
 
-		// motorgroup stuffs - CHANGED TO LEADER FOLLOWER TESTING
-		// The .978 scalar value was determined through testing that our left motors
-		// were outputting
-		// more power than the right.
-
-		left_dt_motor1.set(ControlMode.PercentOutput, left_speed * .985);  //.978  -- .95
-		right_dt_motor1.set(ControlMode.PercentOutput, right_speed);
 
 		shiftGears();
 		
@@ -237,28 +257,50 @@ public class Drivetrain extends Subsystem {
 		//}
 	}
 	
+	public double getLMCurrent() {
+		return left_dt_motor1.getOutputCurrent();
+	}
+
+	public double getRMCurrent() {
+		return right_dt_motor1.getOutputCurrent();
+	}
+
+	public double getLM2Current() {
+		return left_dt_motor2.getOutputCurrent();
+	}
+
+	public double getRM2Current() {
+		return right_dt_motor2.getOutputCurrent();
+	}
+	
 	public void setCoastMode() {
-		//neutral mode configuring
 		left_dt_motor1.setNeutralMode(NeutralMode.Coast);
 		left_dt_motor2.setNeutralMode(NeutralMode.Coast);
 		right_dt_motor1.setNeutralMode(NeutralMode.Coast);
 		right_dt_motor2.setNeutralMode(NeutralMode.Coast);
-		System.out.println("Drivetrain motors have been set to coast mode");
+	}
+	
+	public void setBrakeMode() {
+		left_dt_motor1.setNeutralMode(NeutralMode.Brake);
+		left_dt_motor2.setNeutralMode(NeutralMode.Brake);
+		right_dt_motor1.setNeutralMode(NeutralMode.Brake);
+		right_dt_motor2.setNeutralMode(NeutralMode.Brake);
 	}
 	
 	public void shiftGears() {
-		//add something so that it doesn't shift gears in autonomous
-		
+		// add something so that it doesn't shift gears in autonomous
+
 		double current_speed = Math.max(Math.abs(l_encoder.getRate()), Math.abs(r_encoder.getRate()));
-		
-		//max speed to be in low gear is 4.71ft/sec (56.52 inches/sec), max high gear is 12.47 ft/sec
-		//unit should be inches per second
+
+		// max speed to be in low gear is 4.71ft/sec (56.52 inches/sec), max high gear
+		// is 12.47 ft/sec
+		// unit should be inches per second
 		double downshift_speed = 56.52;
-		
+
 		// if in high gear..
-		if(inHigh) {
+		if (inHigh) {
 			// ..and you dropped below the minimum high speed, switch to low gear
-			if(current_speed < downshift_speed) {
+			if (current_speed < downshift_speed) {
 				transmission_solenoid.set(DoubleSolenoid.Value.kReverse);
 				inHigh = false;
 			}
@@ -266,9 +308,9 @@ public class Drivetrain extends Subsystem {
 		// if in low gear..
 		else {
 			// ..and you went above the max low gear speed..
-			if(current_speed > downshift_speed) {
+			if (current_speed > downshift_speed) {
 				highgear_count++;
-				
+
 				// ..after ~ 1.5 seconds, shift into high gear
 				if(highgear_count == 200) {
 					transmission_solenoid.set(DoubleSolenoid.Value.kForward); 
@@ -277,48 +319,55 @@ public class Drivetrain extends Subsystem {
 				}
 			}
 		}
+
+		// update LED
+		if (inHigh) {
+			greenLED.set(true); // led on = high gear
+		} else {
+			greenLED.set(false); // led off = low gear
+		}
+
 	}
-	
-	//for ShiftGearsTestStartLG command
+
+	// for ShiftGearsTestStartLG command
 	public boolean testStartLG() {
 		boolean done = false;
-		if(!inHigh) {
+		if (!inHigh) {
 			arcadeDrive(0.5, 0);
 			lowgear_count++;
-			if(lowgear_count % 100 == 0) {
+			if (lowgear_count % 100 == 0) {
 				done = true;
 				lowgear_count = 0;
 			}
-		}
-		else {
+		} else {
 			System.out.println("started in high gear, test failed");
 		}
 		return done;
 	}
-	
-	//for ShiftGearsShiftHighGear command
+
+	// for ShiftGearsShiftHighGear command
 	public boolean driveUntilHighGear() {
 		boolean highWasReached = false;
 		if (!inHigh) {
 			arcadeDrive(1, 0);
 			System.out.println("trying to shift to high gear");
-		} 
-		//if you are in high gear, and about 3ish seconds have passed, slow down  
+		}
+		// if you are in high gear, and about 3ish seconds have passed, slow down
 		else {
-			arcadeDrive(1,0);
+			arcadeDrive(1, 0);
 			highgear_count_test++;
-			if(highgear_count_test % 40 == 0) {
+			if (highgear_count_test % 40 == 0) {
 				System.out.println("High gear has been reached");
 			}
 			System.out.println("High gear has been reached");
-			if(highgear_count_test % 190 == 0) {
+			if (highgear_count_test % 190 == 0) {
 				highWasReached = true;
 			}
 		}
 		return highWasReached;
 	}
-	
-	//for ShiftGearsShiftHighGear command
+
+	// for ShiftGearsShiftHighGear command
 	public boolean shiftToLG() {
 		boolean lowWasReached = false;
 		if (inHigh) {
@@ -326,27 +375,28 @@ public class Drivetrain extends Subsystem {
 			System.out.println("trying to shift to low gear");
 		} else {
 			arcadeDrive(0.5, 0);
-			if(lowgear_count % 40 == 0) {
+			if (lowgear_count % 40 == 0) {
 				System.out.println("low gear has been reached");
 			}
 			lowgear_count++;
-			if(lowgear_count % 190 == 0) {
+			if (lowgear_count % 190 == 0) {
 				lowWasReached = true;
 			}
 		}
 		return lowWasReached;
 	}
 
-//==Driving straight code and encoder code==========================================================================
+	// ==Driving straight code and encoder
+	// code==========================================================================
 	public void resetEncoders() {
 		l_encoder.reset();
 		r_encoder.reset();
 	}
-	
+
 	public double getLeftEncoder() {
 		return l_encoder.getDistance();
 	}
-	
+
 	public double getRightEncoder() {
 		return r_encoder.getDistance();
 	}
@@ -398,7 +448,8 @@ public class Drivetrain extends Subsystem {
 		}
 		return targetReached;
 	}
- // ==Rangefinder Code==========================================================================================================
+	// ==Rangefinder
+	// Code==========================================================================================================
 
 	public boolean drivefr_RFDistance(double goaldistance, double speed) { // TODO: do we need separate methods??? this
 		// only does front RF
@@ -526,7 +577,8 @@ public class Drivetrain extends Subsystem {
 		return done;
 	}
 
-//==Accelerometer Code==========================================================================
+	// ==Accelerometer
+	// Code==========================================================================
 	public double getAccelerometerValue() {
 		return accelerometer.getValue(); // TODO: is this the right method?
 	}
@@ -535,8 +587,8 @@ public class Drivetrain extends Subsystem {
 		accelerometer.resetAccumulator();
 	}
 
-	
-//==Gyro Code====================================================================================
+	// ==Gyro
+	// Code====================================================================================
 	public double getAHRSGyroAngle() {
 		return ahrs.getAngle();
 	}
@@ -549,12 +601,29 @@ public class Drivetrain extends Subsystem {
 		ahrs.setAngleAdjustment(adj);
 	}
 
-//==PID Related Driving Code===============================================================================================
+	// ==PID Related Driving
+	// Code===============================================================================================
+	public void makeNewPidDriving(double p, double i, double d) {
+		myPIDOutputDriving = new MyPIDOutput();
+		pidControllerDriving = new PIDController(p, i, d, l_encoder, myPIDOutputDriving);
+	}
+
+	public void makeNewPidTurning(double p, double i, double d) {
+		myPIDOutputTurning = new MyPIDOutput();
+		pidControllerTurning = new PIDController(p, i, d, ahrs, myPIDOutputTurning);
+	}
+
 	public void setDrivingPIDSetpoints(double setpoint) {
 		l_encoder.reset();
 		r_encoder.reset();
 		pidControllerDriving.setSetpoint(setpoint);
 		pidControllerDriving.enable();
+	}
+
+	public void setTurningPIDSetpoints(double setpoint) {
+		ahrs.reset();
+		pidControllerTurning.setSetpoint(setpoint);
+		pidControllerTurning.enable();
 	}
 
 	// TODO -- This is last year's code, with the self correcting and updated arcade
@@ -572,14 +641,18 @@ public class Drivetrain extends Subsystem {
 
 		pidControllerDriving.setAbsoluteTolerance(1);
 
+		System.out.println("l_encoder.getDistance() " + l_encoder.getDistance() + " target " + desiredMoveDistance);
+
 		double pidOutput = myPIDOutputDriving.get();
 		if (Double.isNaN(pidOutput)) {
 			System.out.println("Got invalid PID output for driving");
 		} else {
-			arcadeDrive(0.8 * (myPIDOutputDriving.get()), error); // note 0.8 scalar
+			arcadeDrive(0.8 * pidOutput, error); // note 0.8 scalar
+			System.out.println("trying to drive " + pidOutput);
 		}
 
 		pid_done = pidControllerDriving.onTarget();
+		System.out.println(pid_done);
 
 		if (pid_done) {
 			pidControllerDriving.disable();
@@ -603,6 +676,7 @@ public class Drivetrain extends Subsystem {
 			System.out.println("Got invalid output from Turn PID Controller");
 		} else {
 			arcadeDrive(0.0, pidOutput);
+			System.out.println("trying to drive " + pidOutput);
 		}
 
 		pid_done = pidControllerTurning.onTarget();
@@ -611,27 +685,13 @@ public class Drivetrain extends Subsystem {
 			pidControllerTurning.disable();
 		}
 
+		System.out.println("gyro: " + ahrs.getAngle());
+
 		return pid_done;
 	}
-	
-	//temp
-	public double getLMCurrent() {
-		return left_dt_motor1.getOutputCurrent();
-	}
-	
-	public double getRMCurrent() {
-		return right_dt_motor1.getOutputCurrent();
-	}
-	
-	public double getLM2Current() {
-		return left_dt_motor2.getOutputCurrent();
-	}
-	
-	public double getRM2Current() {
-		return right_dt_motor2.getOutputCurrent();
-	}
 
-//==Default Command==========================================================================
+	// ==Default
+	// Command==========================================================================
 	public void initDefaultCommand() {
 		// Set the default command for a subsystem here.
 		setDefaultCommand(new Default_Drivetrain());

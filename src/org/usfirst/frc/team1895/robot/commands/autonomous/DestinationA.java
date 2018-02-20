@@ -32,43 +32,33 @@ public class DestinationA extends CommandGroup {
 		}	
 		
 		closeRoute = true; //hard coding it for now
-		addSequential(new PrintCommand("A"));
-		/*//2  -- for testing conditional command
-		addSequential(new DriveStraightWithoutPID(0.3, 10));
-		addSequential(new TurnWithoutPID(0.3, -90));
-		addSequential(new DriveStraightWithoutPID(0.3, 35));
-		addSequential(new TurnWithoutPID(0.3, 90));
-		addSequential(new DriveStraightWithoutPID(0.3, 5));
-		addSequential(new DeployCube_Claw());*/
-		
+		addSequential(new PrintCommand("A"));		
 
 		if (ourLeftSwitch) {
 			addSequential(new PrintCommand("we are on left"));
 			switch (Robot.startPos) {
 			case 1: 
 				addSequential(new PrintCommand("A, ourLeftSwitch, position 1"));
-/*				addSequential(new DriveStraightWithoutPID(0.3, 60));
+				addSequential(new DriveStraightWithoutPID(0.3, 60));
 				addSequential(new TurnWithoutPID(0.3, 90));
-				addSequential(new DriveStraightWithoutPID(0.3, 68));
+				addSequential(new DriveStraightWithoutPID(0.3, 60));
 				addSequential(new TurnWithoutPID(0.3, -90));
 				//now directly in front of switch, 40" away
 				//temporarily making DriveToObstacle go all the way Dest.A, but in the real code it'll vision-align
 				//addSequential(new DriveToObstacle(2, 0.5));
 				//addSequential(new AlignToSwitch());
 				//addSequential(new DeployCube_Claw());
-				 */
+				break;
 			case 2:
 				addSequential(new PrintCommand("A, ourLeftSwitch, position 2"));
-/*				addSequential(new DriveStraightWithoutPID(0.3, 60));
+				addSequential(new DriveStraightWithoutPID(0.3, 60));
 				addSequential(new TurnWithoutPID(0.3, -90));
-				addSequential(new DriveStraightWithoutPID(0.3, 182));
-				addSequential(new TurnWithoutPID(0.3, 90));
-				addSequential(new DriveStraightWithoutPID(0.3, 68));
+				addSequential(new DriveStraightWithoutPID(0.3, 100));
 				addSequential(new TurnWithoutPID(0.3, 90));
 				//addSequential(new DriveToObstacle(2, 0.5));
 				//addSequential(new AlignToSwitch());
 				//addSequential(new DeployCube_Claw());
-				 * */
+				/*
 				addSequential(new DriveStraightWithoutPID(0.3, 60));
 				addSequential(new TurnWithoutPID(0.3, -90));
 				addSequential(new DriveStraightWithoutPID(0.3, 140));
@@ -76,33 +66,32 @@ public class DestinationA extends CommandGroup {
 				//addSequential(new DriveToObstacle(2, 0.5));
 				//addSequential(new AlignToSwitch());
 				//addSequential(new DeployCube_Claw());
+				 * 
+				 */
 				break;
 			case 3:  //USING FOR TEST
-				if (closeRoute) {
+//				if (closeRoute) {
 					addSequential(new PrintCommand("A, ourLeftSwitch, position 3, close route"));
-/*					addSequential(new DriveStraightWithoutPID(0.3, 60));
+					addSequential(new DriveStraightWithoutPID(0.3, 60));
 					addSequential(new TurnWithoutPID(0.3, -90));
 					addSequential(new DriveStraightWithoutPID(0.3, 173));
 					addSequential(new TurnWithoutPID(0.3, 90));
 					//addSequential(new DriveToObstacle(2, 0.5));
 					//addSequential(new AlignToSwitch());
 					//addSequential(new DeployCube_Claw());
-					 * 
-					 */
-				} else {
-					addSequential(new PrintCommand("A, ourLeftSwitch, position 3, else"));
-/*					addSequential(new DriveStraightWithoutPID(0.3, 215));
-					addSequential(new TurnWithoutPID(0.3, -90));
-					//addSequential(new DriveToObstacle(30, 0.5)); //drive till you're 30 inches away
-					addSequential(new TurnWithoutPID(0.3, -90));
-					addSequential(new DriveStraightWithoutPID(0.3, 135));
-					addSequential(new TurnWithoutPID(0.3, -90));
-					addSequential(new DriveStraightWithoutPID(0.3, 70));
-					addSequential(new TurnWithoutPID(0.3, -90));
-					addSequential(new DriveToObstacle(2, 0.5));
-					addSequential(new DeployCube_Claw());
-					*/
-				}
+//				} else {
+//					addSequential(new PrintCommand("A, ourLeftSwitch, position 3, else"));
+//					addSequential(new DriveStraightWithoutPID(0.3, 215));
+//					addSequential(new TurnWithoutPID(0.3, -90));
+//					//addSequential(new DriveToObstacle(30, 0.5)); //drive till you're 30 inches away
+//					addSequential(new TurnWithoutPID(0.3, -90));
+//					addSequential(new DriveStraightWithoutPID(0.3, 135));
+//					addSequential(new TurnWithoutPID(0.3, -90));
+//					addSequential(new DriveStraightWithoutPID(0.3, 70));
+//					addSequential(new TurnWithoutPID(0.3, -90));
+//					addSequential(new DriveToObstacle(2, 0.5));
+//					addSequential(new DeployCube_Claw());
+//				}
 				break;
 			}
 
@@ -111,48 +100,45 @@ public class DestinationA extends CommandGroup {
 			switch (Robot.startPos) {
 			case 1:
 				addSequential(new PrintCommand("A, not ourLeftSwitch, position 1"));
-/*				addSequential(new DriveStraightWithoutPID(0.3, 60));
+				addSequential(new DriveStraightWithoutPID(0.3, 50));
 				addSequential(new TurnWithoutPID(0.3, 90));
-				addSequential(new DriveStraightWithoutPID(0.3, 222));
+				addSequential(new DriveStraightWithoutPID(0.3, 175));
 				addSequential(new TurnWithoutPID(0.3, -90));
 				//now in front of Destination A, right switch
 				//addSequential(new DriveToObstacle(2, 0.5));
 				//addSequential(new AlignToSwitch());
 				//addSequential(new DeployCube_Claw());
-				 * 
-				 */
+				break;
 			case 2:
 				addSequential(new PrintCommand("A, not ourLeftSwitch, position 2"));
-/*				addSequential(new DriveStraightWithoutPID(0.3, 60));
-				addSequential(new DriveToObstacle(2, 0.5));
+				addSequential(new DriveStraightWithoutPID(0.3, 60));
+//				addSequential(new DriveToObstacle(2, 0.5));
 				//addSequential(new AlignToSwitch());
-				//addSequential(new DeployCuve_Claw());
-				 * 
-				 */
+				//addSequential(new DeployCube_Claw());
+				break;
 			case 3: //NOT DONE YET
-				if (closeRoute) {
+//				if (closeRoute) {
 					addSequential(new PrintCommand("A, not ourLeftSwitch, position 3, closeRoute"));
-/*					addSequential(new DriveStraightWithoutPID(0.3, 50));
+					addSequential(new DriveStraightWithoutPID(0.3, 50));
 					addSequential(new TurnWithoutPID(0.3, -90));
 					addSequential(new DriveStraightWithoutPID(0.3, 50));
 					addSequential(new TurnWithoutPID(0.3, 90));
-					addSequential(new DriveStraightWithoutPID(0.3, 50));
-					addSequential(new DeployCube_Claw());
-					*/
-				} else {
-					addSequential(new PrintCommand("A, not ourLeftSwitch, position 3, else"));
-/*					addSequential(new DriveStraightWithoutPID(0.3, 50));
-					addSequential(new TurnWithoutPID(0.3, -90));
-					addSequential(new DriveStraightWithoutPID(0.3, 50));
-					addSequential(new TurnWithoutPID(0.3, -90));
-					addSequential(new DriveStraightWithoutPID(0.3, 50));
-					addSequential(new TurnWithoutPID(0.3, -90));
-					addSequential(new DriveStraightWithoutPID(0.3, 50));
-					addSequential(new TurnWithoutPID(0.3, -90));
-					addSequential(new DriveStraightWithoutPID(0.3, 50));
-					addSequential(new DeployCube_Claw());
-					*/
-				}
+//					addSequential(new DriveStraightWithoutPID(0.3, 50));
+//					addSequential(new DeployCube_Claw());
+					
+//				} else {
+//					addSequential(new PrintCommand("A, not ourLeftSwitch, position 3, else"));
+//					addSequential(new DriveStraightWithoutPID(0.3, 50));
+//					addSequential(new TurnWithoutPID(0.3, -90));
+//					addSequential(new DriveStraightWithoutPID(0.3, 50));
+//					addSequential(new TurnWithoutPID(0.3, -90));
+//					addSequential(new DriveStraightWithoutPID(0.3, 50));
+//					addSequential(new TurnWithoutPID(0.3, -90));
+//					addSequential(new DriveStraightWithoutPID(0.3, 50));
+//					addSequential(new TurnWithoutPID(0.3, -90));
+//					addSequential(new DriveStraightWithoutPID(0.3, 50));
+//					addSequential(new DeployCube_Claw());
+//				}
 				break;
 			}
 

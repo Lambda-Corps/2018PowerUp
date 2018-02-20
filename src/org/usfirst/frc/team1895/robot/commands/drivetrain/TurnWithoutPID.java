@@ -11,7 +11,7 @@ public class TurnWithoutPID extends Command {
 	private double goalAngle = 0.0;
 	private boolean isDone = false;
 	private double speed;
-	private double tolerance = 0.2;
+	private double tolerance = 3;
 	private double currentAngle;
 	
     public TurnWithoutPID(double speed, double givenAngle) {
