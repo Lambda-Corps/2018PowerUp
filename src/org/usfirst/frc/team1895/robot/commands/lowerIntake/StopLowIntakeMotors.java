@@ -11,7 +11,7 @@ public class StopLowIntakeMotors extends Command {
 
     public StopLowIntakeMotors() {
         // Use requires() here to declare subsystem dependencies
-        //requires(Robot);
+        requires(Robot.lowerIntake);
     }
 
     // Called just before this Command runs the first time
@@ -21,7 +21,7 @@ public class StopLowIntakeMotors extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	//Robot.lowerIntake.setIntakeMotors(0);
+    	Robot.lowerIntake.setLowerIntakeMotors(0);
     }
 
     // Make this return true when this Command no longer needs to run execute()

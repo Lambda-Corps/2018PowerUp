@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1895.robot.commands.arm;
 
+import org.usfirst.frc.team1895.robot.Robot;
+
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
@@ -9,7 +11,7 @@ public class RetractTelescopingPart extends Command {
 
     public RetractTelescopingPart() {
         // Use requires() here to declare subsystem dependencies
-        // eg. requires(chassis);
+        requires(Robot.arm);
     }
 
     // Called just before this Command runs the first time
@@ -18,6 +20,7 @@ public class RetractTelescopingPart extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	Robot.arm.retractTelescopingArm();
     }
 
     // Make this return true when this Command no longer needs to run execute()

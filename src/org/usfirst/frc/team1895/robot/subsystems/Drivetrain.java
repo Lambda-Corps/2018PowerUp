@@ -278,6 +278,7 @@ public class Drivetrain extends Subsystem {
 		left_dt_motor2.setNeutralMode(NeutralMode.Coast);
 		right_dt_motor1.setNeutralMode(NeutralMode.Coast);
 		right_dt_motor2.setNeutralMode(NeutralMode.Coast);
+		System.out.println("Robot has been set to coast mode");
 	}
 	
 	public void setBrakeMode() {

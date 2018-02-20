@@ -24,7 +24,7 @@ public class LowerIntake extends Subsystem {
 	private TalonSRX right_lower_intake_motor;
 	
 	// pneumatics
-	//private final DoubleSolenoid lower_intake_solenoid;
+	private final DoubleSolenoid lower_intake_solenoid;
 	
 	public LowerIntake() {
 		//motors
@@ -32,13 +32,22 @@ public class LowerIntake extends Subsystem {
 		right_lower_intake_motor = new TalonSRX(RobotMap.RIGHT_LOWER_INTAKE_MOTOR_PORT);
 		
 		//pneumatics
-		//lower_intake_solenoid = new DoubleSolenoid(RobotMap.LOWER_INTAKE_SOLENOID_A_PORT, RobotMap.LOWER_INTAKE_SOLENOID_B_PORT);
+		lower_intake_solenoid = new DoubleSolenoid(RobotMap.LOWER_INTAKE_SOLENOID_A_PORT, RobotMap.LOWER_INTAKE_SOLENOID_B_PORT);
 	}
 	
 	//check signs
 	public void setLowerIntakeMotors(double speed) {
 		left_lower_intake_motor.set(ControlMode.PercentOutput, -speed);
 		right_lower_intake_motor.set(ControlMode.PercentOutput, speed);
+	}
+
+//==Solenoids===================================================================================================
+	public void extendLowerIntake() {
+		lower_intake_solenoid.set(DoubleSolenoid.Value.kForward);
+	}
+	
+	public void retractLowerIntake() {
+		lower_intake_solenoid.set(DoubleSolenoid.Value.kReverse);
 	}
 	
     public void initDefaultCommand() {

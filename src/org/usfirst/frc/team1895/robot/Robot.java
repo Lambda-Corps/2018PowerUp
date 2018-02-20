@@ -97,7 +97,6 @@ public class Robot extends TimedRobot {
 
 		System.out.println("Adding command to Dashboard");
 		// SmartDashboard.putData("Arm Command", new RotateArmUp());
-
 	}
 
 	/**
@@ -108,7 +107,6 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit() {
 		// Robot.camera.putVideo(false);
-
 	}
 
 	@Override
@@ -183,8 +181,6 @@ public class Robot extends TimedRobot {
 
 	@Override
 	public void teleopInit() {
-		
-		Robot.drivetrain.setCoastMode();
 
 		// This makes sure that the autonomous stops running when
 		// teleop starts running. If you want the autonomous to
