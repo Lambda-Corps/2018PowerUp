@@ -4,6 +4,9 @@ import org.usfirst.frc.team1895.robot.RobotMap;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.Default_Drivetrain;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
+import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
+
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
@@ -80,6 +83,8 @@ public class Drivetrain extends Subsystem {
 	int highgear_count_test = 0;
 	int lowgear_count = 0;
 	boolean inHigh = false;
+
+	int current_count = 0;
 	DigitalOutput redLED; // 7
 	DigitalOutput yellowLED; // 8
 	DigitalOutput greenLED; // 9
@@ -152,7 +157,6 @@ public class Drivetrain extends Subsystem {
 																													// //
 																													// output
 		pidControllerTurning = new PIDController(pGainTurn, iGainTurn, dGainTurn, ahrs, myPIDOutputTurning);
-
 		greenLED = new DigitalOutput(RobotMap.GEAR_LED_PORT);
 
 	}
@@ -234,18 +238,55 @@ public class Drivetrain extends Subsystem {
 
 
 		shiftGears();
-		// System.out.println("Am I in high gear? " + inHigh);
-		// if(highgear_count % 33 == 0) {
-		// System.out.println("LE: " + l_encoder.getDistance() + "RE: " +
-		// r_encoder.getDistance());
-		// }
-		// if(highgear_count % 100 == 0) {
-		// System.out.println("Am I in high gear? " + inHigh);
-		// System.out.println("LE: " + l_encoder.getDistance() + "RE: " +
-		// r_encoder.getDistance());
-		// }
+		
+		current_count++;
+		if(current_count % 66 == 0) {
+			System.out.println("LM: " + getLMCurrent() + " " + getLM2Current());
+			System.out.println("RM: " + getRMCurrent() + " " + getRM2Current());
+			System.out.println("trans speed: " + trans_speed);
+			System.out.println();
+		}
+		
+//		System.out.println("Am I in high gear? " + inHigh);
+//		if(highgear_count % 33 == 0) {
+//			System.out.println("LE: " + l_encoder.getDistance() + "RE: " + r_encoder.getDistance());
+//		}
+		//if(highgear_count % 100 == 0) {
+			//System.out.println("Am I in high gear? " + inHigh);
+			//System.out.println("LE: " + l_encoder.getDistance() + "RE: " + r_encoder.getDistance());
+		//}
+	}
+	
+	public double getLMCurrent() {
+		return left_dt_motor1.getOutputCurrent();
 	}
 
+	public double getRMCurrent() {
+		return right_dt_motor1.getOutputCurrent();
+	}
+
+	public double getLM2Current() {
+		return left_dt_motor2.getOutputCurrent();
+	}
+
+	public double getRM2Current() {
+		return right_dt_motor2.getOutputCurrent();
+	}
+	
+	public void setCoastMode() {
+		left_dt_motor1.setNeutralMode(NeutralMode.Coast);
+		left_dt_motor2.setNeutralMode(NeutralMode.Coast);
+		right_dt_motor1.setNeutralMode(NeutralMode.Coast);
+		right_dt_motor2.setNeutralMode(NeutralMode.Coast);
+	}
+	
+	public void setBrakeMode() {
+		left_dt_motor1.setNeutralMode(NeutralMode.Brake);
+		left_dt_motor2.setNeutralMode(NeutralMode.Brake);
+		right_dt_motor1.setNeutralMode(NeutralMode.Brake);
+		right_dt_motor2.setNeutralMode(NeutralMode.Brake);
+	}
+	
 	public void shiftGears() {
 		// add something so that it doesn't shift gears in autonomous
 
@@ -271,8 +312,8 @@ public class Drivetrain extends Subsystem {
 				highgear_count++;
 
 				// ..after ~ 1.5 seconds, shift into high gear
-				if (highgear_count == 100) {
-					transmission_solenoid.set(DoubleSolenoid.Value.kForward);
+				if(highgear_count == 200) {
+					transmission_solenoid.set(DoubleSolenoid.Value.kForward); 
 					inHigh = true;
 					highgear_count = 0;
 				}
@@ -651,37 +692,6 @@ public class Drivetrain extends Subsystem {
 		//System.out.println("gyro: " + ahrs.getAngle());
 
 		return pid_done;
-	}
-
-	// temp
-	public double getLMCurrent() {
-		return left_dt_motor1.getOutputCurrent();
-	}
-
-	public double getRMCurrent() {
-		return right_dt_motor1.getOutputCurrent();
-	}
-
-	public double getLM2Current() {
-		return left_dt_motor2.getOutputCurrent();
-	}
-
-	public double getRM2Current() {
-		return right_dt_motor2.getOutputCurrent();
-	}
-	
-	public void setCoastMode() {
-		left_dt_motor1.setNeutralMode(NeutralMode.Coast);
-		left_dt_motor2.setNeutralMode(NeutralMode.Coast);
-		right_dt_motor1.setNeutralMode(NeutralMode.Coast);
-		right_dt_motor2.setNeutralMode(NeutralMode.Coast);
-	}
-	
-	public void setBrakeMode() {
-		left_dt_motor1.setNeutralMode(NeutralMode.Brake);
-		left_dt_motor2.setNeutralMode(NeutralMode.Brake);
-		right_dt_motor1.setNeutralMode(NeutralMode.Brake);
-		right_dt_motor2.setNeutralMode(NeutralMode.Brake);
 	}
 
 	// ==Default
