@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1895.robot;
 
-import org.usfirst.frc.team1895.robot.commands.autonomous.KevinSequence;
+//import org.usfirst.frc.team1895.robot.commands.autonomous.KevinSequence;
 import org.usfirst.frc.team1895.robot.subsystems.Claw;
 import org.usfirst.frc.team1895.robot.OI;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationA;
@@ -208,6 +208,7 @@ public class Robot extends TimedRobot {
 			autonomousCommand.cancel();
 
 		Robot.drivetrain.resetEncoders();
+		Robot.drivetrain.setCoastMode();
 	}
 
 	/**

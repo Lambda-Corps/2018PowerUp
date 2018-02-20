@@ -74,7 +74,7 @@ public class Arm extends Subsystem {
     	int upperArmLimit = 135;
     	int lowerArmLimit = 45;
     	double anglex = (double)armEncoderValue*180/14000;
-    	System.out.println("This is the encoder value2 "+ anglex);
+    	//System.out.println("This is the encoder value2 "+ anglex);
     	
     	if (((armEncoderValue > armEncoderUpperLimit) && (armSpeed < 0)) ||
     	((armEncoderValue < armEncoderLowerLimit) && (armSpeed > 0))){

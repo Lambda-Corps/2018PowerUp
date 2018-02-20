@@ -4,6 +4,7 @@ import org.usfirst.frc.team1895.robot.commands.arm.RotateArmUp;
 import org.usfirst.frc.team1895.robot.commands.claw.DeployCube_Claw;
 import org.usfirst.frc.team1895.robot.commands.claw.GrabCube_Claw;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.AlignToCube;
+import org.usfirst.frc.team1895.robot.commands.drivetrain.FineTuningMode;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.DeployCube_LowerIntake;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.GrabCube_LowerIntake;
@@ -51,6 +52,7 @@ public class OI {
 	
 	public JoystickButton ninetyDegreeRight;
 	public JoystickButton ninetyDegreeLeft;
+	public JoystickButton fineTuning;
 	public JoystickButton deployCube_Claw;
 	public JoystickButton grabCube_Claw;
 	public JoystickButton deployCube_LowerIntake;
@@ -71,6 +73,9 @@ public class OI {
 		
 		alignToCube = new JoystickButton(gamepad1, F310.A);
 		alignToCube.whenPressed(new AlignToCube());
+		
+		//fineTuning = new JoystickButton(gamepad1, F310.RB);
+		//fineTuning.whileHeld(new FineTuningMode());
 		
 		//claw buttons 
 		grabCube_Claw = new JoystickButton(gamepad2, F310.LB);
