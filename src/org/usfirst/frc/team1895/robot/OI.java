@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1895.robot;
 
-import org.usfirst.frc.team1895.robot.commands.arm.RotateArmUp;
+import org.usfirst.frc.team1895.robot.commands.arm.RotateArm;
 import org.usfirst.frc.team1895.robot.commands.claw.DeployCube_Claw;
 import org.usfirst.frc.team1895.robot.commands.claw.GrabCube_Claw;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.AlignToCube;
@@ -91,9 +91,9 @@ public class OI {
 		
 		//arm buttons
 		ninetyUp = new JoystickButton(gamepad2, F310.Y);
-		ninetyUp.whenPressed(new RotateArmUp(90));
+		ninetyUp.whenPressed(new RotateArm(90));
 		ninetyDown = new JoystickButton(gamepad2, F310.A);
-		ninetyDown.whenPressed(new RotateArmUp(135));
+		ninetyDown.whenPressed(new RotateArm(135));
 		
 	}
 }

@@ -8,10 +8,10 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class RotateArmUp extends Command {
+public class RotateArm extends Command {
 	private double angle;
 	
-    public RotateArmUp(double angle) {
+    public RotateArm(double angle) {
         // Use requires() here to declare subsystem dependencies
     	this.angle = angle;
         requires(Robot.arm);
