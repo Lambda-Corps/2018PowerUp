@@ -1,6 +1,8 @@
 package org.usfirst.frc.team1895.robot.commands.autonomous;
 
 import org.usfirst.frc.team1895.robot.Robot;
+import org.usfirst.frc.team1895.robot.commands.arm.RotateArm;
+import org.usfirst.frc.team1895.robot.commands.claw.DeployCube_Claw;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithPID;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithoutPID;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
@@ -35,11 +37,13 @@ public class DestinationA extends CommandGroup {
 			switch (Robot.startPos) {
 			case 1:
 				addSequential(new PrintCommand("A, ourLeftSwitch, position 1"));
-				addSequential(new DriveStraightWithPID(50));
-				addSequential(new TurnWithoutPID(0.3, 90));
-				addSequential(new DriveStraightWithPID(50));
-				addSequential(new TurnWithoutPID(0.3, -90));
-				addSequential(new DriveStraightWithPID(30));
+				addSequential(new DriveStraightWithoutPID(0.7, 50));
+				addSequential(new TurnWithoutPID(0.5, 90));
+				addSequential(new DriveStraightWithoutPID(0.7, 50));
+				addSequential(new TurnWithoutPID(0.5, -90));
+				addSequential(new RotateArm(45));
+				addSequential(new DriveStraightWithoutPID(0.7, 30));
+				addSequential(new DeployCube_Claw());
 				// now directly in front of switch, 40" away
 				// temporarily making DriveToObstacle go all the way Dest.A, but in the real
 				// code it'll vision-align
@@ -49,10 +53,10 @@ public class DestinationA extends CommandGroup {
 				break;
 			case 2:
 				addSequential(new PrintCommand("A, ourLeftSwitch, position 2"));
-				addSequential(new DriveStraightWithPID(50));
-				addSequential(new TurnWithoutPID(0.3, -90));
-				addSequential(new DriveStraightWithPID(100));
-				addSequential(new TurnWithoutPID(0.3, 90));
+				addSequential(new DriveStraightWithoutPID(0.7, 50));
+				addSequential(new TurnWithoutPID(0.5, -90));
+				addSequential(new DriveStraightWithoutPID(0.7, 75));
+				addSequential(new TurnWithoutPID(0.5, 90));
 				addSequential(new DriveStraightWithPID(30));
 				// addSequential(new DriveToObstacle(2, 0.5));
 				// addSequential(new AlignToSwitch());

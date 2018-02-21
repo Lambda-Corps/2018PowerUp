@@ -21,6 +21,7 @@ public class Default_Arm extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     		Robot.arm.driveArm(Robot.oi.gamepad2.getAxis(F310.LY));
+    		Robot.arm.driveWrist(Robot.oi.gamepad2.getAxis(F310.RX));
     		Robot.arm.getAllAxesString();
     }
 

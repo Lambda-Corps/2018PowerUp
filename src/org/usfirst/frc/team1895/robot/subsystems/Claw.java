@@ -24,22 +24,25 @@ public class Claw extends Subsystem {
 
 	public Claw() {
 		claw_intake_motor1 = new TalonSRX(RobotMap.CLAW_INTAKE_MOTOR1_PORT);
-		claw_intake_motor1.setInverted(true);
 		claw_intake_motor2 = new TalonSRX(RobotMap.CLAW_INTAKE_MOTOR2_PORT);
 		claw_intake_motor2.follow(claw_intake_motor1);
 		
 		in_rangefinder = new AnalogInput(RobotMap.INTAKE_RANGEFINDER_PORT);
 	}
+	
+	public double getRF() {
+		return in_rangefinder.getAverageVoltage();
+	}
 
 	public void grabCube_Claw() {
-		double velocity = CLAW_SPEED;
+		double velocity = -CLAW_SPEED;
 	    if (velocity > 1.0) velocity = 1.0;
 	    if (velocity <-1.0) velocity = -1.0;
 	    claw_intake_motor1.set(ControlMode.PercentOutput, velocity);
 	}
 
 	public void deployCube_Claw() {
-		double velocity = -1;
+		double velocity = CLAW_SPEED;
 	    if (velocity > 1.0) velocity = 1.0;
 	    if (velocity <-1.0) velocity = -1.0;
 	    claw_intake_motor1.set(ControlMode.PercentOutput, velocity);

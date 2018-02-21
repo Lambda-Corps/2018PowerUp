@@ -240,10 +240,10 @@ public class Drivetrain extends Subsystem {
 		
 		current_count++;
 		if(current_count % 66 == 0) {
-			System.out.println("LM: " + getLMCurrent() + " " + getLM2Current());
-			System.out.println("RM: " + getRMCurrent() + " " + getRM2Current());
-			System.out.println("trans speed: " + trans_speed);
-			System.out.println();
+//			System.out.println("LM: " + getLMCurrent() + " " + getLM2Current());
+//			System.out.println("RM: " + getRMCurrent() + " " + getRM2Current());
+//			System.out.println("trans speed: " + trans_speed);
+//			System.out.println();
 		}
 		
 //		System.out.println("Am I in high gear? " + inHigh);

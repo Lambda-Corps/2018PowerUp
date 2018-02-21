@@ -46,6 +46,7 @@ public class Arm extends Subsystem {
     	// motors
     	claw_intake_motor1 = new TalonSRX(RobotMap.CLAW_INTAKE_MOTOR1_PORT);
     	wrist_motor = new TalonSRX(RobotMap.WRIST_MOTOR_PORT);
+    	wrist_motor.getSensorCollection().setQuadraturePosition(0, 0);
     	top_arm_rotation_motor = new TalonSRX(RobotMap.TOP_ARM_ROTATION_MOTOR_PORT);
     	bot_arm_rotation_motor = new TalonSRX(RobotMap.BOT_ARM_ROTATION_MOTOR_PORT);
     	top_arm_rotation_motor.follow(bot_arm_rotation_motor);
@@ -69,7 +70,7 @@ public class Arm extends Subsystem {
 //==Arm Movement=======================================================================================================
     public void driveArm(double armSpeed) {
     	double armEncoderValue = (double) bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
-    	int armEncoderUpperLimit = 14000;
+    	int armEncoderUpperLimit = 16000;
     	int armEncoderLowerLimit = -14000;
     	//These variable control the angle at which the piston will extend
     	int upperArmLimit = 135;
@@ -83,17 +84,22 @@ public class Arm extends Subsystem {
     	bot_arm_rotation_motor.set(ControlMode.PercentOutput, armSpeed );
     	if(anglex>lowerArmLimit && anglex<upperArmLimit) {
     		//led1.set(true);
-    		telescoping_solenoid.set(DoubleSolenoid.Value.kReverse);
+    		//telescoping_solenoid.set(DoubleSolenoid.Value.kReverse);
 
     	}
     	else {
     		//led1.set(false);
-    		telescoping_solenoid.set(DoubleSolenoid.Value.kForward);
+    		//telescoping_solenoid.set(DoubleSolenoid.Value.kForward);
     	}
     	//wrist_motor.set(ControlMode.PercentOutput, armSpeed);
     	//System.out.println(wrist_motor.getSensorCollection().getQuadraturePosition());
     ///	System.out.println(String.format("Arm Encoder:  %5d     Arm Speed:   %6.2f ",armEncoderValue, armSpeed));
     	//System.out.println("Arm Encoder: " + armEncoderValue + "  Arm Speed;" + armSpeed);
+    }
+    
+    public double getAccelValue() {
+    	double accelValue = accel.getX();
+    	return accelValue;
     }
     
     public boolean setPosition(double goalangle) {
@@ -138,8 +144,14 @@ public class Arm extends Subsystem {
 //==Encoder Methods====================================================================================================
     public double getArmEncoder() {
     	double armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
-    	System.out.print(armEncoderValue);
+    	//System.out.print(armEncoderValue);
     	return armEncoderValue;
+    }
+    
+    public double getWristEncoder() {
+    	double wristEncoderValue = wrist_motor.getSensorCollection().getQuadraturePosition();
+    	//System.out.print(wristEncoderValue);
+    	return wristEncoderValue;
     }
     
 	public void resetEncoder() {
@@ -209,11 +221,13 @@ public class Arm extends Subsystem {
 		return retVal;
 	}
 
-//		public void driveWrist(double setSpeed) {
-//			
-//	    	wrist.setPosition(setSpeed);
-//		}
+		public void driveWrist(double wristSpeed) {
+			//TODO set limits
+			wrist_motor.set(ControlMode.PercentOutput, wristSpeed);
+	    
+		}
 	
+		
 //==Telescoping Arm Code===============================================================================================
 	public void extendTelescopingArm() {
 		telescoping_solenoid.set(DoubleSolenoid.Value.kForward);

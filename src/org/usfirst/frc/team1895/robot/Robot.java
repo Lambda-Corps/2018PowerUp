@@ -1,8 +1,5 @@
 package org.usfirst.frc.team1895.robot;
 
-//import org.usfirst.frc.team1895.robot.commands.autonomous.KevinSequence;
-import org.usfirst.frc.team1895.robot.subsystems.Claw;
-import org.usfirst.frc.team1895.robot.OI;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationA;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationB;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationC;
@@ -14,10 +11,12 @@ import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWit
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithoutPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveToObstacle;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestEmptyCommand;
+import org.usfirst.frc.team1895.robot.commands.testcommands.TestRotateArm;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithoutPID;
-import org.usfirst.frc.team1895.robot.oi.F310;
 import org.usfirst.frc.team1895.robot.subsystems.Arm;
+//import org.usfirst.frc.team1895.robot.commands.autonomous.KevinSequence;
+import org.usfirst.frc.team1895.robot.subsystems.Claw;
 import org.usfirst.frc.team1895.robot.subsystems.Climber;
 import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1895.robot.subsystems.FilteredCamera;
@@ -95,7 +94,7 @@ public class Robot extends TimedRobot {
 		climber = new Climber();
 		oi = new OI();
 
-//		System.out.println("Adding command to Dashboard");
+		// System.out.println("Adding command to Dashboard");
 		// SmartDashboard.putData("Arm Command", new RotateArmUp());
 	}
 
@@ -132,17 +131,17 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		
+
 		Robot.drivetrain.setBrakeMode();
 
 		// access FMS data
 		String colorString;
-//		System.out.println("auto init");
+		// System.out.println("auto init");
 		do {
 			colorString = DriverStation.getInstance().getGameSpecificMessage();
-//			System.out.println("string: " + colorString);
+			// System.out.println("string: " + colorString);
 		} while (colorString.length() == 0);
-//		System.out.println("finished do while");
+		// System.out.println("finished do while");
 		if (colorString.charAt(0) == 'L') { // if switch closest to us has our color on the left, we are 1
 			closeSwitchNum = 1;
 		} else {
@@ -218,6 +217,13 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Test Drive Parallel", new TestDriveParallel());
 
 		SmartDashboard.putBoolean("Test boolean onLeft Value", false);
+		
+		//Arm commands
+		SmartDashboard.putNumber("Test RotateArm Angle", 90);
+		
+		SmartDashboard.putData("Test RotateArm", new TestRotateArm());
+
+		
 	}
 
 	/**
@@ -227,6 +233,11 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
+		SmartDashboard.putNumber("Accel Value X", Robot.arm.getXValue());
+		SmartDashboard.putNumber("Accel Value Y", Robot.arm.getYValue());
+		SmartDashboard.putNumber("Accel Value Z", Robot.arm.getZValue());
+		SmartDashboard.putNumber("Wrist Encoder 2.0", Robot.arm.getWristEncoder());
+		
 		// System.out.println("<joy> LY " + Robot.oi.gamepad.getAxis(F310.LY) + " RX " +
 		// Robot.oi.gamepad.getAxis(F310.RX));
 		// System.out.printf("<joy> LY: %5.1f RX: %5.1f",
@@ -239,7 +250,8 @@ public class Robot extends TimedRobot {
 
 		// System.out.println("gyro teleop: " + Robot.drivetrain.getAHRSGyroAngle());
 
-//		System.out.println("LE " + Robot.drivetrain.getLeftEncoder() + " RE " + Robot.drivetrain.getRightEncoder());
+		// System.out.println("LE " + Robot.drivetrain.getLeftEncoder() + " RE " +
+		// Robot.drivetrain.getRightEncoder());
 	}
 
 	/**

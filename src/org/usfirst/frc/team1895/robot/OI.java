@@ -79,6 +79,7 @@ public class OI {
 		
 		//claw buttons 
 		grabCube_Claw = new JoystickButton(gamepad2, F310.LB);
+		
 		deployCube_Claw = new JoystickButton(gamepad2, F310.RB);
 		grabCube_Claw.whenPressed(new GrabCube_Claw());
 		deployCube_Claw.whenPressed(new DeployCube_Claw());

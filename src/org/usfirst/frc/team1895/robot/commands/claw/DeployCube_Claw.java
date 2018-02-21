@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.command.Command;
 public class DeployCube_Claw extends Command {
 	
 	public boolean hasCube;
+	public int counter;
 
     public DeployCube_Claw() {
         // Use requires() here to declare subsystem dependencies
@@ -19,12 +20,19 @@ public class DeployCube_Claw extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	counter = 0;
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	hasCube = Robot.claw.cubeIsIn();
+    	//hasCube = Robot.claw.cubeIsIn();
+    	if(counter>=50) {
+    		hasCube = false;
+    	} else {
+    		hasCube = true;
+    	}
     	Robot.claw.deployCube_Claw();
+    	counter++;
     }
 
     // Make this return true when this Command no longer needs to run execute()

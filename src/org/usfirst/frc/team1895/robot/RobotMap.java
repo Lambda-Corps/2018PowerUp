@@ -21,8 +21,8 @@ public class RobotMap {
 	public static final int WRIST_MOTOR_PORT = 6;
 	public static final int CLAW_INTAKE_MOTOR1_PORT = 7;  //7
 	public static final int CLAW_INTAKE_MOTOR2_PORT = 8;  //8
-	public static final int TOP_ARM_ROTATION_MOTOR_PORT = 9;
-	public static final int BOT_ARM_ROTATION_MOTOR_PORT = 10;
+	public static final int TOP_ARM_ROTATION_MOTOR_PORT = 10;
+	public static final int BOT_ARM_ROTATION_MOTOR_PORT = 9;
 	public static final int LEFT_LOWER_INTAKE_MOTOR_PORT = 11;  //11
 	public static final int RIGHT_LOWER_INTAKE_MOTOR_PORT = 12;  //12
 	
