@@ -13,7 +13,7 @@ public class GrabCube_Claw extends Command {
 
     public GrabCube_Claw() {
         // Use requires() here to declare subsystem dependencies
-    	requires(Robot.claw);
+    	requires(Robot.arm);
     }
 
     // Called just before this Command runs the first time
@@ -23,8 +23,8 @@ public class GrabCube_Claw extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	hasCube = Robot.claw.cubeIsIn();
-    	Robot.claw.grabCube_Claw();
+    	hasCube = Robot.arm.cubeIsIn();
+    	Robot.arm.grabCube_Claw();
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -34,7 +34,7 @@ public class GrabCube_Claw extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.claw.stopClaw();
+    	Robot.arm.stopClaw();
     }
 
     // Called when another command which requires one or more of the same

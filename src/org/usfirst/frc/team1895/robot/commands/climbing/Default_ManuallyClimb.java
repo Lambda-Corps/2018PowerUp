@@ -23,11 +23,12 @@ public class Default_ManuallyClimb extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	//  Read the Operator joy stick right side 
-    	double WinchcontrolAxis = Robot.oi.gamepad2.getAxis(F310.RY);
+    	double WinchcontrolAxis = Robot.oi.gamepad2.getAxis(F310.LT);
     	//System.out.println (String.format("WinchcontrolAxis: %6.2f ", WinchcontrolAxis));
     	
     	//  Create a dead zone where the winch does not try to move unless greater than 0.2 
-    	if ((WinchcontrolAxis > 0.2) || (WinchcontrolAxis < -0.2)) {
+    	//if ((WinchcontrolAxis > 0.2) || (WinchcontrolAxis < -0.2)) {
+    	if (WinchcontrolAxis > 0.2) { //can only climb up
     		Robot.climber.manualClimbing(WinchcontrolAxis);
     	}
     	else {

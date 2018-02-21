@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.ADXL345_I2C;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -24,10 +25,9 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
  */
 public class Arm extends Subsystem {
 
+	// ARM-RELATED COMPONENTS
 	// motors
     private TalonSRX wrist_motor;
-    private TalonSRX claw_intake_motor1;
-    private TalonSRX claw_intake_motor2;
     private TalonSRX top_arm_rotation_motor;			// arm_rotation_motor1 
     private TalonSRX bot_arm_rotation_motor;			// arm_rotation_motor2 
     
@@ -41,10 +41,19 @@ public class Arm extends Subsystem {
     // pneumatics
     private final DoubleSolenoid telescoping_solenoid;
     
+    // CLAW-RELATED COMPONENTS
+    private TalonSRX claw_intake_motor1;
+	private TalonSRX claw_intake_motor2;
+	private static final double CLAW_SPEED = 0.4;
+	
+	private AnalogInput in_rangefinder;
     
     public Arm() {
     	// motors
     	claw_intake_motor1 = new TalonSRX(RobotMap.CLAW_INTAKE_MOTOR1_PORT);
+		claw_intake_motor1.setInverted(true);
+		claw_intake_motor2 = new TalonSRX(RobotMap.CLAW_INTAKE_MOTOR2_PORT);
+		claw_intake_motor2.follow(claw_intake_motor1);
     	wrist_motor = new TalonSRX(RobotMap.WRIST_MOTOR_PORT);
     	top_arm_rotation_motor = new TalonSRX(RobotMap.TOP_ARM_ROTATION_MOTOR_PORT);
     	bot_arm_rotation_motor = new TalonSRX(RobotMap.BOT_ARM_ROTATION_MOTOR_PORT);
@@ -54,6 +63,9 @@ public class Arm extends Subsystem {
     	//accelerometer
     	BIA = new BuiltInAccelerometer();
 		accel = new ADXL345_I2C(I2C.Port.kOnboard, Accelerometer.Range.k4G);
+		
+		//rangefinder
+		in_rangefinder = new AnalogInput(RobotMap.INTAKE_RANGEFINDER_PORT);
 		
 		//led
 		//led1 = new DigitalOutput(9); //COMMENTED OUT FOR STEAMWORKS BOT
@@ -157,7 +169,7 @@ public class Arm extends Subsystem {
 //
 //	}
 	
-//==Get Methods========================================================================================================
+//==Arm Get Methods========================================================================================================
 	public double getXValue(){
 		return accel.getX();
 	}
@@ -226,8 +238,35 @@ public class Arm extends Subsystem {
 //==Wrist Code=========================================================================================================
 	
     
-    
-    public void initDefaultCommand() {
+//==Claw Code===================================================================================================== 
+	public void grabCube_Claw() {
+		double velocity = CLAW_SPEED;
+	    if (velocity > 1.0) velocity = 1.0;
+	    if (velocity <-1.0) velocity = -1.0;
+	    claw_intake_motor1.set(ControlMode.PercentOutput, velocity);
+	}
+
+	public void deployCube_Claw() {
+		double velocity = -1;
+	    if (velocity > 1.0) velocity = 1.0;
+	    if (velocity <-1.0) velocity = -1.0;
+	    claw_intake_motor1.set(ControlMode.PercentOutput, velocity);
+	}
+	
+	public void stopClaw() {
+		claw_intake_motor1.set(ControlMode.PercentOutput, 0);
+	}
+	
+	public boolean cubeIsIn() {
+		System.out.println(in_rangefinder.getAverageVoltage());
+		if(in_rangefinder.getAverageVoltage()>2.0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	public void initDefaultCommand() {
         setDefaultCommand(new Default_Arm());
         
     }

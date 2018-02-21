@@ -14,7 +14,7 @@ public class GrabCube_LowerIntake extends Command {
     public GrabCube_LowerIntake() {
         // Use requires() here to declare subsystem dependencies
         requires(Robot.lowerIntake);
-        requires(Robot.claw);
+        requires(Robot.arm);
     }
 
     // Called just before this Command runs the first time
@@ -24,8 +24,10 @@ public class GrabCube_LowerIntake extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	hasCube = Robot.claw.cubeIsIn();
+    	hasCube = Robot.arm.cubeIsIn();
     	Robot.lowerIntake.setLowerIntakeMotors(0.4);
+    	Robot.arm.deployCube_Claw();
+    	
     }
 
     // Make this return true when this Command no longer needs to run execute()
