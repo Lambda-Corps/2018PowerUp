@@ -1,5 +1,7 @@
 package org.usfirst.frc.team1895.robot;
 
+//import org.usfirst.frc.team1895.robot.commands.autonomous.KevinSequence;
+import org.usfirst.frc.team1895.robot.OI;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationA;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationB;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationC;
@@ -42,7 +44,6 @@ public class Robot extends TimedRobot {
 	public static OI oi;
 	public static Climber climber;
 	public static FilteredCamera camera;
-	public static Claw claw;
 	public static LowerIntake lowerIntake;
 	Command autonomousCommand;
 	int printCount;
@@ -68,7 +69,6 @@ public class Robot extends TimedRobot {
 	public void robotInit() {
 		drivetrain = new Drivetrain();
 		arm = new Arm();
-		claw = new Claw();
 		lowerIntake = new LowerIntake();
 		setPeriod(0.015); // update more frequently - every 25ms
 		// camera = new FilteredCamera();

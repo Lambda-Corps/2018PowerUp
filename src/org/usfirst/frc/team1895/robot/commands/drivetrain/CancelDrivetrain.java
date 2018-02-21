@@ -1,41 +1,34 @@
-package org.usfirst.frc.team1895.robot.commands.claw;
+package org.usfirst.frc.team1895.robot.commands.drivetrain;
 
 import org.usfirst.frc.team1895.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
  */
-public class GrabCube_Claw extends Command {
-	
-	public boolean hasCube;
+public class CancelDrivetrain extends Command {
 
-    public GrabCube_Claw() {
+    public CancelDrivetrain() {
         // Use requires() here to declare subsystem dependencies
-    	requires(Robot.arm);
+        requires(Robot.drivetrain);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	hasCube = false;
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	hasCube = Robot.arm.cubeIsIn();
-    	Robot.arm.grabCube_Claw();
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return hasCube;
+        return false;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.arm.stopClaw();
     }
 
     // Called when another command which requires one or more of the same

@@ -27,6 +27,12 @@ public class F310 extends Joystick {
 	public static final int LT = 2;	//2
 	public static final int RT = 3;	//3
 	
+	//POV 
+	public static final int DPAD_UP = 0;
+	public static final int DPAD_RIGHT = 90;
+	public static final int DPAD_DOWN = 180;
+	public static final int DPAD_LEFT = 270;
+	
 	private double[] scalar = new double[numAxes];
 	
 	private double gain = 0.5;

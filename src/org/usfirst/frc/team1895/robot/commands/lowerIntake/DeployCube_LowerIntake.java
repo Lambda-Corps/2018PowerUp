@@ -14,7 +14,7 @@ public class DeployCube_LowerIntake extends Command {
     public DeployCube_LowerIntake() {
         // Use requires() here to declare subsystem dependencies
         requires(Robot.lowerIntake);
-        requires(Robot.claw);
+        requires(Robot.arm);
     }
 
     // Called just before this Command runs the first time
@@ -23,8 +23,9 @@ public class DeployCube_LowerIntake extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	hasCube = Robot.claw.cubeIsIn();
+    	hasCube = Robot.arm.cubeIsIn();
     	Robot.lowerIntake.setLowerIntakeMotors(-1);
+    	
     }
 
     // Make this return true when this Command no longer needs to run execute()
