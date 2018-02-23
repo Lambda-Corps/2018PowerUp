@@ -21,14 +21,14 @@ public class TestDriveToObstacle extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	t_speed = SmartDashboard.getNumber("Test Drive TankDrive Speed: ", .4);
-    	t_goalDistance = SmartDashboard.getNumber("Test Drive Distance: ", 13);
+    	t_speed = SmartDashboard.getNumber("Test Drive Speed:", .4);
+    	t_goalDistance = SmartDashboard.getNumber("Test Drive Distance:", 13);
     	t_scalar = SmartDashboard.getNumber("Test Drive Tank Scalar:", .94);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	//t_done = Robot.drivetrain.testdriveRangeFinderDistance(t_goalDistance, t_speed, t_scalar); // method needed
+    	t_done = Robot.drivetrain.drivefr_RFDistance(t_goalDistance, t_speed); // method needed
     }
 
     // Make this return true when this Command no longer needs to run execute()

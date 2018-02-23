@@ -13,7 +13,6 @@ public class GrabCube_Claw extends Command {
 	public boolean hasCube;
 
     public GrabCube_Claw() {
-        // Use requires() here to declare subsystem dependencies
     	requires(Robot.arm);
     }
 

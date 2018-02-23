@@ -1,13 +1,22 @@
 package org.usfirst.frc.team1895.robot;
 
-//import org.usfirst.frc.team1895.robot.commands.autonomous.KevinSequence;
-import org.usfirst.frc.team1895.robot.OI;
+import org.usfirst.frc.team1895.robot.commands.arm.ExtendTelescopingPart;
+import org.usfirst.frc.team1895.robot.commands.arm.RetractTelescopingPart;
+import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_High;
+import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_Low;
+import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_Mid;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationA;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationB;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationC;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationD;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationE;
 import org.usfirst.frc.team1895.robot.commands.autonomous.ShiftGearsTestCommand;
+import org.usfirst.frc.team1895.robot.commands.claw.DeployCube_Claw;
+import org.usfirst.frc.team1895.robot.commands.claw.GrabCube_Claw;
+import org.usfirst.frc.team1895.robot.commands.lowerIntake.DeployCube_LowerIntake;
+import org.usfirst.frc.team1895.robot.commands.lowerIntake.ExtendLowerIntake;
+import org.usfirst.frc.team1895.robot.commands.lowerIntake.GrabCube_LowerIntake;
+import org.usfirst.frc.team1895.robot.commands.lowerIntake.RetractLowerIntake;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveParallel;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithoutPID;
@@ -17,8 +26,6 @@ import org.usfirst.frc.team1895.robot.commands.testcommands.TestRotateArm;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithoutPID;
 import org.usfirst.frc.team1895.robot.subsystems.Arm;
-//import org.usfirst.frc.team1895.robot.commands.autonomous.KevinSequence;
-import org.usfirst.frc.team1895.robot.subsystems.Claw;
 import org.usfirst.frc.team1895.robot.subsystems.Climber;
 import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
 import org.usfirst.frc.team1895.robot.subsystems.FilteredCamera;
@@ -207,8 +214,8 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Distance: I value: ", 0.0);
 		SmartDashboard.putNumber("Distance: D value: ", -.01);
 		SmartDashboard.putNumber("Test Drive Distance:", 30.0);
-		SmartDashboard.putNumber("Test Drive Speed: ", .4);
-		SmartDashboard.putNumber("Test Drive Tank Scalar:", .94); // incase of drifting
+		SmartDashboard.putNumber("Test Drive Speed:", .5);
+		SmartDashboard.putNumber("Test Drive Tank Scalar:", .94); // in case of drifting
 		SmartDashboard.putNumber("Test Drive Buffer:", 10);
 
 		SmartDashboard.putData("Test DriveStraight With PID", new TestDriveStraightWithPID());
@@ -217,12 +224,22 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Test Drive Parallel", new TestDriveParallel());
 
 		SmartDashboard.putBoolean("Test boolean onLeft Value", false);
-		
-		//Arm commands
-		SmartDashboard.putNumber("Test RotateArm Angle", 90);
-		
-		SmartDashboard.putData("Test RotateArm", new TestRotateArm());
 
+		// Arm/lower intake commands
+		SmartDashboard.putNumber("Test RotateArm Angle", 90);
+		SmartDashboard.putData("Test RotateArm", new TestRotateArm());
+		
+		SmartDashboard.putData("Test Deploy Cube Claw", new DeployCube_Claw());
+		SmartDashboard.putData("Test Grab Cube Claw", new GrabCube_Claw());
+		SmartDashboard.putData("Test Extend Lower Intake", new ExtendLowerIntake());
+		SmartDashboard.putData("Test Retract Lower Intake", new RetractLowerIntake());
+		SmartDashboard.putData("Test Deploy Cube Lower Intake", new DeployCube_LowerIntake());
+		SmartDashboard.putData("Test Grab Cube Lower Intake", new GrabCube_LowerIntake());
+		SmartDashboard.putData("Test Extend Telescoping Part", new ExtendTelescopingPart());
+		SmartDashboard.putData("Test Retract Telescoping Part", new RetractTelescopingPart());
+		SmartDashboard.putData("Test RotateArm_Scale_High", new RotateArm_Scale_High());
+		SmartDashboard.putData("Test RotateArm_Scale_Low", new RotateArm_Scale_Low());
+		SmartDashboard.putData("Test RotateArm_Scale_Mid", new RotateArm_Scale_Mid());
 		
 	}
 
@@ -233,11 +250,11 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		SmartDashboard.putNumber("Accel Value X", Robot.arm.getXValue());
-		SmartDashboard.putNumber("Accel Value Y", Robot.arm.getYValue());
-		SmartDashboard.putNumber("Accel Value Z", Robot.arm.getZValue());
-		SmartDashboard.putNumber("Wrist Encoder 2.0", Robot.arm.getWristEncoder());
-		
+//		SmartDashboard.putNumber("Accel Value X", Robot.arm.getXValue());
+//		SmartDashboard.putNumber("Accel Value Y", Robot.arm.getYValue());
+//		SmartDashboard.putNumber("Accel Value Z", Robot.arm.getZValue());
+//		SmartDashboard.putNumber("Wrist Encoder 2.0", Robot.arm.getWristEncoder());
+
 		// System.out.println("<joy> LY " + Robot.oi.gamepad.getAxis(F310.LY) + " RX " +
 		// Robot.oi.gamepad.getAxis(F310.RX));
 		// System.out.printf("<joy> LY: %5.1f RX: %5.1f",

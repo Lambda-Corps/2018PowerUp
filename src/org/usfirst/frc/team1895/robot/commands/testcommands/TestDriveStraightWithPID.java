@@ -23,7 +23,7 @@ public class TestDriveStraightWithPID extends Command {
     	t_p = SmartDashboard.getNumber("Distance: P value: ", .1);
     	t_i = SmartDashboard.getNumber("Distance: I value: ", 0.0);
     	t_d = SmartDashboard.getNumber("Distance: D value: ", -.01);
-    	t_Distance = SmartDashboard.getNumber("Test Drive Distance: ", 20.0);
+    	t_Distance = SmartDashboard.getNumber("Test Drive Distance:", 30.0);
     	
     	Robot.drivetrain.setDrivingPIDSetpoints(t_Distance);
     	Robot.drivetrain.makeNewPidDriving(t_p, t_i, t_d); //get p,i,d from smartdashboard

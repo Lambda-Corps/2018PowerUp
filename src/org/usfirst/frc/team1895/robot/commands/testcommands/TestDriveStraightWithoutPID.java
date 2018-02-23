@@ -21,7 +21,7 @@ public class TestDriveStraightWithoutPID extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	t_goalDis = SmartDashboard.getNumber("Test Drive Distance:", 30.0);
-    	t_speed = SmartDashboard.getNumber("Test Drive Speed: ", .4);
+    	t_speed = SmartDashboard.getNumber("Test Drive Speed:", .4);
     	Robot.drivetrain.resetEncoders();
     }
 

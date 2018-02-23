@@ -145,7 +145,7 @@ public class Arm extends Subsystem {
     	return false;
     }
     
-    public void setArmToZero() {
+    public void stopClawIntake() {
     	claw_intake_motor1.set(ControlMode.PercentOutput, 0);
     }
     
