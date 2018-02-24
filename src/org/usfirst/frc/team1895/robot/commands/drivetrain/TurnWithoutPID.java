@@ -3,6 +3,7 @@ package org.usfirst.frc.team1895.robot.commands.drivetrain;
 import org.usfirst.frc.team1895.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -27,6 +28,8 @@ public class TurnWithoutPID extends Command {
     protected void initialize() {
     	Robot.drivetrain.resetAHRSGyro();
     	isDone = false;
+ 
+
     	//Robot.drivetrain.setAHRSAdjustment(80.0);
     }
 
@@ -34,6 +37,7 @@ public class TurnWithoutPID extends Command {
     protected void execute() {
     	currentAngle = Robot.drivetrain.getAHRSGyroAngle();
     	System.out.println("angle: " + currentAngle);
+    	SmartDashboard.putNumber("Gyro: ", currentAngle);
     	if(Math.abs(goalAngle - currentAngle) < tolerance) {  //if within tolerance
     		System.out.println("Done!");
     		Robot.drivetrain.arcadeDrive(0, 0);
@@ -58,5 +62,7 @@ public class TurnWithoutPID extends Command {
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
+    	Robot.drivetrain.arcadeDrive(0, 0);
+    	isDone = true;
     }
 }

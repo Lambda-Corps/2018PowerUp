@@ -54,15 +54,6 @@ public class OI {
 		gamepad2 = new F310(RobotMap.GAMEPAD2_PORT);
 
 		//drivetrain buttons
-		ninetyDegreeRight = new JoystickButton(gamepad1, F310.DPAD_RIGHT);
-		ninetyDegreeRight.whenPressed(new TurnWithoutPID(0.3, 90.0));
-		ninetyDegreeLeft = new JoystickButton(gamepad1, F310.DPAD_LEFT);
-		ninetyDegreeLeft.whenPressed(new TurnWithoutPID(0.3, -90.0));
-		turn180Left = new JoystickButton(gamepad1, F310.DPAD_DOWN);
-		turn180Left.whenPressed(new TurnWithoutPID(0.3, -180.0));
-		drivetrainCancel = new JoystickButton(gamepad1, F310.DPAD_UP);
-		drivetrainCancel.whenPressed(new CancelDrivetrain());
-		
 		alignToCube = new JoystickButton(gamepad1, F310.A);
 		alignToCube.whenPressed(new AlignToCube());
 		
