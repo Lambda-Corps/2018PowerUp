@@ -2,11 +2,11 @@ package org.usfirst.frc.team1895.robot;
 
 import org.usfirst.frc.team1895.robot.commands.arm.CancelArm;
 import org.usfirst.frc.team1895.robot.commands.arm.DeployCube;
-import org.usfirst.frc.team1895.robot.commands.arm.RotateArm;
+import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToAngle;
+import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToPosition;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_High;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_Low;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_Mid;
-import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_SwitchPos;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.AlignToCube;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.CancelDrivetrain;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
@@ -76,17 +76,17 @@ public class OI {
 		
 		//arm buttons
 		ninetyUp = new JoystickButton(gamepad2, F310.Y);
-		ninetyUp.whenPressed(new RotateArm(90));
+		ninetyUp.whenPressed(new RotateArmToAngle(90));
 		ninetyDown = new JoystickButton(gamepad2, F310.A);
-		ninetyDown.whenPressed(new RotateArm(135));
+		ninetyDown.whenPressed(new RotateArmToAngle(135));
 		rotateArm_switchPos = new JoystickButton(gamepad2, F310.A);
-		rotateArm_switchPos.whenPressed(new RotateArm_SwitchPos());
+		rotateArm_switchPos.whenPressed(new RotateArmToPosition("A"));
 		rotateArm_Scale_Low = new JoystickButton(gamepad2, F310.X);
-		rotateArm_Scale_Low.whenPressed(new RotateArm_Scale_Low());
+		rotateArm_Scale_Low.whenPressed(new RotateArmToPosition("X"));
 		rotateArm_Scale_Mid = new JoystickButton(gamepad2, F310.B);
-		rotateArm_Scale_Mid.whenPressed(new RotateArm_Scale_Mid());
+		rotateArm_Scale_Mid.whenPressed(new RotateArmToPosition("B"));
 		rotateArm_Scale_High = new JoystickButton(gamepad2, F310.Y);
-		rotateArm_Scale_High.whenPressed(new RotateArm_Scale_High());
+		rotateArm_Scale_High.whenPressed(new RotateArmToPosition("Y"));
 		armCancel = new JoystickButton(gamepad2, F310.DPAD_UP);
 		armCancel.whenPressed(new CancelArm());
 	}

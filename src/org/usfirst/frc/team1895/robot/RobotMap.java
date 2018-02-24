@@ -48,6 +48,7 @@ public class RobotMap {
 	public static final int FRONT_RANGEFINDER_PORT = 3;
 	public static final int LEFT_RANGEFINDER_PORT = 1;
 	public static final int RIGHT_RANGEFINDER_PORT = 2;
+	public static final int POTENTIOMETER_PORT = 4; //NAVX port 0
 	
 	// I2C Ports, should only be accelerometer for now
 	public static final int ACCELEROMETER_PORT = 0;
