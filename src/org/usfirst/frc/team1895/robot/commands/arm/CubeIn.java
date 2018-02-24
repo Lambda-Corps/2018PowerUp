@@ -17,7 +17,6 @@ public class CubeIn extends CommandGroup {
     	 * Retract lower intake, go down
     	 * Arm extends
     	 * Run lower intake motors in until cube is present
-    	 * 
     	 */
     	
     	addSequential(new RetractLowerIntake());

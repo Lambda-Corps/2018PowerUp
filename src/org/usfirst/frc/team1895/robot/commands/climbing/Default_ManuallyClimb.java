@@ -27,8 +27,8 @@ public class Default_ManuallyClimb extends Command {
     	//System.out.println (String.format("WinchcontrolAxis: %6.2f ", WinchcontrolAxis));
     	
     	//  Create a dead zone where the winch does not try to move unless greater than 0.2 
-    	//if ((WinchcontrolAxis > 0.2) || (WinchcontrolAxis < -0.2)) {
-    	if (WinchcontrolAxis > 0.2) { //can only climb up
+    	if ((WinchcontrolAxis > 0.2) || (WinchcontrolAxis < -0.2)) {
+    	//if (WinchcontrolAxis > 0.2) { //can only climb up
     		Robot.climber.manualClimbing(WinchcontrolAxis);
     	}
     	else {

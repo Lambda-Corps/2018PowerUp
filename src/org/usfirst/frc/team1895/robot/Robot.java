@@ -228,7 +228,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Test RotateArm Angle", 90);
 		SmartDashboard.putData("Test RotateArm", new TestRotateArm());
 		
-		SmartDashboard.putData("Test Deploy Cube Claw", new DeployCube());
+		SmartDashboard.putData("Test Deploy Cube", new DeployCube());
 		SmartDashboard.putData("Test Extend Lower Intake", new ExtendLowerIntake());
 		SmartDashboard.putData("Test Retract Lower Intake", new RetractLowerIntake());
 		SmartDashboard.putData("Test Deploy Cube Lower Intake", new DeployCube_LowerIntake());
