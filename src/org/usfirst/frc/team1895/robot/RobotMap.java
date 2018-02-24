@@ -34,7 +34,7 @@ public class RobotMap {
 	public static final int ARM_TELESCOPING_SOLENOID_A_PORT = 5;
 	public static final int ARM_TELESCOPING_SOLENOID_B_PORT = 6;
 	public static final int LOWER_INTAKE_SOLENOID_UPDOWN_A_PORT = 7;
-	public static final int LOWER_INTAKE_SOLENOID_UPDOWN_B_PORT = 8;
+	public static final int LOWER_INTAKE_SOLENOID_UPDOWN_B_PORT = 0;
 	
 	// Digital IO
 	public static final int RIGHT_ENCODER_A_PORT = 0;

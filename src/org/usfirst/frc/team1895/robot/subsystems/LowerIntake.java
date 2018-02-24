@@ -34,8 +34,7 @@ public class LowerIntake extends Subsystem {
 		
 		//pneumatics
 		lower_intake_solenoid_ExRe = new DoubleSolenoid(RobotMap.LOWER_INTAKE_SOLENOID_EXRE_A_PORT, RobotMap.LOWER_INTAKE_SOLENOID_EXRE_B_PORT);
-//		lower_intake_solenoid_UpDown = new DoubleSolenoid(RobotMap.LOWER_INTAKE_SOLENOID_UPDOWN_A_PORT, RobotMap.LOWER_INTAKE_SOLENOID_UPDOWN_B_PORT);
-		lower_intake_solenoid_UpDown = new DoubleSolenoid(7, 0);
+		lower_intake_solenoid_UpDown = new DoubleSolenoid(RobotMap.LOWER_INTAKE_SOLENOID_UPDOWN_A_PORT, RobotMap.LOWER_INTAKE_SOLENOID_UPDOWN_B_PORT);
 	}
 	
 	//check signs
