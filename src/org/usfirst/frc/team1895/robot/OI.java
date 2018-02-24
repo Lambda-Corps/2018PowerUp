@@ -1,12 +1,12 @@
 package org.usfirst.frc.team1895.robot;
 
 import org.usfirst.frc.team1895.robot.commands.arm.CancelArm;
+import org.usfirst.frc.team1895.robot.commands.arm.DeployCube;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_High;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_Low;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_Mid;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_SwitchPos;
-import org.usfirst.frc.team1895.robot.commands.claw.DeployCube_Claw;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.AlignToCube;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.CancelDrivetrain;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
@@ -68,7 +68,7 @@ public class OI {
 		
 		//claw buttons 
 		deployCube_Claw = new JoystickButton(gamepad2, F310.RB);
-		deployCube_Claw.whenPressed(new DeployCube_Claw());
+		deployCube_Claw.whenPressed(new DeployCube());
 
 		//lower intake buttons
 		grabCube_LowerIntake = new JoystickButton(gamepad1, F310.LB);

@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1895.robot;
 
+import org.usfirst.frc.team1895.robot.commands.arm.DeployCube;
 import org.usfirst.frc.team1895.robot.commands.arm.ExtendTelescopingPart;
 import org.usfirst.frc.team1895.robot.commands.arm.RetractTelescopingPart;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_High;
@@ -11,8 +12,6 @@ import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationC;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationD;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationE;
 import org.usfirst.frc.team1895.robot.commands.autonomous.ShiftGearsTestCommand;
-import org.usfirst.frc.team1895.robot.commands.claw.DeployCube_Claw;
-import org.usfirst.frc.team1895.robot.commands.claw.GrabCube_Claw;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.DeployCube_LowerIntake;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.ExtendLowerIntake;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.GrabCube_LowerIntake;
@@ -229,8 +228,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Test RotateArm Angle", 90);
 		SmartDashboard.putData("Test RotateArm", new TestRotateArm());
 		
-		SmartDashboard.putData("Test Deploy Cube Claw", new DeployCube_Claw());
-		SmartDashboard.putData("Test Grab Cube Claw", new GrabCube_Claw());
+		SmartDashboard.putData("Test Deploy Cube Claw", new DeployCube());
 		SmartDashboard.putData("Test Extend Lower Intake", new ExtendLowerIntake());
 		SmartDashboard.putData("Test Retract Lower Intake", new RetractLowerIntake());
 		SmartDashboard.putData("Test Deploy Cube Lower Intake", new DeployCube_LowerIntake());
