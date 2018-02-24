@@ -105,10 +105,17 @@ public class Drivetrain extends Subsystem {
 
 		// TODO -- Test this code so we can uncomment if it works.
 		// current limited to 10 amps when current is >15amps for 100 milliseconds
-		// left_dt_motor1.configContinuousCurrentLimit(10, 0);
-		// left_dt_motor1.configPeakCurrentLimit(15, 0);
-		// left_dt_motor1.configPeakCurrentDuration(100, 0);
-		// left_dt_motor1.enableCurrentLimit(true);
+		 left_dt_motor1.configContinuousCurrentLimit(10, 0);
+		 left_dt_motor1.configPeakCurrentLimit(15, 0);
+		 left_dt_motor1.configPeakCurrentDuration(100, 0);
+		 left_dt_motor1.enableCurrentLimit(true);
+		 left_dt_motor1.configOpenloopRamp(0.25, 0);
+		 
+		 right_dt_motor1.configContinuousCurrentLimit(10, 0);
+		 right_dt_motor1.configPeakCurrentLimit(15, 0);
+		 right_dt_motor1.configPeakCurrentDuration(100, 0);
+		 right_dt_motor1.enableCurrentLimit(true);
+		 right_dt_motor1.configOpenloopRamp(0.25, 0);
 
 		// pneumatics
 		compressor = new Compressor();

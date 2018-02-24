@@ -267,6 +267,9 @@ public class Robot extends TimedRobot {
 
 		// System.out.println("LE " + Robot.drivetrain.getLeftEncoder() + " RE " +
 		// Robot.drivetrain.getRightEncoder());
+		
+		SmartDashboard.putNumber("RM Current: ", Robot.drivetrain.getRMCurrent());
+		SmartDashboard.putNumber("LM Current: ", Robot.drivetrain.getLMCurrent());
 	}
 
 	/**
