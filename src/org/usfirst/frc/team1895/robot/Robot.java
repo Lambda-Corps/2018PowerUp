@@ -6,6 +6,7 @@ import org.usfirst.frc.team1895.robot.commands.arm.RetractTelescopingPart;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_High;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_Low;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_Mid;
+import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_SwitchPos;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationA;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationB;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationC;
@@ -15,6 +16,8 @@ import org.usfirst.frc.team1895.robot.commands.autonomous.ShiftGearsTestCommand;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.DeployCube_LowerIntake;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.ExtendLowerIntake;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.GrabCube_LowerIntake;
+import org.usfirst.frc.team1895.robot.commands.lowerIntake.LowerLowerIntake;
+import org.usfirst.frc.team1895.robot.commands.lowerIntake.RaiseLowerIntake;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.RetractLowerIntake;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveParallel;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithPID;
@@ -231,6 +234,8 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Test Deploy Cube", new DeployCube());
 		SmartDashboard.putData("Test Extend Lower Intake", new ExtendLowerIntake());
 		SmartDashboard.putData("Test Retract Lower Intake", new RetractLowerIntake());
+		SmartDashboard.putData("Test Raise Lower Intake", new RaiseLowerIntake());
+		SmartDashboard.putData("Test Lower Lower Intake", new LowerLowerIntake());
 		SmartDashboard.putData("Test Deploy Cube Lower Intake", new DeployCube_LowerIntake());
 		SmartDashboard.putData("Test Grab Cube Lower Intake", new GrabCube_LowerIntake());
 		SmartDashboard.putData("Test Extend Telescoping Part", new ExtendTelescopingPart());
@@ -238,6 +243,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Test RotateArm_Scale_High", new RotateArm_Scale_High());
 		SmartDashboard.putData("Test RotateArm_Scale_Low", new RotateArm_Scale_Low());
 		SmartDashboard.putData("Test RotateArm_Scale_Mid", new RotateArm_Scale_Mid());
+		SmartDashboard.putData("Test RotateArm_SwitchPos", new RotateArm_SwitchPos());
 		
 	}
 

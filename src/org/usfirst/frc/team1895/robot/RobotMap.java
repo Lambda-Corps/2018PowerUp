@@ -29,10 +29,12 @@ public class RobotMap {
 	// Solenoids
 	public static final int DRIVETRAIN_SOLENOID_A_PORT = 1;
 	public static final int DRIVETRAIN_SOLENOID_B_PORT = 2;
-	public static final int LOWER_INTAKE_SOLENOID_A_PORT = 3;
-	public static final int LOWER_INTAKE_SOLENOID_B_PORT = 4;
+	public static final int LOWER_INTAKE_SOLENOID_EXRE_A_PORT = 3;
+	public static final int LOWER_INTAKE_SOLENOID_EXRE_B_PORT = 4;
 	public static final int ARM_TELESCOPING_SOLENOID_A_PORT = 5;
 	public static final int ARM_TELESCOPING_SOLENOID_B_PORT = 6;
+	public static final int LOWER_INTAKE_SOLENOID_UPDOWN_A_PORT = 7;
+	public static final int LOWER_INTAKE_SOLENOID_UPDOWN_B_PORT = 8;
 	
 	// Digital IO
 	public static final int RIGHT_ENCODER_A_PORT = 0;

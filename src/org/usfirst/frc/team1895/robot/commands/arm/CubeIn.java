@@ -2,6 +2,7 @@ package org.usfirst.frc.team1895.robot.commands.arm;
 
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.ExtendLowerIntake;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.GrabCube_LowerIntake;
+import org.usfirst.frc.team1895.robot.commands.lowerIntake.RaiseLowerIntake;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
 
@@ -19,6 +20,7 @@ public class CubeIn extends CommandGroup {
     	 * Run lower intake motors in until cube is present
     	 */
     	
+    	addSequential(new RaiseLowerIntake());
     	addSequential(new ExtendLowerIntake());
     	addSequential(new ExtendTelescopingPart());
     	addSequential(new GrabCube_LowerIntake());
