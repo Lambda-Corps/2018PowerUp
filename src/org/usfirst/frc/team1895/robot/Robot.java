@@ -1,6 +1,6 @@
 package org.usfirst.frc.team1895.robot;
 
-import org.usfirst.frc.team1895.robot.commands.arm.DeployCube;
+import org.usfirst.frc.team1895.robot.commands.arm.DeployCubeAndRetract;
 import org.usfirst.frc.team1895.robot.commands.arm.ExtendTelescopingPart;
 import org.usfirst.frc.team1895.robot.commands.arm.RetractTelescopingPart;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_High;
@@ -231,7 +231,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Test RotateArm Angle", 90);
 		SmartDashboard.putData("Test RotateArm", new TestRotateArm());
 		
-		SmartDashboard.putData("Test Deploy Cube", new DeployCube());
+		SmartDashboard.putData("Test Deploy Cube and Retract", new DeployCubeAndRetract());
 		SmartDashboard.putData("Test Extend Lower Intake", new ExtendLowerIntake());
 		SmartDashboard.putData("Test Retract Lower Intake", new RetractLowerIntake());
 		SmartDashboard.putData("Test Raise Lower Intake", new RaiseLowerIntake());

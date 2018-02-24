@@ -14,7 +14,6 @@ public class RotateArm_SwitchPos extends CommandGroup {
 
     public RotateArm_SwitchPos() {
     	
-    	addSequential(new RetractTelescopingPart());
     	addSequential(new ExtendLowerIntake());
     	addSequential(new RaiseLowerIntake());
     	addSequential(new RotateArm(10));  //need to find out num degrees here

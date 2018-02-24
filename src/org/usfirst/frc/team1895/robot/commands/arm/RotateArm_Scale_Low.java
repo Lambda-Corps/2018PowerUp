@@ -12,7 +12,6 @@ public class RotateArm_Scale_Low extends CommandGroup {
 
     public RotateArm_Scale_Low() {    	
     	
-    	addSequential(new RetractTelescopingPart());
     	addSequential(new ExtendLowerIntake());
     	addSequential(new RaiseLowerIntake());
     	addSequential(new RotateArm(10));  //need to find out num degrees here
