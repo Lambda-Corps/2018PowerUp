@@ -1,8 +1,8 @@
 package org.usfirst.frc.team1895.robot.commands.autonomous;
 
 import org.usfirst.frc.team1895.robot.Robot;
+import org.usfirst.frc.team1895.robot.commands.arm.DeployCube;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm;
-import org.usfirst.frc.team1895.robot.commands.claw.DeployCube_Claw;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithPID;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithoutPID;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
@@ -43,13 +43,13 @@ public class DestinationA extends CommandGroup {
 				addSequential(new TurnWithoutPID(0.5, -90));
 				addSequential(new RotateArm(45));
 				addSequential(new DriveStraightWithoutPID(0.7, 30));
-				addSequential(new DeployCube_Claw());
+				addSequential(new DeployCube());
 				// now directly in front of switch, 40" away
 				// temporarily making DriveToObstacle go all the way Dest.A, but in the real
 				// code it'll vision-align
 				// addSequential(new DriveToObstacle(2, 0.5));
 				// addSequential(new AlignToSwitch());
-				// addSequential(new DeployCube_Claw());
+				// addSequential(new DeployCube());
 				break;
 			case 2:
 				addSequential(new PrintCommand("A, ourLeftSwitch, position 2"));
@@ -60,7 +60,7 @@ public class DestinationA extends CommandGroup {
 				addSequential(new DriveStraightWithPID(30));
 				// addSequential(new DriveToObstacle(2, 0.5));
 				// addSequential(new AlignToSwitch());
-				// addSequential(new DeployCube_Claw());
+				// addSequential(new DeployCube());
 
 				break;
 			case 3: // USING FOR TEST
@@ -86,7 +86,7 @@ public class DestinationA extends CommandGroup {
 				// now in front of Destination A, right switch
 				// addSequential(new DriveToObstacle(2, 0.5));
 				// addSequential(new AlignToSwitch());
-				// addSequential(new DeployCube_Claw());
+				// addSequential(new DeployCube());
 				break;
 			case 2:
 				addSequential(new PrintCommand("A, not ourLeftSwitch, position 2"));
@@ -94,7 +94,7 @@ public class DestinationA extends CommandGroup {
 				addSequential(new DriveStraightWithPID(30));
 				// addSequential(new DriveToObstacle(2, 0.5));
 				// addSequential(new AlignToSwitch());
-				// addSequential(new DeployCube_Claw());
+				// addSequential(new DeployCube());
 				break;
 			case 3: // NOT DONE YET
 				addSequential(new PrintCommand("A, not ourLeftSwitch, position 3, closeRoute"));

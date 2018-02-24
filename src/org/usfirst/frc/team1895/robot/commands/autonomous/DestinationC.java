@@ -1,8 +1,8 @@
 package org.usfirst.frc.team1895.robot.commands.autonomous;
 
 import org.usfirst.frc.team1895.robot.Robot;
+import org.usfirst.frc.team1895.robot.commands.arm.DeployCube;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm;
-import org.usfirst.frc.team1895.robot.commands.claw.DeployCube_Claw;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithPID;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithoutPID;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
@@ -35,7 +35,7 @@ public class DestinationC extends CommandGroup {
 				addSequential(new TurnWithoutPID(0.5, 90.0));
 				addSequential(new RotateArm(45));
 				//addSequential(new DriveStraightWithoutPID(0.7, 10));
-				addSequential(new DeployCube_Claw());
+				addSequential(new DeployCube());
 //				addSequential(new DriveToObstacle(0.5, 5)); // accurate within this distance?
 //				addSequential(new DeployCube_Claw());
 				break;
