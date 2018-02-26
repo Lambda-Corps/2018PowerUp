@@ -47,6 +47,17 @@ public class Arm extends Subsystem {
 	private static final double CLAW_SPEED = 0.4;
 	
 	private AnalogInput in_rangefinder;
+	private AnalogInput potentiometer;
+	
+	// final variables for potentiometer
+	private final double VOLTVAL_1ROT = 0.6438;
+	private final double VOLTVAL_3QUARTERROT = 0.48285;
+	private final double VOLTVAL_HALFROT = 0.3219;
+	private final double VOLTVAL_QUARTERROT = 0.16095;
+	
+	//potentiometer variables
+	private double pot_voltage;
+	private double arm_speed = 0.4;
     
     public Arm() {
     	// motors
@@ -65,8 +76,9 @@ public class Arm extends Subsystem {
     	BIA = new BuiltInAccelerometer();
 		accel = new ADXL345_I2C(I2C.Port.kOnboard, Accelerometer.Range.k4G);
 		
-		//rangefinder
+		//analog sensors
 		in_rangefinder = new AnalogInput(RobotMap.INTAKE_RANGEFINDER_PORT);
+		potentiometer = new AnalogInput(RobotMap.POTENTIOMETER_PORT);
 		
 		//led
 		//led1 = new DigitalOutput(9); //COMMENTED OUT FOR STEAMWORKS BOT
@@ -199,7 +211,7 @@ public class Arm extends Subsystem {
 		return String.format("X =  %6.2f   Y =  %6.2f  Z =  %6.2f ", accel.getX(), accel.getY(), accel.getZ());
 	}
     
-	public void driveShoulder(double setSpeed){
+	public void driveArmShoulder(double setSpeed){
 	    	//System.out.println("Set Speed: " + setSpeed);
 		bot_arm_rotation_motor.set(ControlMode.PercentOutput, setSpeed);
 		top_arm_rotation_motor.set(ControlMode.PercentOutput, setSpeed);
@@ -233,7 +245,7 @@ public class Arm extends Subsystem {
 		return retVal;
 	}
 
-		public void driveWrist(double wristSpeed) {
+		public void driveArmWrist(double wristSpeed) {
 			//TODO set limits
 			wrist_motor.set(ControlMode.PercentOutput, wristSpeed);
 	    
@@ -248,7 +260,62 @@ public class Arm extends Subsystem {
 	public void retractTelescopingArm() {
 		telescoping_solenoid.set(DoubleSolenoid.Value.kReverse);
 	}
-    
+ 
+//==Potentiometer Code=========================================================================================================
+	public void getPotentiometerVoltage() {
+		double voltage = potentiometer.getVoltage();
+		System.out.println("Potentiometer voltage " + voltage);
+		//return pot_voltage;
+	}
+	
+	public boolean rotateToUpperScale() {
+		boolean done = false;
+		pot_voltage = potentiometer.getVoltage();
+		if(pot_voltage < VOLTVAL_1ROT) {
+			driveArm(arm_speed);
+		} else {
+			done = true;
+			driveArm(0);
+		}
+		return done;
+	}
+	
+	public boolean rotateToMidScale() {
+		boolean done = false;
+		pot_voltage = potentiometer.getVoltage();
+		if(pot_voltage < VOLTVAL_3QUARTERROT) {
+			driveArm(arm_speed);
+		} else {
+			done = true;
+			driveArm(0);
+		}
+		return done;
+	}
+	 
+	public boolean rotateToLowerScale() {
+		boolean done = false;
+		pot_voltage = potentiometer.getVoltage();
+		if(pot_voltage < VOLTVAL_HALFROT) {
+			driveArm(arm_speed);
+		} else {
+			done = true;
+			driveArm(0);
+		}
+		return done;
+	}
+	
+	public boolean rotateToSwitch() {
+		boolean done = false;
+		pot_voltage = potentiometer.getVoltage();
+		if(pot_voltage < VOLTVAL_QUARTERROT) {
+			driveArm(arm_speed);
+		} else {
+			done = true;
+			driveArm(0);
+		}
+		return done;
+	}
+	
 //==Wrist Code=========================================================================================================
 	
     

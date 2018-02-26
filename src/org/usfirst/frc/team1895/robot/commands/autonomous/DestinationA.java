@@ -2,7 +2,7 @@ package org.usfirst.frc.team1895.robot.commands.autonomous;
 
 import org.usfirst.frc.team1895.robot.Robot;
 import org.usfirst.frc.team1895.robot.commands.arm.DeployCube;
-import org.usfirst.frc.team1895.robot.commands.arm.RotateArm;
+import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToAngle;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithPID;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithoutPID;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
@@ -41,7 +41,7 @@ public class DestinationA extends CommandGroup {
 				addSequential(new TurnWithoutPID(0.5, 90));
 				addSequential(new DriveStraightWithoutPID(0.7, 50));
 				addSequential(new TurnWithoutPID(0.5, -90));
-				addSequential(new RotateArm(45));
+				addSequential(new RotateArmToAngle(45));
 				addSequential(new DriveStraightWithoutPID(0.7, 30));
 				addSequential(new DeployCube());
 				// now directly in front of switch, 40" away

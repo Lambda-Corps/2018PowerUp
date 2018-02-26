@@ -13,6 +13,7 @@ import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationC;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationD;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationE;
 import org.usfirst.frc.team1895.robot.commands.autonomous.ShiftGearsTestCommand;
+import org.usfirst.frc.team1895.robot.commands.drivetrain.CancelDrivetrain;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.DeployCube_LowerIntake;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.ExtendLowerIntake;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.GrabCube_LowerIntake;
@@ -27,6 +28,7 @@ import org.usfirst.frc.team1895.robot.commands.testcommands.TestEmptyCommand;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestRotateArm;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithoutPID;
+import org.usfirst.frc.team1895.robot.oi.F310;
 import org.usfirst.frc.team1895.robot.subsystems.Arm;
 import org.usfirst.frc.team1895.robot.subsystems.Climber;
 import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
@@ -115,6 +117,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void disabledInit() {
 		// Robot.camera.putVideo(false);
+		Scheduler.getInstance().removeAll();
 	}
 
 	@Override
@@ -266,13 +269,17 @@ public class Robot extends TimedRobot {
 		// System.out.println("<joy> LY " + Robot.oi.gamepad.getAxis(F310.LY) + " RX " +
 		// Robot.oi.gamepad.getAxis(F310.RX));
 
-		// System.out.printf("<joy> LY: %5.1f RX: %5.1f",
-		// Robot.oi.gamepad.getAxis(F310.LY), Robot.oi.gamepad.getAxis(F310.RX) );
+//		 System.out.printf("<joy> LY: %5.1f RX: %5.1f",
+//		 Robot.oi.gamepad1.getAxis(F310.LY), Robot.oi.gamepad1.getAxis(F310.RX) );
 
 		// System.out.println("gyro teleop: " + Robot.drivetrain.getAHRSGyroAngle());
 
 		// System.out.println("LE " + Robot.drivetrain.getLeftEncoder() + " RE " +
 		// Robot.drivetrain.getRightEncoder());
+		if (Robot.oi.gamepad1.getPOV() == 0 ) {
+		 Command turnCmd = new CancelDrivetrain();
+		 turnCmd.start();
+		}
 		
 		SmartDashboard.putNumber("RM Current: ", Robot.drivetrain.getRMCurrent());
 		SmartDashboard.putNumber("LM Current: ", Robot.drivetrain.getLMCurrent());

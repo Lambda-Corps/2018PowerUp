@@ -2,7 +2,7 @@ package org.usfirst.frc.team1895.robot.commands.autonomous;
 
 import org.usfirst.frc.team1895.robot.Robot;
 import org.usfirst.frc.team1895.robot.commands.arm.DeployCube;
-import org.usfirst.frc.team1895.robot.commands.arm.RotateArm;
+import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToAngle;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithPID;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithoutPID;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
@@ -32,7 +32,7 @@ public class DestinationB extends CommandGroup {
 				addSequential(new PrintCommand("Position 1"));
 				addSequential(new DriveStraightWithoutPID(0.7, 150));
 				addSequential(new TurnWithoutPID(0.5, 90));
-				addSequential(new RotateArm(45));
+				addSequential(new RotateArmToAngle(45));
 				addSequential(new DeployCube());
 				//addSequential(new DriveStraightWithPID(0));
 //				addSequential(new DriveToObstacle(0.5, 5)); // accurate within this distance?
