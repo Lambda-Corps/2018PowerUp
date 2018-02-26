@@ -234,12 +234,16 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Test RotateArm Angle", 90);
 		SmartDashboard.putData("Test RotateArm", new TestRotateArm());
 		
+		SmartDashboard.putNumber("Claw Speed", 0);
+		
 		SmartDashboard.putData("Test Deploy Cube and Retract", new DeployCubeAndRetract());
 		SmartDashboard.putData("Test Extend Lower Intake", new ExtendLowerIntake());
 		SmartDashboard.putData("Test Retract Lower Intake", new RetractLowerIntake());
 		SmartDashboard.putData("Test Raise Lower Intake", new RaiseLowerIntake());
 		SmartDashboard.putData("Test Lower Lower Intake", new LowerLowerIntake());
-		SmartDashboard.putData("Test Deploy Cube Lower Intake", new DeployCube_LowerIntake());
+		
+		SmartDashboard.putNumber("Lower Intake Speed", 0.4);
+		
 		SmartDashboard.putData("Test Grab Cube Lower Intake", new GrabCube_LowerIntake());
 		SmartDashboard.putData("Test Extend Telescoping Part", new ExtendTelescopingPart());
 		SmartDashboard.putData("Test Retract Telescoping Part", new RetractTelescopingPart());
@@ -247,6 +251,8 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Test RotateArm_Scale_Low", new RotateArm_Scale_Low());
 		SmartDashboard.putData("Test RotateArm_Scale_Mid", new RotateArm_Scale_Mid());
 		SmartDashboard.putData("Test RotateArm_SwitchPos", new RotateArm_SwitchPos());
+		
+		SmartDashboard.putNumber("Cube Close Value", 1);
 		
 	}
 

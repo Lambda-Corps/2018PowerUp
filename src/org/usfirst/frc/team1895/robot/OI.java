@@ -1,16 +1,11 @@
 package org.usfirst.frc.team1895.robot;
 
 import org.usfirst.frc.team1895.robot.commands.arm.CancelArm;
+import org.usfirst.frc.team1895.robot.commands.arm.CubeIn;
 import org.usfirst.frc.team1895.robot.commands.arm.DeployCube;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToAngle;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToPosition;
-import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_High;
-import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_Low;
-import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_Mid;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.AlignToCube;
-import org.usfirst.frc.team1895.robot.commands.drivetrain.CancelDrivetrain;
-import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
-import org.usfirst.frc.team1895.robot.commands.lowerIntake.GrabCube_LowerIntake;
 import org.usfirst.frc.team1895.robot.oi.F310;
 
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
@@ -63,7 +58,7 @@ public class OI {
 
 		//lower intake buttons
 		grabCube_LowerIntake = new JoystickButton(gamepad1, F310.LB);
-		grabCube_LowerIntake.whenPressed(new GrabCube_LowerIntake());
+		grabCube_LowerIntake.whenPressed(new CubeIn());
 		
 		//arm buttons
 		ninetyUp = new JoystickButton(gamepad2, F310.Y);

@@ -10,7 +10,8 @@ public class ResetArm extends CommandGroup {
     public ResetArm() {
 
     	addSequential(new RetractTelescopingPart());
-    	addSequential(new RotateArm(0));
+    	addSequential(new RotateArmToAngle(0));
+    	addSequential(new ExtendTelescopingPart());
     	
     }
 }

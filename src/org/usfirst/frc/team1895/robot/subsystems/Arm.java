@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  * Function: Moves up and down to put cubes onto switch or scale. Can also extend for added height. Contains
  * latch for climbing. Includes wrist for claw. 
@@ -341,6 +342,15 @@ public class Arm extends Subsystem {
 	public boolean cubeIsIn() {
 		System.out.println(in_rangefinder.getAverageVoltage());
 		if(in_rangefinder.getAverageVoltage()>2.0) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	public boolean cubeIsClose() {
+		System.out.println(in_rangefinder.getAverageVoltage());
+		if(in_rangefinder.getAverageVoltage()>SmartDashboard.getNumber("Cube Close Value", 1)) {
 			return true;
 		} else {
 			return false;
