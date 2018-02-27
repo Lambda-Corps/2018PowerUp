@@ -1,7 +1,9 @@
 package org.usfirst.frc.team1895.robot;
 
+import org.usfirst.frc.team1895.robot.commands.arm.CubeIn;
 import org.usfirst.frc.team1895.robot.commands.arm.DeployCubeAndRetract;
 import org.usfirst.frc.team1895.robot.commands.arm.ExtendTelescopingPart;
+import org.usfirst.frc.team1895.robot.commands.arm.ResetArm;
 import org.usfirst.frc.team1895.robot.commands.arm.RetractTelescopingPart;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_High;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_Low;
@@ -14,7 +16,6 @@ import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationD;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationE;
 import org.usfirst.frc.team1895.robot.commands.autonomous.ShiftGearsTestCommand;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.CancelDrivetrain;
-import org.usfirst.frc.team1895.robot.commands.lowerIntake.DeployCube_LowerIntake;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.ExtendLowerIntake;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.GrabCube_LowerIntake;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.LowerLowerIntake;
@@ -28,7 +29,6 @@ import org.usfirst.frc.team1895.robot.commands.testcommands.TestEmptyCommand;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestRotateArm;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithoutPID;
-import org.usfirst.frc.team1895.robot.oi.F310;
 import org.usfirst.frc.team1895.robot.subsystems.Arm;
 import org.usfirst.frc.team1895.robot.subsystems.Climber;
 import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
@@ -235,6 +235,10 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Test RotateArm", new TestRotateArm());
 		
 		SmartDashboard.putNumber("Claw Speed", 0);
+		
+		SmartDashboard.putData("Test CubeIn", new CubeIn());
+		
+		SmartDashboard.putData("Test ResetArm", new ResetArm());
 		
 		SmartDashboard.putData("Test Deploy Cube and Retract", new DeployCubeAndRetract());
 		SmartDashboard.putData("Test Extend Lower Intake", new ExtendLowerIntake());

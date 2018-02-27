@@ -63,9 +63,10 @@ public class Arm extends Subsystem {
     public Arm() {
     	// motors
     	claw_intake_motor1 = new TalonSRX(RobotMap.CLAW_INTAKE_MOTOR1_PORT);
-		claw_intake_motor1.setInverted(true);
+    	claw_intake_motor1.setInverted(true);
 		claw_intake_motor2 = new TalonSRX(RobotMap.CLAW_INTAKE_MOTOR2_PORT);
-		claw_intake_motor2.follow(claw_intake_motor1);
+    	claw_intake_motor2.setInverted(true);
+    	claw_intake_motor2.follow(claw_intake_motor1);
     	wrist_motor = new TalonSRX(RobotMap.WRIST_MOTOR_PORT);
     	wrist_motor.getSensorCollection().setQuadraturePosition(0, 0);
     	top_arm_rotation_motor = new TalonSRX(RobotMap.TOP_ARM_ROTATION_MOTOR_PORT);
@@ -255,11 +256,11 @@ public class Arm extends Subsystem {
 		
 //==Telescoping Arm Code===============================================================================================
 	public void extendTelescopingArm() {
-		telescoping_solenoid.set(DoubleSolenoid.Value.kForward);
+		telescoping_solenoid.set(DoubleSolenoid.Value.kReverse);
 	}
 	
 	public void retractTelescopingArm() {
-		telescoping_solenoid.set(DoubleSolenoid.Value.kReverse);
+		telescoping_solenoid.set(DoubleSolenoid.Value.kForward);
 	}
  
 //==Potentiometer Code=========================================================================================================

@@ -73,7 +73,5 @@ public class OI {
 		rotateArm_Scale_Mid.whenPressed(new RotateArmToPosition("B"));
 		rotateArm_Scale_High = new JoystickButton(gamepad2, F310.Y);
 		rotateArm_Scale_High.whenPressed(new RotateArmToPosition("Y"));
-		armCancel = new JoystickButton(gamepad2, F310.DPAD_UP);
-		armCancel.whenPressed(new CancelArm());
 	}
 }

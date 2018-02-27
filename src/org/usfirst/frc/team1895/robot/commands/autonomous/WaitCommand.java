@@ -12,8 +12,6 @@ public class WaitCommand extends Command {
 	boolean done;
 
 	public WaitCommand(int seconds) {
-		// Use requires() here to declare subsystem dependencies
-		// eg. requires(chassis);
 		counter = 0;
 		cycles = seconds * 66.667;
 		done = false;

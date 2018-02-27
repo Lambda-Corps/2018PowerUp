@@ -53,11 +53,11 @@ public class LowerIntake extends Subsystem {
 	}
 	
 	public void raiseLowerIntake() {
-		lower_intake_solenoid_ExRe.set(DoubleSolenoid.Value.kForward);
+		lower_intake_solenoid_UpDown.set(DoubleSolenoid.Value.kReverse);
 	}
 	
 	public void lowerLowerIntake() {
-		lower_intake_solenoid_ExRe.set(DoubleSolenoid.Value.kReverse);
+		lower_intake_solenoid_UpDown.set(DoubleSolenoid.Value.kForward);
 	}
 	
     public void initDefaultCommand() {
