@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PIDController;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.command.Subsystem;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Function: Drives around. Can gear shift into high and low gear. I am also
@@ -116,6 +117,8 @@ public class Drivetrain extends Subsystem {
 		 right_dt_motor1.configPeakCurrentDuration(100, 0);
 		 right_dt_motor1.enableCurrentLimit(true);
 		 right_dt_motor1.configOpenloopRamp(0.15, 0);
+		 
+		 shiftToLowGear();
 
 		// pneumatics
 		compressor = new Compressor();
@@ -465,6 +468,7 @@ public class Drivetrain extends Subsystem {
 
 	public boolean drivefr_RFDistance(double goaldistance, double speed) { // TODO: do we need separate methods??? this
 		// only does front RF
+		SmartDashboard.putNumber("distance from obstacle", fr_rangefinderDist());
 		//System.out.printf("rangefinder: %5.1f \n", fr_rangefinderDist());
 		if (fr_rangefinderDist() <= (goaldistance)) { // if the robot crossed the goal distance + buffer then the code
 			// will stop
@@ -540,6 +544,11 @@ public class Drivetrain extends Subsystem {
 			fromWall = l_rangefinderDist();
 		} else {
 			fromWall = r_rangefinderDist();
+		}
+		if(onLeft) {
+			SmartDashboard.putNumber("distance from wall (on left)", fromWall);
+		} else {
+			SmartDashboard.putNumber("distance from wall (on right)", fromWall);
 		}
 		// System.out.println("distance; "+ fromWall);
 		double currentDistance = l_encoder.getDistance() + r_encoder.getDistance();

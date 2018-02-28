@@ -1,5 +1,6 @@
 package org.usfirst.frc.team1895.robot.subsystems;
 
+import org.usfirst.frc.team1895.robot.Robot;
 import org.usfirst.frc.team1895.robot.RobotMap;
 import org.usfirst.frc.team1895.robot.commands.arm.Default_Arm;
 
@@ -9,7 +10,6 @@ import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import edu.wpi.first.wpilibj.ADXL345_I2C;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
-import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C;
@@ -101,7 +101,8 @@ public class Arm extends Subsystem {
     	//These variable control the angle at which the piston will extend
     	int upperArmLimit = 135;
     	int lowerArmLimit = 45;
-    	double anglex = (double)armEncoderValue*180/14000;
+    	double anglex = (double) armEncoderValue*180/14000;
+    	SmartDashboard.putNumber("arm encoder", anglex);
 //    	System.out.println("This is the encoder value2 "+ anglex);
     	if (((armEncoderValue > armEncoderUpperLimit) && (armSpeed < 0)) ||
     	((armEncoderValue < armEncoderLowerLimit) && (armSpeed > 0))){
@@ -121,6 +122,7 @@ public class Arm extends Subsystem {
     	//System.out.println(wrist_motor.getSensorCollection().getQuadraturePosition());
     ///	System.out.println(String.format("Arm Encoder:  %5d     Arm Speed:   %6.2f ",armEncoderValue, armSpeed));
     	//System.out.println("Arm Encoder: " + armEncoderValue + "  Arm Speed;" + armSpeed);
+    	getPotentiometerVoltage();
     }
     
     public double getAccelValue() {
@@ -140,21 +142,23 @@ public class Arm extends Subsystem {
     	if(goalangle > 180) {
     		goalangle = 180;
     	}
+    	
     	//convert angle to 0-14000
     	goalangle = goalangle*(14000/180);
     	
     	double armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
-    	//System.out.println("This is the encoder value "+ armEncoderValue);
+    	System.out.printf("encoder value %5.1f   accel  %5.1f", armEncoderValue, accelValue);
     	
-    	if(armEncoderValue< goalangle && Math.abs(armEncoderValue  - goalangle)> tolerance){
-    		driveArm(-.25);
-    	}
-    	else if(armEncoderValue > goalangle && Math.abs(armEncoderValue - goalangle)> tolerance) {
-    		driveArm(.25);
-    	}
-    	else{
+    	if(Math.abs(armEncoderValue-goalangle)<tolerance) {
     		driveArm(0);
     		return true;
+    	} else if(armEncoderValue < goalangle){
+    		driveArm(-.25);
+    		System.out.println("driving arm negative");
+    	}
+    	else if(armEncoderValue > goalangle) {
+    		driveArm(.25);
+    		System.out.println("driving arm positive");
     	}
     	return false;
     }
@@ -165,6 +169,13 @@ public class Arm extends Subsystem {
     
 	public void calibrate(){
 		return;
+	}
+	
+	public boolean findZero() {
+		System.out.println("encoder value: " + getArmEncoder());
+		System.out.println("potentiometer value: " + getPotentiometerVoltage());
+		System.out.println("accel z " + getZValue());
+		return true;
 	}
     
 //==Encoder Methods====================================================================================================
@@ -182,7 +193,6 @@ public class Arm extends Subsystem {
     
 	public void resetEncoder() {
 		bot_arm_rotation_motor.getSensorCollection().setQuadraturePosition(0, 0);
-		
 	}
     
   //TODO: change these to match power-up
@@ -250,7 +260,7 @@ public class Arm extends Subsystem {
 		public void driveArmWrist(double wristSpeed) {
 			//TODO set limits
 			wrist_motor.set(ControlMode.PercentOutput, wristSpeed);
-	    
+			SmartDashboard.putNumber("wrist value", Robot.arm.getWristEncoder());
 		}
 	
 		
@@ -264,10 +274,11 @@ public class Arm extends Subsystem {
 	}
  
 //==Potentiometer Code=========================================================================================================
-	public void getPotentiometerVoltage() {
+	public double getPotentiometerVoltage() {
 		double voltage = potentiometer.getVoltage();
-		System.out.println("Potentiometer voltage " + voltage);
-		//return pot_voltage;
+		//System.out.println("Potentiometer voltage " + voltage);
+		SmartDashboard.putNumber("potentiometer", voltage);
+		return pot_voltage;
 	}
 	
 	public boolean rotateToUpperScale() {
@@ -351,7 +362,7 @@ public class Arm extends Subsystem {
 	
 	public boolean cubeIsClose() {
 		System.out.println(in_rangefinder.getAverageVoltage());
-		if(in_rangefinder.getAverageVoltage()>SmartDashboard.getNumber("Cube Close Value", 1)) {
+		if(in_rangefinder.getAverageVoltage()>0.8) {
 			return true;
 		} else {
 			return false;

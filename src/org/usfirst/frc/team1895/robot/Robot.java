@@ -5,10 +5,12 @@ import org.usfirst.frc.team1895.robot.commands.arm.DeployCubeAndRetract;
 import org.usfirst.frc.team1895.robot.commands.arm.ExtendTelescopingPart;
 import org.usfirst.frc.team1895.robot.commands.arm.ResetArm;
 import org.usfirst.frc.team1895.robot.commands.arm.RetractTelescopingPart;
+import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToZero;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_High;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_Low;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_Mid;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_SwitchPos;
+import org.usfirst.frc.team1895.robot.commands.arm.RotateWrist;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationA;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationB;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationC;
@@ -145,6 +147,7 @@ public class Robot extends TimedRobot {
 	public void autonomousInit() {
 
 		Robot.drivetrain.setBrakeMode();
+		Robot.drivetrain.shiftToLowGear();
 
 		// access FMS data
 		String colorString;
@@ -203,6 +206,7 @@ public class Robot extends TimedRobot {
 
 		Robot.drivetrain.resetEncoders();
 		Robot.drivetrain.setCoastMode();
+		Robot.drivetrain.shiftToLowGear();
 
 		// Testing Turning
 		SmartDashboard.putNumber("Turn: P value: ", .025);
@@ -233,21 +237,22 @@ public class Robot extends TimedRobot {
 		// Arm/lower intake commands
 		SmartDashboard.putNumber("Test RotateArm Angle", 90);
 		SmartDashboard.putData("Test RotateArm", new TestRotateArm());
-		
+
 		SmartDashboard.putNumber("Claw Speed", 0);
-		
+		SmartDashboard.putNumber("Arm Speed", 0.2);
+
 		SmartDashboard.putData("Test CubeIn", new CubeIn());
-		
+
 		SmartDashboard.putData("Test ResetArm", new ResetArm());
-		
+
 		SmartDashboard.putData("Test Deploy Cube and Retract", new DeployCubeAndRetract());
 		SmartDashboard.putData("Test Extend Lower Intake", new ExtendLowerIntake());
 		SmartDashboard.putData("Test Retract Lower Intake", new RetractLowerIntake());
 		SmartDashboard.putData("Test Raise Lower Intake", new RaiseLowerIntake());
 		SmartDashboard.putData("Test Lower Lower Intake", new LowerLowerIntake());
-		
+
 		SmartDashboard.putNumber("Lower Intake Speed", 0.4);
-		
+
 		SmartDashboard.putData("Test Grab Cube Lower Intake", new GrabCube_LowerIntake());
 		SmartDashboard.putData("Test Extend Telescoping Part", new ExtendTelescopingPart());
 		SmartDashboard.putData("Test Retract Telescoping Part", new RetractTelescopingPart());
@@ -255,9 +260,13 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Test RotateArm_Scale_Low", new RotateArm_Scale_Low());
 		SmartDashboard.putData("Test RotateArm_Scale_Mid", new RotateArm_Scale_Mid());
 		SmartDashboard.putData("Test RotateArm_SwitchPos", new RotateArm_SwitchPos());
-		
+
 		SmartDashboard.putNumber("Cube Close Value", 1);
 		
+		SmartDashboard.putData("Rotate Arm to Zero", new RotateArmToZero());
+		
+		SmartDashboard.putData("Rotate Wrist", new RotateWrist());
+
 	}
 
 	/**
@@ -267,10 +276,10 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-//		SmartDashboard.putNumber("Accel Value X", Robot.arm.getXValue());
-//		SmartDashboard.putNumber("Accel Value Y", Robot.arm.getYValue());
-//		SmartDashboard.putNumber("Accel Value Z", Robot.arm.getZValue());
-//		SmartDashboard.putNumber("Wrist Encoder 2.0", Robot.arm.getWristEncoder());
+		// SmartDashboard.putNumber("Accel Value X", Robot.arm.getXValue());
+		// SmartDashboard.putNumber("Accel Value Y", Robot.arm.getYValue());
+		// SmartDashboard.putNumber("Accel Value Z", Robot.arm.getZValue());
+		// SmartDashboard.putNumber("Wrist Encoder 2.0", Robot.arm.getWristEncoder());
 
 		// System.out.println("<joy> LY " + Robot.oi.gamepad.getAxis(F310.LY) + " RX " +
 		// Robot.oi.gamepad.getAxis(F310.RX));
@@ -279,18 +288,18 @@ public class Robot extends TimedRobot {
 		// System.out.println("<joy> LY " + Robot.oi.gamepad.getAxis(F310.LY) + " RX " +
 		// Robot.oi.gamepad.getAxis(F310.RX));
 
-//		 System.out.printf("<joy> LY: %5.1f RX: %5.1f",
-//		 Robot.oi.gamepad1.getAxis(F310.LY), Robot.oi.gamepad1.getAxis(F310.RX) );
+		// System.out.printf("<joy> LY: %5.1f RX: %5.1f",
+		// Robot.oi.gamepad1.getAxis(F310.LY), Robot.oi.gamepad1.getAxis(F310.RX) );
 
 		// System.out.println("gyro teleop: " + Robot.drivetrain.getAHRSGyroAngle());
 
 		// System.out.println("LE " + Robot.drivetrain.getLeftEncoder() + " RE " +
 		// Robot.drivetrain.getRightEncoder());
-		if (Robot.oi.gamepad1.getPOV() == 0 ) {
-		 Command turnCmd = new CancelDrivetrain();
-		 turnCmd.start();
+		if (Robot.oi.gamepad1.getPOV() == 0) {
+			Command turnCmd = new CancelDrivetrain();
+			turnCmd.start();
 		}
-		
+
 		SmartDashboard.putNumber("RM Current: ", Robot.drivetrain.getRMCurrent());
 		SmartDashboard.putNumber("LM Current: ", Robot.drivetrain.getLMCurrent());
 	}
