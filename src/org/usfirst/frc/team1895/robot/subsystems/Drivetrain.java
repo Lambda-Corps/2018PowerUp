@@ -308,7 +308,7 @@ public class Drivetrain extends Subsystem {
 		// max speed to be in low gear is 4.71ft/sec (56.52 inches/sec), max high gear
 		// is 12.47 ft/sec
 		// unit should be inches per second
-		double downshift_speed = 56.52;
+		double downshift_speed = 56.52 * .70; // Downshift if we get to 70% of max low gear speed
 
 		// if in high gear..
 		if (inHigh) {
