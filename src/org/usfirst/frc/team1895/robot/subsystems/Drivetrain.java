@@ -103,7 +103,8 @@ public class Drivetrain extends Subsystem {
 		right_dt_motor2.setInverted(true);
 		left_dt_motor2.follow(left_dt_motor1);
 		right_dt_motor2.follow(right_dt_motor1);
-
+		
+		/*
 		// TODO -- Test this code so we can uncomment if it works.
 		// current limited to 10 amps when current is >15amps for 100 milliseconds
 		 left_dt_motor1.configContinuousCurrentLimit(10, 0);
@@ -117,8 +118,8 @@ public class Drivetrain extends Subsystem {
 		 right_dt_motor1.configPeakCurrentDuration(100, 0);
 		 right_dt_motor1.enableCurrentLimit(true);
 		 right_dt_motor1.configOpenloopRamp(0.15, 0);
+		 */
 		 
-		 shiftToLowGear();
 
 		// pneumatics
 		compressor = new Compressor();
@@ -170,6 +171,7 @@ public class Drivetrain extends Subsystem {
 		pidControllerTurning = new PIDController(pGainTurn, iGainTurn, dGainTurn, ahrs, myPIDOutputTurning);
 		greenLED = new DigitalOutput(RobotMap.GEAR_LED_PORT);
 
+		shiftToLowGear();
 	}
 
 	// ==Manual
@@ -312,7 +314,7 @@ public class Drivetrain extends Subsystem {
 		if (inHigh) {
 			// ..and you dropped below the minimum high speed, switch to low gear
 			if (current_speed < downshift_speed) {
-				transmission_solenoid.set(DoubleSolenoid.Value.kReverse);
+				transmission_solenoid.set(DoubleSolenoid.Value.kForward);
 				inHigh = false;
 			}
 		}
@@ -323,8 +325,8 @@ public class Drivetrain extends Subsystem {
 				highgear_count++;
 
 				// ..after ~ 1.5 seconds, shift into high gear
-				if(highgear_count == 200) {
-					transmission_solenoid.set(DoubleSolenoid.Value.kForward); 
+				if(highgear_count == 100) {
+					transmission_solenoid.set(DoubleSolenoid.Value.kReverse); 
 					inHigh = true;
 					highgear_count = 0;
 				}
@@ -341,7 +343,7 @@ public class Drivetrain extends Subsystem {
 	}
 	
 	public void shiftToLowGear() {
-		transmission_solenoid.set(DoubleSolenoid.Value.kReverse);
+		transmission_solenoid.set(DoubleSolenoid.Value.kForward);
 	}
 
 	// for ShiftGearsTestStartLG command
@@ -468,7 +470,7 @@ public class Drivetrain extends Subsystem {
 
 	public boolean drivefr_RFDistance(double goaldistance, double speed) { // TODO: do we need separate methods??? this
 		// only does front RF
-		SmartDashboard.putNumber("distance from obstacle", fr_rangefinderDist());
+//		SmartDashboard.putNumber("distance from obstacle", fr_rangefinderDist());
 		//System.out.printf("rangefinder: %5.1f \n", fr_rangefinderDist());
 		if (fr_rangefinderDist() <= (goaldistance)) { // if the robot crossed the goal distance + buffer then the code
 			// will stop
@@ -546,9 +548,9 @@ public class Drivetrain extends Subsystem {
 			fromWall = r_rangefinderDist();
 		}
 		if(onLeft) {
-			SmartDashboard.putNumber("distance from wall (on left)", fromWall);
+//			SmartDashboard.putNumber("distance from wall (on left)", fromWall);
 		} else {
-			SmartDashboard.putNumber("distance from wall (on right)", fromWall);
+//			SmartDashboard.putNumber("distance from wall (on right)", fromWall);
 		}
 		// System.out.println("distance; "+ fromWall);
 		double currentDistance = l_encoder.getDistance() + r_encoder.getDistance();

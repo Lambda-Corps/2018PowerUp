@@ -8,6 +8,9 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class RetractTelescopingPart extends Command {
+	
+	int counter;
+	boolean done;
 
     public RetractTelescopingPart() {
         // Use requires() here to declare subsystem dependencies
@@ -16,16 +19,22 @@ public class RetractTelescopingPart extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	counter = 0;
+    	done = false;
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	if(counter>=200) {
+    		done = true;
+    	}
     	Robot.arm.retractTelescopingArm();
+    	counter++;
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return true;
+        return done;
     }
 
     // Called once after isFinished returns true

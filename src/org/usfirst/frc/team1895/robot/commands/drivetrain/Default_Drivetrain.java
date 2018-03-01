@@ -31,8 +31,9 @@ public class Default_Drivetrain extends Command {
     	double yAxisValue = -Robot.oi.gamepad1.getAxis(F310.LY);
     	int povValue = Robot.oi.gamepad1.getPOV();
 
-    //	Robot.drivetrain.arcadeDrive(-Robot.oi.gamepad1.getAxis(F310.LY), Robot.oi.gamepad1.getAxis(F310.RX));
+    	Robot.drivetrain.arcadeDrive(-Robot.oi.gamepad1.getAxis(F310.LY), Robot.oi.gamepad1.getAxis(F310.RX));
 
+    	/*
     	if ((xAxisValue > 0.05 || xAxisValue < -0.05) || (yAxisValue > 0.05 || yAxisValue < -0.05)) {            //check if less than value is -0.005
         	Robot.drivetrain.arcadeDrive(-Robot.oi.gamepad1.getAxis(F310.LY), Robot.oi.gamepad1.getAxis(F310.RX));
     	} else {
@@ -56,7 +57,7 @@ public class Default_Drivetrain extends Command {
     	    
     	  
     	}
-  	
+  		*/
     }
 
     // Make this return true when this Command no longer needs to runexecute()

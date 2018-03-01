@@ -71,6 +71,7 @@ public class Arm extends Subsystem {
     	wrist_motor.getSensorCollection().setQuadraturePosition(0, 0);
     	top_arm_rotation_motor = new TalonSRX(RobotMap.TOP_ARM_ROTATION_MOTOR_PORT);
     	bot_arm_rotation_motor = new TalonSRX(RobotMap.BOT_ARM_ROTATION_MOTOR_PORT);
+    	bot_arm_rotation_motor.setInverted(true);
     	top_arm_rotation_motor.follow(bot_arm_rotation_motor);
     	resetEncoder();
     	
@@ -95,28 +96,37 @@ public class Arm extends Subsystem {
     
 //==Arm Movement=======================================================================================================
     public void driveArm(double armSpeed) {
-    	double armEncoderValue = (double) bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
+    	int armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
     	int armEncoderUpperLimit = 16000;
-    	int armEncoderLowerLimit = -14000;
+    	int armEncoderLowerLimit = 250;  //should be pos
     	//These variable control the angle at which the piston will extend
-    	int upperArmLimit = 135;
-    	int lowerArmLimit = 45;
-    	double anglex = (double) armEncoderValue*180/14000;
-    	SmartDashboard.putNumber("arm encoder", anglex);
+    	int upperArmLimit = 13000;  //test
+    	int lowerArmLimit = 2000;  //test
+//    	SmartDashboard.putNumber("arm encoder", armEncoderValue);
+//    	SmartDashboard.putNumber("accelerometer z" , Robot.arm.getZValue());
+//    	SmartDashboard.putNumber("accelerometer y" , Robot.arm.getYValue());
+//    	SmartDashboard.putNumber("accelerometer x" , Robot.arm.getXValue());
 //    	System.out.println("This is the encoder value2 "+ anglex);
-    	if (((armEncoderValue > armEncoderUpperLimit) && (armSpeed < 0)) ||
-    	((armEncoderValue < armEncoderLowerLimit) && (armSpeed > 0))){
-    		armSpeed = 0;
+    	if(armSpeed>0) {
+    		if(armEncoderValue>=armEncoderUpperLimit) {
+    			armSpeed = 0;
+    			System.out.println("stopped by upper limit");
+    		} 
+    	} else if(armSpeed<0){
+    		if(armEncoderValue<=armEncoderLowerLimit) {
+    			armSpeed = 0;
+    			System.out.println("stopped by lower limit");
+    		} 
     	}
-    	bot_arm_rotation_motor.set(ControlMode.PercentOutput, armSpeed );
-    	if(anglex>lowerArmLimit && anglex<upperArmLimit) {
+    	bot_arm_rotation_motor.set(ControlMode.PercentOutput, armSpeed);
+    	System.out.println("arm speed: " + armSpeed + " encoder " + armEncoderValue);
+    	if(armEncoderValue>lowerArmLimit && armEncoderValue<upperArmLimit) {
     		//led1.set(true);
-    		//telescoping_solenoid.set(DoubleSolenoid.Value.kReverse);
-
+    		telescoping_solenoid.set(DoubleSolenoid.Value.kForward);  //retract
     	}
     	else {
     		//led1.set(false);
-    		//telescoping_solenoid.set(DoubleSolenoid.Value.kForward);
+    		//telescoping_solenoid.set(DoubleSolenoid.Value.kReverse);
     	}
     	//wrist_motor.set(ControlMode.PercentOutput, armSpeed);
     	//System.out.println(wrist_motor.getSensorCollection().getQuadraturePosition());
@@ -260,13 +270,21 @@ public class Arm extends Subsystem {
 		public void driveArmWrist(double wristSpeed) {
 			//TODO set limits
 			wrist_motor.set(ControlMode.PercentOutput, wristSpeed);
-			SmartDashboard.putNumber("wrist value", Robot.arm.getWristEncoder());
+//			SmartDashboard.putNumber("wrist value", Robot.arm.getWristEncoder());
 		}
 	
 		
 //==Telescoping Arm Code===============================================================================================
 	public void extendTelescopingArm() {
-		telescoping_solenoid.set(DoubleSolenoid.Value.kReverse);
+    	int armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
+    	//These variable control the angle at which the piston will extend
+    	int upperArmLimit = 13000;  //test
+    	int lowerArmLimit = 2000;  //test
+    	if(armEncoderValue>lowerArmLimit && armEncoderValue<upperArmLimit) {
+    		telescoping_solenoid.set(DoubleSolenoid.Value.kForward);  //retract
+    	} else {
+    		telescoping_solenoid.set(DoubleSolenoid.Value.kReverse);  //extend
+    	}
 	}
 	
 	public void retractTelescopingArm() {
@@ -277,7 +295,7 @@ public class Arm extends Subsystem {
 	public double getPotentiometerVoltage() {
 		double voltage = potentiometer.getVoltage();
 		//System.out.println("Potentiometer voltage " + voltage);
-		SmartDashboard.putNumber("potentiometer", voltage);
+//		SmartDashboard.putNumber("potentiometer", voltage);
 		return pot_voltage;
 	}
 	

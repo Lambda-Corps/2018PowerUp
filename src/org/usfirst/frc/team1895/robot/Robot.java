@@ -104,6 +104,10 @@ public class Robot extends TimedRobot {
 		chooser.addObject("Destination E", "E");
 		chooser.addObject("Gear Shifting Test Suite", "T");
 		SmartDashboard.putData("Destination", chooser);
+		
+		SmartDashboard.putNumber("D Dist", 200);
+
+		
 		climber = new Climber();
 		oi = new OI();
 
@@ -148,6 +152,7 @@ public class Robot extends TimedRobot {
 
 		Robot.drivetrain.setBrakeMode();
 		Robot.drivetrain.shiftToLowGear();
+		
 
 		// access FMS data
 		String colorString;
@@ -205,67 +210,67 @@ public class Robot extends TimedRobot {
 			autonomousCommand.cancel();
 
 		Robot.drivetrain.resetEncoders();
-		Robot.drivetrain.setCoastMode();
+		Robot.drivetrain.setBrakeMode();
 		Robot.drivetrain.shiftToLowGear();
 
-		// Testing Turning
-		SmartDashboard.putNumber("Turn: P value: ", .025);
-		SmartDashboard.putNumber("Turn: I value: ", 0.0);
-		SmartDashboard.putNumber("Turn: D value: ", -.005);
-		SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
-		SmartDashboard.putNumber("Test NP Turn Speed: ", .4);
-
-		SmartDashboard.putData("Test Turn With PID", new TestTurnWithPID());
-		SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
-
-		// Distance Related Testing
-		SmartDashboard.putNumber("Distance: P value: ", .1);
-		SmartDashboard.putNumber("Distance: I value: ", 0.0);
-		SmartDashboard.putNumber("Distance: D value: ", -.01);
-		SmartDashboard.putNumber("Test Drive Distance:", 30.0);
-		SmartDashboard.putNumber("Test Drive Speed:", .5);
-		SmartDashboard.putNumber("Test Drive Tank Scalar:", .94); // in case of drifting
-		SmartDashboard.putNumber("Test Drive Buffer:", 10);
-
-		SmartDashboard.putData("Test DriveStraight With PID", new TestDriveStraightWithPID());
-		SmartDashboard.putData("Test DriveStraight No PID", new TestDriveStraightWithoutPID());
-		SmartDashboard.putData("Test Drive With RangeFinder", new TestDriveToObstacle());
-		SmartDashboard.putData("Test Drive Parallel", new TestDriveParallel());
-
-		SmartDashboard.putBoolean("Test boolean onLeft Value", false);
-
-		// Arm/lower intake commands
-		SmartDashboard.putNumber("Test RotateArm Angle", 90);
-		SmartDashboard.putData("Test RotateArm", new TestRotateArm());
-
-		SmartDashboard.putNumber("Claw Speed", 0);
-		SmartDashboard.putNumber("Arm Speed", 0.2);
-
-		SmartDashboard.putData("Test CubeIn", new CubeIn());
-
-		SmartDashboard.putData("Test ResetArm", new ResetArm());
-
-		SmartDashboard.putData("Test Deploy Cube and Retract", new DeployCubeAndRetract());
-		SmartDashboard.putData("Test Extend Lower Intake", new ExtendLowerIntake());
-		SmartDashboard.putData("Test Retract Lower Intake", new RetractLowerIntake());
-		SmartDashboard.putData("Test Raise Lower Intake", new RaiseLowerIntake());
-		SmartDashboard.putData("Test Lower Lower Intake", new LowerLowerIntake());
-
-		SmartDashboard.putNumber("Lower Intake Speed", 0.4);
-
-		SmartDashboard.putData("Test Grab Cube Lower Intake", new GrabCube_LowerIntake());
+//		// Testing Turning
+//		SmartDashboard.putNumber("Turn: P value: ", .025);
+//		SmartDashboard.putNumber("Turn: I value: ", 0.0);
+//		SmartDashboard.putNumber("Turn: D value: ", -.005);
+//		SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
+//		SmartDashboard.putNumber("Test NP Turn Speed: ", .4);
+//
+//		SmartDashboard.putData("Test Turn With PID", new TestTurnWithPID());
+//		SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
+//
+//		// Distance Related Testing
+//		SmartDashboard.putNumber("Distance: P value: ", .1);
+//		SmartDashboard.putNumber("Distance: I value: ", 0.0);
+//		SmartDashboard.putNumber("Distance: D value: ", -.01);
+//		SmartDashboard.putNumber("Test Drive Distance:", 30.0);
+//		SmartDashboard.putNumber("Test Drive Speed:", .5);
+//		SmartDashboard.putNumber("Test Drive Tank Scalar:", .94); // in case of drifting
+//		SmartDashboard.putNumber("Test Drive Buffer:", 10);
+//
+//		SmartDashboard.putData("Test DriveStraight With PID", new TestDriveStraightWithPID());
+//		SmartDashboard.putData("Test DriveStraight No PID", new TestDriveStraightWithoutPID());
+//		SmartDashboard.putData("Test Drive With RangeFinder", new TestDriveToObstacle());
+//		SmartDashboard.putData("Test Drive Parallel", new TestDriveParallel());
+//
+//		SmartDashboard.putBoolean("Test boolean onLeft Value", false);
+//
+//		// Arm/lower intake commands
+//		SmartDashboard.putNumber("Test RotateArm Angle", 90);
+//		SmartDashboard.putData("Test RotateArm", new TestRotateArm());
+//
+//		SmartDashboard.putNumber("Claw Speed", 0);
+//		SmartDashboard.putNumber("Arm Speed", 0.2);
+//
+//		SmartDashboard.putData("Test CubeIn", new CubeIn());
+//
+//		SmartDashboard.putData("Test ResetArm", new ResetArm());
+//
+//		SmartDashboard.putData("Test Deploy Cube and Retract", new DeployCubeAndRetract());
+//		SmartDashboard.putData("Test Extend Lower Intake", new ExtendLowerIntake());
+//		SmartDashboard.putData("Test Retract Lower Intake", new RetractLowerIntake());
+//		SmartDashboard.putData("Test Raise Lower Intake", new RaiseLowerIntake());
+//		SmartDashboard.putData("Test Lower Lower Intake", new LowerLowerIntake());
+//
+//		SmartDashboard.putNumber("Lower Intake Speed", 0.4);
+//
+//		SmartDashboard.putData("Test Grab Cube Lower Intake", new GrabCube_LowerIntake());
 		SmartDashboard.putData("Test Extend Telescoping Part", new ExtendTelescopingPart());
 		SmartDashboard.putData("Test Retract Telescoping Part", new RetractTelescopingPart());
-		SmartDashboard.putData("Test RotateArm_Scale_High", new RotateArm_Scale_High());
-		SmartDashboard.putData("Test RotateArm_Scale_Low", new RotateArm_Scale_Low());
-		SmartDashboard.putData("Test RotateArm_Scale_Mid", new RotateArm_Scale_Mid());
-		SmartDashboard.putData("Test RotateArm_SwitchPos", new RotateArm_SwitchPos());
-
-		SmartDashboard.putNumber("Cube Close Value", 1);
-		
-		SmartDashboard.putData("Rotate Arm to Zero", new RotateArmToZero());
-		
-		SmartDashboard.putData("Rotate Wrist", new RotateWrist());
+//		SmartDashboard.putData("Test RotateArm_Scale_High", new RotateArm_Scale_High());
+//		SmartDashboard.putData("Test RotateArm_Scale_Low", new RotateArm_Scale_Low());
+//		SmartDashboard.putData("Test RotateArm_Scale_Mid", new RotateArm_Scale_Mid());
+//		SmartDashboard.putData("Test RotateArm_SwitchPos", new RotateArm_SwitchPos());
+//
+//		SmartDashboard.putNumber("Cube Close Value", 1);
+//		
+//		SmartDashboard.putData("Rotate Arm to Zero", new RotateArmToZero());
+//		
+//		SmartDashboard.putData("Rotate Wrist", new RotateWrist());
 
 	}
 
