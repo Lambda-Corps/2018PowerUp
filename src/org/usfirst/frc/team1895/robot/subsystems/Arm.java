@@ -71,7 +71,8 @@ public class Arm extends Subsystem {
     	wrist_motor.getSensorCollection().setQuadraturePosition(0, 0);
     	top_arm_rotation_motor = new TalonSRX(RobotMap.TOP_ARM_ROTATION_MOTOR_PORT);
     	bot_arm_rotation_motor = new TalonSRX(RobotMap.BOT_ARM_ROTATION_MOTOR_PORT);
-    	bot_arm_rotation_motor.setInverted(true);
+//    	bot_arm_rotation_motor.setInverted(true);
+//    	top_arm_rotation_motor.setInverted(true);
     	top_arm_rotation_motor.follow(bot_arm_rotation_motor);
     	resetEncoder();
     	
@@ -96,23 +97,24 @@ public class Arm extends Subsystem {
     
 //==Arm Movement=======================================================================================================
     public void driveArm(double armSpeed) {
+    	System.out.println("given arm speed: " + armSpeed);
     	int armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
     	int armEncoderUpperLimit = 16000;
-    	int armEncoderLowerLimit = 250;  //should be pos
+    	int armEncoderLowerLimit = 1150;  //should be pos
     	//These variable control the angle at which the piston will extend
-    	int upperArmLimit = 13000;  //test
-    	int lowerArmLimit = 2000;  //test
-//    	SmartDashboard.putNumber("arm encoder", armEncoderValue);
+    	int extendUpperLimit = 13000;  //test
+    	int extendLowerLimit = 3000;  //test
+    	SmartDashboard.putNumber("arm encoder", armEncoderValue);
 //    	SmartDashboard.putNumber("accelerometer z" , Robot.arm.getZValue());
 //    	SmartDashboard.putNumber("accelerometer y" , Robot.arm.getYValue());
 //    	SmartDashboard.putNumber("accelerometer x" , Robot.arm.getXValue());
 //    	System.out.println("This is the encoder value2 "+ anglex);
-    	if(armSpeed>0) {
+    	if(armSpeed<0) {
     		if(armEncoderValue>=armEncoderUpperLimit) {
     			armSpeed = 0;
     			System.out.println("stopped by upper limit");
     		} 
-    	} else if(armSpeed<0){
+    	} else if(armSpeed>0){
     		if(armEncoderValue<=armEncoderLowerLimit) {
     			armSpeed = 0;
     			System.out.println("stopped by lower limit");
@@ -120,7 +122,7 @@ public class Arm extends Subsystem {
     	}
     	bot_arm_rotation_motor.set(ControlMode.PercentOutput, armSpeed);
     	System.out.println("arm speed: " + armSpeed + " encoder " + armEncoderValue);
-    	if(armEncoderValue>lowerArmLimit && armEncoderValue<upperArmLimit) {
+    	if(armEncoderValue>extendLowerLimit && armEncoderValue<extendUpperLimit) {
     		//led1.set(true);
     		telescoping_solenoid.set(DoubleSolenoid.Value.kForward);  //retract
     	}
@@ -279,7 +281,7 @@ public class Arm extends Subsystem {
     	int armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
     	//These variable control the angle at which the piston will extend
     	int upperArmLimit = 13000;  //test
-    	int lowerArmLimit = 2000;  //test
+    	int lowerArmLimit = 3000;  //test
     	if(armEncoderValue>lowerArmLimit && armEncoderValue<upperArmLimit) {
     		telescoping_solenoid.set(DoubleSolenoid.Value.kForward);  //retract
     	} else {
@@ -346,6 +348,11 @@ public class Arm extends Subsystem {
 		}
 		return done;
 	}
+    public void testDriveArm(double armSpeed) {
+    	int armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
+    	double speed = armSpeed / 2;
+    	bot_arm_rotation_motor.set(ControlMode.PercentOutput, speed);
+    }
 	
 //==Wrist Code=========================================================================================================
 	

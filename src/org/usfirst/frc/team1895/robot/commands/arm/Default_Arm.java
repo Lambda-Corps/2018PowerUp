@@ -1,8 +1,9 @@
 package org.usfirst.frc.team1895.robot.commands.arm;
 
-import edu.wpi.first.wpilibj.command.Command;
 import org.usfirst.frc.team1895.robot.Robot;
 import org.usfirst.frc.team1895.robot.oi.F310;
+
+import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
@@ -21,10 +22,10 @@ public class Default_Arm extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	if(Math.abs(Robot.oi.gamepad2.getAxis(F310.LY))>.05) {
-        	Robot.arm.driveArm(-0.5*Robot.oi.gamepad2.getAxis(F310.LY));
+        	Robot.arm.driveArm(0.5*Robot.oi.gamepad2.getAxis(F310.LY));
     	}
     	if(Math.abs(Robot.oi.gamepad2.getAxis(F310.RY))>.05) {
-        	Robot.arm.driveArm(-0.5*Robot.oi.gamepad2.getAxis(F310.RY));
+        	Robot.arm.driveArmWrist(0.5*Robot.oi.gamepad2.getAxis(F310.RY));
     	}
     }
 

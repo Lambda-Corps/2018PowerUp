@@ -1,16 +1,7 @@
 package org.usfirst.frc.team1895.robot;
 
-import org.usfirst.frc.team1895.robot.commands.arm.CubeIn;
-import org.usfirst.frc.team1895.robot.commands.arm.DeployCubeAndRetract;
 import org.usfirst.frc.team1895.robot.commands.arm.ExtendTelescopingPart;
-import org.usfirst.frc.team1895.robot.commands.arm.ResetArm;
 import org.usfirst.frc.team1895.robot.commands.arm.RetractTelescopingPart;
-import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToZero;
-import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_High;
-import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_Low;
-import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_Mid;
-import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_SwitchPos;
-import org.usfirst.frc.team1895.robot.commands.arm.RotateWrist;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationA;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationB;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationC;
@@ -18,19 +9,8 @@ import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationD;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationE;
 import org.usfirst.frc.team1895.robot.commands.autonomous.ShiftGearsTestCommand;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.CancelDrivetrain;
-import org.usfirst.frc.team1895.robot.commands.lowerIntake.ExtendLowerIntake;
-import org.usfirst.frc.team1895.robot.commands.lowerIntake.GrabCube_LowerIntake;
-import org.usfirst.frc.team1895.robot.commands.lowerIntake.LowerLowerIntake;
-import org.usfirst.frc.team1895.robot.commands.lowerIntake.RaiseLowerIntake;
-import org.usfirst.frc.team1895.robot.commands.lowerIntake.RetractLowerIntake;
-import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveParallel;
-import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithPID;
-import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithoutPID;
-import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveToObstacle;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestEmptyCommand;
-import org.usfirst.frc.team1895.robot.commands.testcommands.TestRotateArm;
-import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithPID;
-import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithoutPID;
+import org.usfirst.frc.team1895.robot.oi.F310;
 import org.usfirst.frc.team1895.robot.subsystems.Arm;
 import org.usfirst.frc.team1895.robot.subsystems.Climber;
 import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
@@ -318,6 +298,8 @@ public class Robot extends TimedRobot {
 	@Override
 	public void testPeriodic() {
 		Scheduler.getInstance().run();
+		double value = Robot.oi.gamepad2.getAxis(F310.LY);
+		Robot.arm.testDriveArm(value);
 	}
 
 	// This function will take in the our starting position from the smart
