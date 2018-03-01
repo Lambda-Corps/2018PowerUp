@@ -105,7 +105,10 @@ public class Robot extends TimedRobot {
 		chooser.addObject("Gear Shifting Test Suite", "T");
 		SmartDashboard.putData("Destination", chooser);
 		
-		SmartDashboard.putNumber("D Dist", 200);
+		// toggle conditional wait at beginning
+		SmartDashboard.putNumber("AUTO WAIT TIME", 0);
+		
+		//SmartDashboard.putNumber("D Dist", 200);
 
 		
 		climber = new Climber();

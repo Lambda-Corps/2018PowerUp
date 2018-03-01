@@ -8,6 +8,7 @@ import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithoutPI
 import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -19,6 +20,7 @@ public class DestinationB extends CommandGroup {
 	public DestinationB() {
 
 		addSequential(new PrintCommand("B"));
+		addSequential(new WaitCommand(SmartDashboard.getNumber("AUTO WAIT TIME", 0)));
 
 		if (Robot.closeSwitchNum == 1) { // our switch is on the left
 			ourLeftSwitch = true;
@@ -31,6 +33,7 @@ public class DestinationB extends CommandGroup {
 			case 1:
 				addSequential(new PrintCommand("Position 1"));
 				addSequential(new DriveStraightWithoutPID(0.7, 150));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.5, 90));
 				addSequential(new RotateArmToAngle(45));
 				addSequential(new DeployCube());
@@ -41,11 +44,17 @@ public class DestinationB extends CommandGroup {
 			case 2:
 				addSequential(new PrintCommand("Position 2"));
 				addSequential(new DriveStraightWithPID(55)); // should be 3in clearance of cubes
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.3, -90));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(150));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.3, 90));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(85));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.3, 90));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(30));
 //				addSequential(new DriveToObstacle(0.5, 5)); // accurate within this distance?
 //				addSequential(new DeployCube());
@@ -53,11 +62,17 @@ public class DestinationB extends CommandGroup {
 			case 3:
 				addSequential(new PrintCommand("Position 3"));
 				addSequential(new DriveStraightWithPID(55)); // should be 3in clearance of cubes
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.3, -90));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(244));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.3, 90));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(85));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.3, 90));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(30));
 //				addSequential(new DriveToObstacle(0.5, 5)); // accurate within this distance?
 //				addSequential(new DeployCube());
@@ -68,11 +83,17 @@ public class DestinationB extends CommandGroup {
 			case 1:
 				addSequential(new PrintCommand("Position 1"));
 				addSequential(new DriveStraightWithPID(55)); // should be 3in clearance of cubes
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.3, 90));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(244));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.3, -90));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(70));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.3, -90));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(30));
 //				addSequential(new DriveToObstacle(0.5, 5)); // accurate within this distance?
 //				addSequential(new DeployCube());
@@ -80,11 +101,17 @@ public class DestinationB extends CommandGroup {
 			case 2:
 				addSequential(new PrintCommand("Position 2"));
 				addSequential(new DriveStraightWithPID(55));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.3, 90));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(70));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.3, -90));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(85));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.3, -90));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(30));
 //				addSequential(new DriveToObstacle(0.5, 5)); // accurate within this distance?
 //				addSequential(new DeployCube());
@@ -92,7 +119,9 @@ public class DestinationB extends CommandGroup {
 			case 3:
 				addSequential(new PrintCommand("Position 3"));
 				addSequential(new DriveStraightWithPID(140));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.3, -90));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(30));
 //				addSequential(new DriveToObstacle(0.5, 5)); // accurate within this distance?
 //				addSequential(new DeployCube());

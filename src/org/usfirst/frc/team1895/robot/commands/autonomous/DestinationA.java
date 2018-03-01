@@ -8,6 +8,7 @@ import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithoutPI
 import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  * Testing 1/30/18 Starting Position is variable - 2 or 3, test both
@@ -21,6 +22,7 @@ public class DestinationA extends CommandGroup {
 	public DestinationA() {
 
 		addSequential(new PrintCommand("A"));
+		addSequential(new WaitCommand(SmartDashboard.getNumber("AUTO WAIT TIME", 0)));
 
 		// retrieve FMS data to determine where scale is
 		if (Robot.closeSwitchNum == 1) { // our switch is on the left
@@ -38,8 +40,11 @@ public class DestinationA extends CommandGroup {
 			case 1:
 				addSequential(new PrintCommand("A, ourLeftSwitch, position 1"));
 				addSequential(new DriveStraightWithoutPID(0.7, 50));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.5, 90));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithoutPID(0.7, 50));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.5, -90));
 				addSequential(new RotateArmToAngle(45));
 				addSequential(new DriveStraightWithoutPID(0.7, 30));
@@ -54,21 +59,28 @@ public class DestinationA extends CommandGroup {
 			case 2:
 				addSequential(new PrintCommand("A, ourLeftSwitch, position 2"));
 				addSequential(new DriveStraightWithoutPID(0.7, 50));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.5, -90));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithoutPID(0.7, 75));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.5, 90));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(30));
 				// addSequential(new DriveToObstacle(2, 0.5));
 				// addSequential(new AlignToSwitch());
 				// addSequential(new DeployCube());
-
 				break;
 			case 3: // USING FOR TEST
-				addSequential(new PrintCommand("A, ourLeftSwitch, position 3, close route"));
+				addSequential(new PrintCommand("A, ourLeftSwitch, position 3"));
 				addSequential(new DriveStraightWithPID(50));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.3, -90));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(173));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.3, 90));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(30));
 				break;
 			}
@@ -79,9 +91,13 @@ public class DestinationA extends CommandGroup {
 			case 1:
 				addSequential(new PrintCommand("A, not ourLeftSwitch, position 1"));
 				addSequential(new DriveStraightWithPID(50));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.3, 90));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(173));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.3, -90));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(30));
 				// now in front of Destination A, right switch
 				// addSequential(new DriveToObstacle(2, 0.5));
@@ -99,9 +115,13 @@ public class DestinationA extends CommandGroup {
 			case 3: // NOT DONE YET
 				addSequential(new PrintCommand("A, not ourLeftSwitch, position 3, closeRoute"));
 				addSequential(new DriveStraightWithPID(50));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.3, -90));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(50));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.3, 90));
+				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(30));
 				break;
 			}

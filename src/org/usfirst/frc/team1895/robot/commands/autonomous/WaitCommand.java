@@ -11,7 +11,7 @@ public class WaitCommand extends Command {
 	double cycles;
 	boolean done;
 
-	public WaitCommand(int seconds) {
+	public WaitCommand(double seconds) {
 		counter = 0;
 		cycles = seconds * 66.667;
 		done = false;
