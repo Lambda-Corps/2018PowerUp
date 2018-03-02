@@ -27,7 +27,7 @@ public class OurWaitCommand extends Command {
 			done = true;
 		}
 		counter++;
-		System.out.println(counter + "/" + cycles);
+//		System.out.println(counter + "/" + cycles);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()
