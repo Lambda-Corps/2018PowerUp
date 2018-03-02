@@ -68,6 +68,8 @@ public class Arm extends Subsystem {
 	public static final int ARM_CLIMB_POSITION = ARM_UPPER_SOFT_LIMIT;
 	public static final int ARM_POSITIONAL_TOLERANCE = 750;
 	
+	private boolean endGameStarted;
+	
     public Arm() {
 	    	// motors
 	    	claw_intake_motor1 = new TalonSRX(RobotMap.CLAW_INTAKE_MOTOR1_PORT);
@@ -101,6 +103,8 @@ public class Arm extends Subsystem {
 	
 	    	//pneumatics
 	    	telescoping_solenoid = new DoubleSolenoid(RobotMap.ARM_TELESCOPING_SOLENOID_A_PORT, RobotMap.ARM_TELESCOPING_SOLENOID_B_PORT);
+	    	
+	    	endGameStarted = false;
     }
     
 //==Arm Movement=======================================================================================================
@@ -126,14 +130,18 @@ public class Arm extends Subsystem {
 	    			System.out.println("stopped by lower limit");
 	    		} 
 	    	}
-	    	if(armEncoderValue>ARM_EXTENSION_LOWER_LIMIT && 
-	    	   armEncoderValue<ARM_EXTENSION_UPPER_LIMIT) {
-	    		//led1.set(true);
-	    		telescoping_solenoid.set(DoubleSolenoid.Value.kForward);  //retract
-	    	}
-	    	else {
-	    		//led1.set(false);
-	    		//telescoping_solenoid.set(DoubleSolenoid.Value.kReverse);
+	    	
+	    	// We only want to manage telescoping during the rounds, not during the endgame
+	    	if(!endGameStarted) {
+		    	if(armEncoderValue>ARM_EXTENSION_LOWER_LIMIT && 
+		    	   armEncoderValue<ARM_EXTENSION_UPPER_LIMIT) {
+		    		//led1.set(true);
+		    		telescoping_solenoid.set(DoubleSolenoid.Value.kForward);  //retract
+		    	}
+		    	else {
+		    		//led1.set(false);
+		    		//telescoping_solenoid.set(DoubleSolenoid.Value.kReverse);
+		    	}
 	    	}
 	    	bot_arm_rotation_motor.set(ControlMode.PercentOutput, armSpeed);
 	    	
@@ -483,7 +491,7 @@ public class Arm extends Subsystem {
 	}
 	
 	public void retractTelescopingArm() {
-		telescoping_solenoid.set(DoubleSolenoid.Value.kForward);
+		telescoping_solenoid.set(DoubleSolenoid.Value.kForward); // retract
 	}
  
 //==Potentiometer Code=========================================================================================================
@@ -589,5 +597,9 @@ public class Arm extends Subsystem {
         setDefaultCommand(new Default_Arm());
         
     }
+	
+	public void setArmEndGameTrue() {
+		endGameStarted = true;
+	}
 }
 

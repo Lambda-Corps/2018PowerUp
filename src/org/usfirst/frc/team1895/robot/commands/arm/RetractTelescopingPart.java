@@ -19,17 +19,19 @@ public class RetractTelescopingPart extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	counter = 0;
-    	done = false;
+	    	counter = 0;
+	    	done = false;
+	    	Robot.arm.retractTelescopingArm();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if(counter>=200) {
-    		done = true;
-    	}
-    	Robot.arm.retractTelescopingArm();
-    	counter++;
+    		// Run this command for a 1/2 second
+	    	if(counter>=30) {
+	    		done = true;
+	    	}
+	    	
+	    	counter++;
     }
 
     // Make this return true when this Command no longer needs to run execute()

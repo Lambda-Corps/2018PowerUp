@@ -4,6 +4,7 @@ import org.usfirst.frc.team1895.robot.commands.arm.CancelArm;
 import org.usfirst.frc.team1895.robot.commands.arm.CubeIn;
 import org.usfirst.frc.team1895.robot.commands.arm.DeployCube;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToPosition;
+import org.usfirst.frc.team1895.robot.commands.climbing.ClimbSequence;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.AlignToCube;
 import org.usfirst.frc.team1895.robot.oi.F310;
 import org.usfirst.frc.team1895.robot.subsystems.Arm;
@@ -22,11 +23,7 @@ public class OI {
 	public F310 gamepad2;
 	
 	//Drivetrain
-	public JoystickButton ninetyDegreeRight;
-	public JoystickButton ninetyDegreeLeft;
-	public JoystickButton turn180Left;
 	public JoystickButton drivetrainCancel;
-	public JoystickButton fineTuning;
 	public JoystickButton alignToCube;
 	
 	//claw and intake
@@ -41,6 +38,8 @@ public class OI {
 	public JoystickButton rotateArm_Scale_Mid;
 	public JoystickButton rotateArm_Scale_High;
 	public JoystickButton armCancel;
+	
+	public JoystickButton climbSequence;
 
 	public OI() {
 		gamepad1 = new F310(RobotMap.GAMEPAD_PORT);
@@ -55,6 +54,7 @@ public class OI {
 		// DPAD Down -- Turn 180 degrees
 		// DPAD Left -- Turn left 90 degrees
 		// DPAD Right -- Turn right 90 degrees
+		// Y  -- Climbing Sequence for the endgame
 
 		//drivetrain buttons
 		alignToCube = new JoystickButton(gamepad1, F310.A);
@@ -64,8 +64,11 @@ public class OI {
 		grabCube_LowerIntake = new JoystickButton(gamepad1, F310.LB);
 		grabCube_LowerIntake.whenPressed(new CubeIn());
 		
+		climbSequence = new JoystickButton(gamepad1, F310.Y);
+		climbSequence.whenPressed(new ClimbSequence());
+		
 		// Gamepad 1 open buttons
-		// B, X, Y, RB, RT
+		// B, X, RB, RT
 		
 		
 		// Setup the secondary driver controller and button mappings
