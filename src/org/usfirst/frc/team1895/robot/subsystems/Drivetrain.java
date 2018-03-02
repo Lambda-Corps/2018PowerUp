@@ -449,7 +449,6 @@ public class Drivetrain extends Subsystem {
 			// Checking if we still have to keep driving or not. If we haven't reached our
 			// target distance, keep driving straight. Otherwise, stop.
 			if ((targetDis > leftDis) && (targetDis > rightDis)) {
-
 				arcadeDrive(speed, 0);
 			} else {
 				arcadeDrive(0, 0);
@@ -470,14 +469,13 @@ public class Drivetrain extends Subsystem {
 
 	public boolean drivefr_RFDistance(double goaldistance, double speed) { // TODO: do we need separate methods??? this
 		// only does front RF
-//		SmartDashboard.putNumber("distance from obstacle", fr_rangefinderDist());
+		SmartDashboard.putNumber("distance from obstacle", fr_rangefinderDist());
 		//System.out.printf("rangefinder: %5.1f \n", fr_rangefinderDist());
 		if (fr_rangefinderDist() <= (goaldistance)) { // if the robot crossed the goal distance + buffer then the code
 			// will stop
 			arcadeDrive(0, 0);
 			//System.out.printf("rangefinder distance achieved: %5.1f \n", fr_rangefinderDist());
 			//System.out.println(" for goal of " + goaldistance);
-
 			return true;
 		} else { // if it hasn't crossed it will run at a determined speed
 			arcadeDrive(speed, 0);
@@ -487,7 +485,7 @@ public class Drivetrain extends Subsystem {
 
 	public double fr_rangefinderDist() {
 		double voltage = fr_rangefinder.getAverageVoltage();
-		double inches = 40 * voltage; // from LinReg
+		double inches = SmartDashboard.getNumber("fr RF scalar", 40) * voltage; // from LinReg
 		return inches;
 	}
 
@@ -548,9 +546,9 @@ public class Drivetrain extends Subsystem {
 			fromWall = r_rangefinderDist();
 		}
 		if(onLeft) {
-//			SmartDashboard.putNumber("distance from wall (on left)", fromWall);
+			SmartDashboard.putNumber("distance from wall (on left)", fromWall);
 		} else {
-//			SmartDashboard.putNumber("distance from wall (on right)", fromWall);
+			SmartDashboard.putNumber("distance from wall (on right)", fromWall);
 		}
 		// System.out.println("distance; "+ fromWall);
 		double currentDistance = l_encoder.getDistance() + r_encoder.getDistance();

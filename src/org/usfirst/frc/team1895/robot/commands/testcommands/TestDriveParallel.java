@@ -22,9 +22,9 @@ public class TestDriveParallel extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	t_speed = SmartDashboard.getNumber("Test Drive TankDrive Speed ", .4);
+    	t_speed = SmartDashboard.getNumber("Test Drive Speed:", .4);
     	t_buffer = SmartDashboard.getNumber("Test Drive Buffer:", 10);
-    	t_goalDistance = SmartDashboard.getNumber("Test Drive Distance ", 20.0);
+    	t_goalDistance = SmartDashboard.getNumber("Test Drive Distance ", 10);
     	t_onLeft = SmartDashboard.getBoolean("Test boolean onLeft Value", false);
     }
 

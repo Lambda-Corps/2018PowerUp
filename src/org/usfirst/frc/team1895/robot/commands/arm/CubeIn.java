@@ -26,6 +26,7 @@ public class CubeIn extends CommandGroup {
     	addSequential(new ExtendTelescopingPart());
     	addSequential(new GrabCube_LowerIntake());
     	addSequential(new RetractTelescopingPart());
+    	addSequential(new ExtendLowerIntake());
     	addSequential(new RaiseLowerIntake());
     	
     }

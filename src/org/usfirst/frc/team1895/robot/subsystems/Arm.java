@@ -376,9 +376,13 @@ public class Arm extends Subsystem {
 		claw_intake_motor1.set(ControlMode.PercentOutput, 0);
 	}
 	
+	public double getIntakeRF() {
+		return in_rangefinder.getAverageVoltage();
+	}
+	
 	public boolean cubeIsIn() {
 		System.out.println(in_rangefinder.getAverageVoltage());
-		if(in_rangefinder.getAverageVoltage()>2.0) {
+		if(in_rangefinder.getAverageVoltage()<2.0) {
 			return true;
 		} else {
 			return false;
@@ -387,7 +391,7 @@ public class Arm extends Subsystem {
 	
 	public boolean cubeIsClose() {
 		System.out.println(in_rangefinder.getAverageVoltage());
-		if(in_rangefinder.getAverageVoltage()>0.8) {
+		if(in_rangefinder.getAverageVoltage()>3.0) {
 			return true;
 		} else {
 			return false;

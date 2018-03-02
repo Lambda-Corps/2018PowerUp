@@ -32,7 +32,7 @@ public class DestinationC extends CommandGroup {
 			switch (Robot.startPos) {
 			case 1:
 				addSequential(new PrintCommand("Position 1"));
-				addSequential(new DriveStraightWithPID(205));
+				addSequential(new DriveStraightWithPID(180));
 				addSequential(new WaitCommand(0.5));
 				addSequential(new TurnWithoutPID(0.5, 90.0));
 				addSequential(new WaitCommand(0.5));
