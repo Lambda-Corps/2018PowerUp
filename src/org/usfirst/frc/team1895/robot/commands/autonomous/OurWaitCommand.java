@@ -5,13 +5,13 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class WaitCommand extends Command {
+public class OurWaitCommand extends Command {
 
 	double counter;
 	double cycles;
 	boolean done;
 
-	public WaitCommand(double seconds) {
+	public OurWaitCommand(double seconds) {
 		counter = 0;
 		cycles = seconds * 66.667;
 		done = false;

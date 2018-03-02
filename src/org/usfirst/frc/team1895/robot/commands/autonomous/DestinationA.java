@@ -2,12 +2,15 @@ package org.usfirst.frc.team1895.robot.commands.autonomous;
 
 import org.usfirst.frc.team1895.robot.Robot;
 import org.usfirst.frc.team1895.robot.commands.arm.DeployCube;
-import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToAngle;
+import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToPosition;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithPID;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithoutPID;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
+import org.usfirst.frc.team1895.robot.subsystems.Arm;
+import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.command.CommandGroup;
+import edu.wpi.first.wpilibj.command.WaitCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -39,15 +42,15 @@ public class DestinationA extends CommandGroup {
 			switch (Robot.startPos) {
 			case 1:
 				addSequential(new PrintCommand("A, ourLeftSwitch, position 1"));
-				addSequential(new DriveStraightWithoutPID(0.7, 50));
+				addSequential(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 50));
 				addSequential(new WaitCommand(0.5));
-				addSequential(new TurnWithoutPID(0.5, 90));
+				addSequential(new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, 90));
 				addSequential(new WaitCommand(0.5));
-				addSequential(new DriveStraightWithoutPID(0.7, 50));
+				addSequential(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 50));
 				addSequential(new WaitCommand(0.5));
-				addSequential(new TurnWithoutPID(0.5, -90));
-				addSequential(new RotateArmToAngle(45));
-				addSequential(new DriveStraightWithoutPID(0.7, 30));
+				addSequential(new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, -90));
+				addSequential(new RotateArmToPosition(Arm.ARM_SWITCH_POSITION));
+				addSequential(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 30));
 				addSequential(new DeployCube());
 				// now directly in front of switch, 40" away
 				// temporarily making DriveToObstacle go all the way Dest.A, but in the real
@@ -58,30 +61,33 @@ public class DestinationA extends CommandGroup {
 				break;
 			case 2:
 				addSequential(new PrintCommand("A, ourLeftSwitch, position 2"));
-				addSequential(new DriveStraightWithoutPID(0.7, 50));
+				addSequential(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 50));
 				addSequential(new WaitCommand(0.5));
-				addSequential(new TurnWithoutPID(0.5, -90));
+				addSequential(new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, -90));
 				addSequential(new WaitCommand(0.5));
-				addSequential(new DriveStraightWithoutPID(0.7, 75));
+				addSequential(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 75));
 				addSequential(new WaitCommand(0.5));
-				addSequential(new TurnWithoutPID(0.5, 90));
+				addSequential(new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, 90));
 				addSequential(new WaitCommand(0.5));
+				addSequential(new RotateArmToPosition(Arm.ARM_SWITCH_POSITION));
 				addSequential(new DriveStraightWithPID(30));
 				// addSequential(new DriveToObstacle(2, 0.5));
 				// addSequential(new AlignToSwitch());
-				// addSequential(new DeployCube());
+				addSequential(new DeployCube());
 				break;
 			case 3: // USING FOR TEST
 				addSequential(new PrintCommand("A, ourLeftSwitch, position 3"));
 				addSequential(new DriveStraightWithPID(50));
 				addSequential(new WaitCommand(0.5));
-				addSequential(new TurnWithoutPID(0.3, -90));
+				addSequential(new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, -90));
 				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(173));
 				addSequential(new WaitCommand(0.5));
-				addSequential(new TurnWithoutPID(0.3, 90));
+				addSequential(new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, 90));
 				addSequential(new WaitCommand(0.5));
+				addSequential(new RotateArmToPosition(Arm.ARM_SWITCH_POSITION));
 				addSequential(new DriveStraightWithPID(30));
+				addSequential(new DeployCube());
 				break;
 			}
 
@@ -92,17 +98,15 @@ public class DestinationA extends CommandGroup {
 				addSequential(new PrintCommand("A, not ourLeftSwitch, position 1"));
 				addSequential(new DriveStraightWithPID(50));
 				addSequential(new WaitCommand(0.5));
-				addSequential(new TurnWithoutPID(0.3, 90));
+				addSequential(new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, 90));
 				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(173));
 				addSequential(new WaitCommand(0.5));
-				addSequential(new TurnWithoutPID(0.3, -90));
+				addSequential(new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, -90));
 				addSequential(new WaitCommand(0.5));
+				addSequential(new RotateArmToPosition(Arm.ARM_SWITCH_POSITION));
 				addSequential(new DriveStraightWithPID(30));
-				// now in front of Destination A, right switch
-				// addSequential(new DriveToObstacle(2, 0.5));
-				// addSequential(new AlignToSwitch());
-				// addSequential(new DeployCube());
+				addSequential(new DeployCube());
 				break;
 			case 2:
 				addSequential(new PrintCommand("A, not ourLeftSwitch, position 2"));
@@ -110,19 +114,21 @@ public class DestinationA extends CommandGroup {
 				addSequential(new DriveStraightWithPID(30));
 				// addSequential(new DriveToObstacle(2, 0.5));
 				// addSequential(new AlignToSwitch());
-				// addSequential(new DeployCube());
+				addSequential(new DeployCube());
 				break;
 			case 3: // NOT DONE YET
 				addSequential(new PrintCommand("A, not ourLeftSwitch, position 3, closeRoute"));
 				addSequential(new DriveStraightWithPID(50));
 				addSequential(new WaitCommand(0.5));
-				addSequential(new TurnWithoutPID(0.3, -90));
+				addSequential(new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, -90));
 				addSequential(new WaitCommand(0.5));
 				addSequential(new DriveStraightWithPID(50));
 				addSequential(new WaitCommand(0.5));
-				addSequential(new TurnWithoutPID(0.3, 90));
+				addSequential(new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, 90));
 				addSequential(new WaitCommand(0.5));
+				addSequential(new RotateArmToPosition(Arm.ARM_SWITCH_POSITION));
 				addSequential(new DriveStraightWithPID(30));
+				addSequential(new DeployCube());
 				break;
 			}
 

@@ -29,6 +29,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Drivetrain extends Subsystem {
 	
 	public static boolean amCorrecting;
+	public static final double AUTO_TURN_SPEED = 0.7;
+	public static final double AUTO_DRIVE_SPEED = 0.7;
 
 	// motors CAN ID #
 	private TalonSRX left_dt_motor1; // 1
