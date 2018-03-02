@@ -36,10 +36,8 @@ public class TurnWithoutPID extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	currentAngle = Robot.drivetrain.getAHRSGyroAngle();
-    	System.out.println("angle: " + currentAngle);
     	SmartDashboard.putNumber("Gyro: ", currentAngle);
     	if(Math.abs(goalAngle - currentAngle) < tolerance) {  //if within tolerance
-    		System.out.println("Done!");
     		Robot.drivetrain.arcadeDrive(0, 0);
     		isDone = true;
     	} else if(currentAngle < goalAngle) {  //If left of target angle

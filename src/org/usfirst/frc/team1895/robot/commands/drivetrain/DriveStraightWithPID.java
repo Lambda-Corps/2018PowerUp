@@ -37,8 +37,6 @@ public class DriveStraightWithPID extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	System.out.println("finished");
-    	
     	//System.out.println("LE: " + Robot.drivetrain.getLeftEncoder() + " RE: " + Robot.drivetrain.getRightEncoder());
     }
 

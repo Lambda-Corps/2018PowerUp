@@ -379,9 +379,9 @@ public class Arm extends Subsystem {
 	}
 	
 	public boolean findZero() {
-		System.out.println("encoder value: " + getArmEncoder());
-		System.out.println("potentiometer value: " + getPotentiometerVoltage());
-		System.out.println("accel z " + getZValue());
+//		System.out.println("encoder value: " + getArmEncoder());
+//		System.out.println("potentiometer value: " + getPotentiometerVoltage());
+//		System.out.println("accel z " + getZValue());
 		return true;
 	}
     

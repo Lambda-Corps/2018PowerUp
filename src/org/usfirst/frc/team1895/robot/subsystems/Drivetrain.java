@@ -332,7 +332,7 @@ public class Drivetrain extends Subsystem {
 		left_dt_motor2.setNeutralMode(NeutralMode.Coast);
 		right_dt_motor1.setNeutralMode(NeutralMode.Coast);
 		right_dt_motor2.setNeutralMode(NeutralMode.Coast);
-		System.out.println("Robot has been set to coast mode");
+//		System.out.println("Robot has been set to coast mode");
 	}
 	
 	public void setBrakeMode() {
@@ -340,7 +340,7 @@ public class Drivetrain extends Subsystem {
 		left_dt_motor2.setNeutralMode(NeutralMode.Brake);
 		right_dt_motor1.setNeutralMode(NeutralMode.Brake);
 		right_dt_motor2.setNeutralMode(NeutralMode.Brake);
-		System.out.println("set brake mode");
+//		System.out.println("set brake mode");
 	}
 	
 	public void shiftGears() {
@@ -667,7 +667,7 @@ public class Drivetrain extends Subsystem {
 		if (Double.isNaN(pidOutput)) {
 		} else {
 			arcadeDrive(pidOutput, error); // note 0.8 scalar
-			System.out.println("trying to drive (not accounting for scalar) " + pidOutput);
+//			System.out.println("trying to drive (not accounting for scalar) " + pidOutput);
 		}
 
 		pid_done = pidControllerDriving.onTarget();
