@@ -301,19 +301,20 @@ public class Drivetrain extends Subsystem {
 	}
 	
 	public void shiftGears() {
+		// max speed to be in low gear is 4.71ft/sec (56.52 inches/sec), max high gear
+		// is 12.47 ft/sec
+		// unit should be inches per second
+		double DOWNSHIFT_SPEED = 56.62 * .25;
 		// add something so that it doesn't shift gears in autonomous
 
 		double current_speed = Math.max(Math.abs(l_encoder.getRate()), Math.abs(r_encoder.getRate()));
 
-		// max speed to be in low gear is 4.71ft/sec (56.52 inches/sec), max high gear
-		// is 12.47 ft/sec
-		// unit should be inches per second
-		double downshift_speed = 56.52 * .70; // Downshift if we get to 70% of max low gear speed
+		
 
 		// if in high gear..
 		if (inHigh) {
 			// ..and you dropped below the minimum high speed, switch to low gear
-			if (current_speed < downshift_speed) {
+			if (current_speed < DOWNSHIFT_SPEED) {
 				transmission_solenoid.set(DoubleSolenoid.Value.kForward);
 				inHigh = false;
 			}
@@ -321,7 +322,7 @@ public class Drivetrain extends Subsystem {
 		// if in low gear..
 		else {
 			// ..and you went above the max low gear speed..
-			if (current_speed > downshift_speed) {
+			if (current_speed > DOWNSHIFT_SPEED) {
 				highgear_count++;
 
 				// ..after ~ 1.5 seconds, shift into high gear
