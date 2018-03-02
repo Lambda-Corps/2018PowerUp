@@ -3,7 +3,6 @@ package org.usfirst.frc.team1895.robot;
 import org.usfirst.frc.team1895.robot.commands.arm.CancelArm;
 import org.usfirst.frc.team1895.robot.commands.arm.CubeIn;
 import org.usfirst.frc.team1895.robot.commands.arm.DeployCube;
-import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToAngle;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToPosition;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.AlignToCube;
 import org.usfirst.frc.team1895.robot.oi.F310;

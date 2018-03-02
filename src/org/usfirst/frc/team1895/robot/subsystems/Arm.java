@@ -1,6 +1,5 @@
 package org.usfirst.frc.team1895.robot.subsystems;
 
-import org.usfirst.frc.team1895.robot.Robot;
 import org.usfirst.frc.team1895.robot.RobotMap;
 import org.usfirst.frc.team1895.robot.commands.arm.Default_Arm;
 
@@ -11,12 +10,9 @@ import edu.wpi.first.wpilibj.ADXL345_I2C;
 import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.interfaces.Accelerometer;
-import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 /**
  * Function: Moves up and down to put cubes onto switch or scale. Can also extend for added height. Contains
  * latch for climbing. Includes wrist for claw. 
@@ -32,10 +28,6 @@ public class Arm extends Subsystem {
     private TalonSRX top_arm_rotation_motor;			// arm_rotation_motor1 
     private TalonSRX bot_arm_rotation_motor;			// arm_rotation_motor2 
     
-    private Encoder armUpEncoder;
-    
-    //private DigitalOutput led1;
-    
     public final Accelerometer accel;
 	public final BuiltInAccelerometer BIA;
     
@@ -47,8 +39,7 @@ public class Arm extends Subsystem {
 	private TalonSRX claw_intake_motor2;
 	private static final double CLAW_INTAKE_SPEED = 0.4;
 	private static final double CLAW_DEPLOY_SPEED = .7;
-	private static final double INTAKE_MOTOR1_SPEED = .7;
-	private static final double INTAKE_MOTOR2_SPEED = .7;
+
 	
 	private AnalogInput in_rangefinder;
 	private AnalogInput potentiometer;
@@ -441,8 +432,6 @@ public class Arm extends Subsystem {
 	public boolean moveToZAxis(double zaxis) {
 		boolean retVal = false;	
 		// Figure out where the arm is in space
-		double yAccel = accel.getZ();
-			
 //			
 //			double z_tolerUp = zaxis + .05;
 //			double z_tolerDo = zaxis - .05;
@@ -554,18 +543,12 @@ public class Arm extends Subsystem {
 	
     
 //==Claw Code===================================================================================================== 
-	public void grabCube_Claw() {
-		double velocity = CLAW_INTAKE_SPEED;
-	    if (velocity > 1.0) velocity = 1.0;
-	    if (velocity <-1.0) velocity = -1.0;
-	    claw_intake_motor1.set(ControlMode.PercentOutput, velocity);
+	public void grabCube() {
+	    claw_intake_motor1.set(ControlMode.PercentOutput, CLAW_INTAKE_SPEED);
 	}
 
 	public void deployCube_Claw() {
-		double velocity = -1;
-	    if (velocity > 1.0) velocity = 1.0;
-	    if (velocity <-1.0) velocity = -1.0;
-	    claw_intake_motor1.set(ControlMode.PercentOutput, velocity);
+	    claw_intake_motor1.set(ControlMode.PercentOutput, CLAW_DEPLOY_SPEED);
 	}
 	
 	public void stopClaw() {

@@ -18,7 +18,6 @@ import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.command.Subsystem;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /*
  * This class will process the the images coming in from the camera, send the 
@@ -91,7 +90,6 @@ public class FilteredCamera extends Subsystem {
 		// SmartDashboard.getNumber("minVal: ", 0.0);
 		// SmartDashboard.tNumber("maxVal: ", 255.0);
 		//
-		Mat mat = new Mat(); // define mat in order to reuse it
 
 		visionThread = new Thread(() -> {
 			// Get the UsbCamera from CameraServer
@@ -211,14 +209,6 @@ public class FilteredCamera extends Subsystem {
 
 	public void startVisionThread() {
 		visionThread.start();
-	}
-
-	public void stopVisionThread() {
-		visionThread.suspend();
-	}
-
-	public void resumeVisionThread() {
-		visionThread.resume();
 	}
 
 	public double getAvgCenterX() {

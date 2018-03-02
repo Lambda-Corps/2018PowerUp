@@ -1,13 +1,9 @@
 package org.usfirst.frc.team1895.robot.subsystems;
 
-import org.usfirst.frc.team1895.robot.Robot;
 import org.usfirst.frc.team1895.robot.RobotMap;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.Default_Drivetrain;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
-import com.ctre.phoenix.motorcontrol.LimitSwitchNormal;
-import com.ctre.phoenix.motorcontrol.LimitSwitchSource;
-
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
@@ -41,6 +37,7 @@ public class Drivetrain extends Subsystem {
 	private TalonSRX right_dt_motor2; // 5
 
 	// pneumatics
+	@SuppressWarnings("unused")
 	private final Compressor compressor;
 	private final DoubleSolenoid transmission_solenoid;
 

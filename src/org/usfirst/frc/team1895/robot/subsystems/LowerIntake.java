@@ -26,6 +26,9 @@ public class LowerIntake extends Subsystem {
 	// pneumatics
 	private final DoubleSolenoid lower_intake_solenoid_ExRe;
 	private final DoubleSolenoid lower_intake_solenoid_UpDown;
+	
+	public static final double INTAKE_MOTOR_LEFT_SPEED = .7;
+	public static final double INTAKE_MOTOR_RIGHT_SPEED = .7;
 
 	public LowerIntake() {
 		//motors
@@ -64,5 +67,10 @@ public class LowerIntake extends Subsystem {
         // Set the default command for a subsystem here.
         setDefaultCommand(new Default_LowerIntake());
     }
+
+	public void grabCube() {
+		left_lower_intake_motor.set(ControlMode.PercentOutput, INTAKE_MOTOR_LEFT_SPEED);
+		right_lower_intake_motor.set(ControlMode.PercentOutput, INTAKE_MOTOR_RIGHT_SPEED);	
+	}
 }
 

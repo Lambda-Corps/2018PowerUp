@@ -3,7 +3,6 @@ package org.usfirst.frc.team1895.robot.commands.lowerIntake;
 import org.usfirst.frc.team1895.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -31,14 +30,11 @@ public class GrabCube_LowerIntake extends Command {
 	protected void execute() {
 		if(Robot.arm.cubeIsClose()) {
 			Robot.lowerIntake.retractLowerIntake();
-			hasCube = true;
+			//hasCube = true;
 		}
-//		hasCube = Robot.arm.cubeIsIn();
-		Robot.lowerIntake.setLowerIntakeMotors(0.4);
-		Robot.arm.grabCube_Claw();
-		SmartDashboard.putBoolean("cube close", Robot.arm.cubeIsClose());
-		SmartDashboard.putBoolean("cube in", hasCube);
-		SmartDashboard.putNumber("intake rf", Robot.arm.getIntakeRF());
+		hasCube = Robot.arm.cubeIsIn();
+		Robot.lowerIntake.grabCube();
+		Robot.arm.grabCube();
 		counter++;
 	}
 
@@ -51,6 +47,7 @@ public class GrabCube_LowerIntake extends Command {
 	protected void end() {
 		Robot.lowerIntake.setLowerIntakeMotors(0);
 		Robot.arm.stopClaw();
+		Robot.lowerIntake.extendLowerIntake();
 	}
 
 	// Called when another command which requires one or more of the same
@@ -58,5 +55,6 @@ public class GrabCube_LowerIntake extends Command {
 	protected void interrupted() {
 		Robot.lowerIntake.setLowerIntakeMotors(0);
 		Robot.arm.stopClaw();
+		Robot.lowerIntake.extendLowerIntake();
 	}
 }

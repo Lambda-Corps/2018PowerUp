@@ -1,8 +1,6 @@
 package org.usfirst.frc.team1895.robot.commands.testcommands;
 
 import org.usfirst.frc.team1895.robot.Robot;
-import org.usfirst.frc.team1895.robot.oi.F310;
-
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
