@@ -28,13 +28,20 @@ public class GrabCube_LowerIntake extends Command {
 
 	// Called repeatedly when this Command is scheduled to run
 	protected void execute() {
+		Robot.lowerIntake.grabCube();
+		Robot.arm.grabCube();
+		
 		if(Robot.arm.cubeIsClose()) {
 			Robot.lowerIntake.retractLowerIntake();
 			//hasCube = true;
 		}
+		
 		hasCube = Robot.arm.cubeIsIn();
-		Robot.lowerIntake.grabCube();
-		Robot.arm.grabCube();
+		if( hasCube ) {
+			// Stop the motors if we have a cube
+			Robot.lowerIntake.setLowerIntakeMotors(0);
+			Robot.arm.stopClaw();
+		}
 		counter++;
 	}
 

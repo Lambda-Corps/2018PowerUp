@@ -463,15 +463,23 @@ public class Arm extends Subsystem {
 		
 //==Telescoping Arm Code===============================================================================================
 	public void extendTelescopingArm() {
-    	int armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
-    	//These variable control the angle at which the piston will extend
-    	int upperArmLimit = 13000;  //test
-    	int lowerArmLimit = 3000;  //test
-    	if(armEncoderValue>lowerArmLimit && armEncoderValue<upperArmLimit) {
-    		telescoping_solenoid.set(DoubleSolenoid.Value.kForward);  //retract
-    	} else {
+	    	int armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
+	    	//These variable control the angle at which the piston will extend
+	    	
+	    	// If we're already extended, just return
+	    	if( telescoping_solenoid.get() == DoubleSolenoid.Value.kReverse ) {
+	    		return;
+	    	}
+	    	
+	    	// If we're going to extend, just make sure we're not going to get a violation
+	    	if(armEncoderValue>ARM_EXTENSION_LOWER_LIMIT && armEncoderValue<ARM_EXTENSION_UPPER_LIMIT) {
+	    		// We already verified that we're retracted, so just return since we're in the 
+	    		// violation zone
+	    		return;
+	    	} 
+	    	
+	    	// We're safe to extend, let it rip
     		telescoping_solenoid.set(DoubleSolenoid.Value.kReverse);  //extend
-    	}
 	}
 	
 	public void retractTelescopingArm() {
@@ -559,9 +567,10 @@ public class Arm extends Subsystem {
 		return in_rangefinder.getAverageVoltage();
 	}
 	
+	// TODO --  Fix this, it may falsely trigger when the cube is in
+	// the intake, but oriented in a way we haven't grabbed it yet.
 	public boolean cubeIsIn() {
-		System.out.println(in_rangefinder.getAverageVoltage());
-		if(in_rangefinder.getAverageVoltage()<2.0) {
+		if(in_rangefinder.getAverageVoltage()>2.0) {
 			return true;
 		} else {
 			return false;
@@ -569,7 +578,6 @@ public class Arm extends Subsystem {
 	}
 	
 	public boolean cubeIsClose() {
-		System.out.println(in_rangefinder.getAverageVoltage());
 		if(in_rangefinder.getAverageVoltage()>3.0) {
 			return true;
 		} else {
