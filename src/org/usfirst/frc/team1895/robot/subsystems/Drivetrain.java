@@ -177,58 +177,92 @@ public class Drivetrain extends Subsystem {
 	// ==Manual
 	// driving============================================================================
 	public void arcadeDrive(double trans_speed, double yaw) {
+		// Normalize the input, must be in a -1 <= x <= 1 range
+		trans_speed = normalizeMotorInput(trans_speed);
+		yaw = normalizeMotorInput(yaw);
 		
-		double left_speed = trans_speed + yaw;
-		double right_speed = yaw - trans_speed;
-
+		// Sometimes the joysticks send in a value that is non-zero, but effectively
+		// zero.  Remove any inputs from that dead zone of numbers where we don't 
+		// actually want to drive.
+		trans_speed = removeDeadZoneInput(trans_speed);
+		yaw = removeDeadZoneInput(yaw);
+		
+		// We are going to square the inputs here to give our drivers finer motor
+		// control.  For things like aligning to the exchange and climbing, we
+		// need to give them control without forcing them to push a second button
+		// We also need to preserve the sign, since squaring would remove the 
+		// input values.
+		trans_speed = Math.copySign(trans_speed * trans_speed, trans_speed);
+		yaw = Math.copySign(yaw * yaw, yaw);
+		
+		// The first things we have to do is determine which quadrant we want to 
+		// be operating in, the arcade drive will use the typical cartesian plane
+		// where quadrant one is top right, two is top left, three is bottom left, 
+		// and four is bottom right if we were looking at the desired motion
+		// projected onto the wall.
+		double left_speed;    // The left motor input that will be assigned
+		double right_speed;   // The right motor input that will be assigned
+		
+		// Get the max input from the two values, that will be used to drive into
+		// that quadrant.  We preserve the sign of the trans_speed because that
+		// will determine which quadrant we should end up in.
+		double maxInput = Math.copySign(Math.max(Math.abs(trans_speed), Math.abs(yaw)), trans_speed);
+		
+		if( trans_speed >= 0.0 ) { 
+			// These are the first two quadrants, if the first condition
+			// hits that will be quadrant 1, the else condition is quadrant 2
+			if( yaw >= 0.0 ) {
+				left_speed = maxInput;
+				right_speed = trans_speed - yaw;
+			} else {
+				left_speed = trans_speed + yaw;
+				right_speed = maxInput;
+			}
+		} else {
+			// These conditions take care of quadrant 3 and 4.  The if conditional
+			// is quadrant 3, the else is quadrant 4.
+			if( yaw >= 0.0) {
+				left_speed = trans_speed + yaw;
+				right_speed = maxInput;
+			}else {
+				left_speed = maxInput;
+				right_speed = trans_speed - yaw;
+			}
+		}
+		
 		// These three variables are for self correcting driving. The angle is the
 		// heading
 		// from the gyro, the tolerance is how far we deviate (in degrees) before we
 		// self correct, and the scalar is the percentage we use to reduce the over
 		// corrected side.
 		double tolerance = 0.1;
-		double scalar = 0.75; // Correlate it with the trans_speed
+		double scalar = 0.9; // Correlate it with the trans_speed
 
-		// This is to normalize the speed inputs. The Talons require a speed of -1 > x >
-		// 1.
-		double max_speed = Math.max(Math.abs(left_speed), Math.abs(right_speed));
-
-		if (Math.abs(max_speed) > 1.0) {
-			left_speed /= max_speed;
-			right_speed /= max_speed;
-		}
-		
-		if (Math.abs(yaw) < 0.005) { // if no x input --> correcting mode
+		// If there is no yaw input, we want to make sure we correct any drift
+		// we have over time. 
+		if (Math.abs(yaw) == 0) { // if no x input --> correcting mode
 			if(!amCorrecting) {
 				amCorrecting = true;
 				resetEncoders();
 			}
 			double l_distance = l_encoder.getDistance();
 			double r_distance = r_encoder.getDistance();
-//			System.out.println("L " + l_distance + "R " + r_distance);
 			if (Math.abs(l_distance - r_distance) < tolerance) {
 				// already straight
-				//System.out.println("im good");
 			} else {
 				// forward
 				if (trans_speed > 0) {
-					//System.out.println("fwd");
 					// determine whether drifting left or right
 					if (l_distance > r_distance) { // drifting right, need to go left
-						//System.out.println("drifting right");
 						left_speed *= scalar; // go left
 					} else { // drifting left, need to go right
-						//System.out.println("drifting left");
 						right_speed *= scalar; // go right
 					}
 				} else { // backward
-					//System.out.println("bwd");
 					// determine whether drifting left or right
 					if (l_distance > r_distance) { // drifting right, need to go left
-						//System.out.println("drifting left");
 						right_speed *= scalar; // go left
 					} else { // drifting left, need to go right
-						//System.out.println("drifting right");
 						left_speed *= scalar; // go right
 					}
 				}
@@ -236,9 +270,8 @@ public class Drivetrain extends Subsystem {
 		} else {
 			amCorrecting = false;
 		}
-		// The .985 scalar value was determined through testing that our left motors
+		// The .985 and .972 scalar values were determined through testing that our left motors
 		// were outputting more power than the right.
-		
 		if(trans_speed>0) {  //forward
 			left_dt_motor1.set(ControlMode.PercentOutput, left_speed * .985); // .978 -- .95
 			right_dt_motor1.set(ControlMode.PercentOutput, right_speed);
@@ -252,22 +285,33 @@ public class Drivetrain extends Subsystem {
 		
 		current_count++;
 		if(current_count % 66 == 0) {
-//			System.out.println("LM: " + getLMCurrent() + " " + getLM2Current());
-//			System.out.println("RM: " + getRMCurrent() + " " + getRM2Current());
-//			System.out.println("trans speed: " + trans_speed);
 //			System.out.println();
 		}
-		
-//		System.out.println("Am I in high gear? " + inHigh);
-//		if(highgear_count % 33 == 0) {
-//			System.out.println("LE: " + l_encoder.getDistance() + "RE: " + r_encoder.getDistance());
-//		}
-		//if(highgear_count % 100 == 0) {
-			//System.out.println("Am I in high gear? " + inHigh);
-			//System.out.println("LE: " + l_encoder.getDistance() + "RE: " + r_encoder.getDistance());
-		//}
 	}
 	
+	private double removeDeadZoneInput(double value) {
+		// Deadband is normally in the third significant digit (e.g. .003)
+		// so we'll use the second signficant digit as the limiter.
+		if( value > 0 && value < 0.01 ) {
+			return 0;
+		}
+		
+		if( value < 0 && value > -0.01) {
+			return 0;
+		}
+		return value;
+	}
+
+	private double normalizeMotorInput(double value) {
+		if( value > 1.0 ) {
+			return 1.0;
+		}
+		if( value < -1.0 ) {
+			return -1.0;
+		}
+		return value;
+	}
+
 	public double getLMCurrent() {
 		return left_dt_motor1.getOutputCurrent();
 	}
@@ -308,8 +352,6 @@ public class Drivetrain extends Subsystem {
 		// add something so that it doesn't shift gears in autonomous
 
 		double current_speed = Math.max(Math.abs(l_encoder.getRate()), Math.abs(r_encoder.getRate()));
-
-		
 
 		// if in high gear..
 		if (inHigh) {
@@ -470,13 +512,9 @@ public class Drivetrain extends Subsystem {
 
 	public boolean drivefr_RFDistance(double goaldistance, double speed) { // TODO: do we need separate methods??? this
 		// only does front RF
-		SmartDashboard.putNumber("distance from obstacle", fr_rangefinderDist());
-		//System.out.printf("rangefinder: %5.1f \n", fr_rangefinderDist());
 		if (fr_rangefinderDist() <= (goaldistance)) { // if the robot crossed the goal distance + buffer then the code
 			// will stop
 			arcadeDrive(0, 0);
-			//System.out.printf("rangefinder distance achieved: %5.1f \n", fr_rangefinderDist());
-			//System.out.println(" for goal of " + goaldistance);
 			return true;
 		} else { // if it hasn't crossed it will run at a determined speed
 			arcadeDrive(speed, 0);
@@ -491,37 +529,12 @@ public class Drivetrain extends Subsystem {
 	}
 
 	public double l_rangefinderDist() { // TODO: check that this is right / T U N E. also check if battery affects
-		// output
-		// double outputValue = l_rangefinder.getAverageVoltage();
-		// if (outputValue > 2.4 || outputValue < 0.4) { // code currently only
-		//// accurate from 0.4-2.4
-		//// volts
-		// return -1;
-		//// TODO: Add code to handle that -1 so the robot can act accordingly
-		// }
-		// double voltage = Math.pow(outputValue, -1.16);
-		// double coefficient = 10.298;
-		// double d = voltage * coefficient;
-		// return d;
 		double voltage = l_rangefinder.getAverageVoltage();
 		double inches = 40 * voltage; // from LinReg
 		return inches;
 	}
 
 	public double r_rangefinderDist() { // TODO: check that this is right / T U N E. also check if battery affects
-		// output
-		// double outputValue = r_rangefinder.getAverageVoltage();
-		// if (outputValue > 2.4 || outputValue < 0.4) { // code currently only
-		//// accurate from 0.4-2.4
-		//// volts
-		// return -1;
-		//// TODO: Add code to handle that -1 so the robot can act accordingly
-		// }
-		// double voltage = Math.pow(outputValue, -1.16);
-		// double coefficient = 10.298;
-		// double d = voltage * coefficient;
-		// return d;
-
 		double voltage = r_rangefinder.getAverageVoltage();
 		double inches = 40 * voltage; // from LinReg
 		return inches;
@@ -551,7 +564,6 @@ public class Drivetrain extends Subsystem {
 		} else {
 			SmartDashboard.putNumber("distance from wall (on right)", fromWall);
 		}
-		// System.out.println("distance; "+ fromWall);
 		double currentDistance = l_encoder.getDistance() + r_encoder.getDistance();
 
 		double goalTolerance = 1.0; // inches
@@ -566,30 +578,18 @@ public class Drivetrain extends Subsystem {
 			if (onLeft) { // wall is on left of robot
 				if (fromWall < buffer - bufferTolerance) { // drifting left (toward wall), needs to go right
 					arcadeDrive(speed, 0.1);
-//					System.out.printf("[wall is on left of robot] drifting left, toward wall -- correcting %5.1f \n",
-//							fromWall);
 				} else if (fromWall > buffer + bufferTolerance) { // drifting right (away from wall), needs to go left
 					arcadeDrive(speed, -0.1);
-//					System.out.printf(
-//							"[wall is on left of robot] drifting right, away from wall -- correcting  %5.1f \n",
-//							fromWall);
 				} else {
 					arcadeDrive(speed, 0);
-//					System.out.printf("[wall is on left of robot] I am already parallel %5.1f \n", fromWall);
 				}
 			} else { // wall is on right of robot
 				if (fromWall > buffer + bufferTolerance) { // drifting left (away from wall), needs to go right
 					arcadeDrive(speed, 0.1);
-//					System.out.printf(
-//							"[wall is on right of robot] drifting left, away from wall -- correcting %5.1f \n",
-//							fromWall);
 				} else if (fromWall < buffer - bufferTolerance) { // drifting right (toward wall), needs to go left
 					arcadeDrive(speed, -0.1);
-//					System.out.printf("[wall is on right of robot] drifting right, toward wall -- correcting  %5.1f \n",
-//							fromWall);
 				} else {
 					arcadeDrive(speed, 0);
-//					System.out.printf("[wall is on right of robot] I am already parallel %5.1f \n", fromWall);
 				}
 			}
 		} else { // has reached target -- stop
@@ -663,18 +663,15 @@ public class Drivetrain extends Subsystem {
 
 		pidControllerDriving.setAbsoluteTolerance(1);
 
-//		System.out.println("l_encoder.getDistance() " + l_encoder.getDistance() + " target " + desiredMoveDistance);
 
 		double pidOutput = myPIDOutputDriving.get();
 		if (Double.isNaN(pidOutput)) {
-//			System.out.println("Got invalid PID output for driving");
 		} else {
 			arcadeDrive(pidOutput, error); // note 0.8 scalar
 			System.out.println("trying to drive (not accounting for scalar) " + pidOutput);
 		}
 
 		pid_done = pidControllerDriving.onTarget();
-//		System.out.println(pid_done);
 
 		if (pid_done) {
 			pidControllerDriving.disable();
@@ -695,10 +692,8 @@ public class Drivetrain extends Subsystem {
 		double pidOutput = myPIDOutputTurning.get();
 
 		if (Double.isNaN(pidOutput)) {
-			//System.out.println("Got invalid output from Turn PID Controller");
 		} else {
 			arcadeDrive(0.0, pidOutput);
-			//System.out.println("trying to drive " + pidOutput);
 		}
 
 		pid_done = pidControllerTurning.onTarget();
@@ -706,8 +701,6 @@ public class Drivetrain extends Subsystem {
 		if (pid_done) {
 			pidControllerTurning.disable();
 		}
-
-		//System.out.println("gyro: " + ahrs.getAngle());
 
 		return pid_done;
 	}
