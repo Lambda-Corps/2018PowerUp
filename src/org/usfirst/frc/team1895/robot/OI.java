@@ -61,17 +61,20 @@ public class OI {
 		grabCube_LowerIntake.whenPressed(new CubeIn());
 		
 		//arm buttons
-		ninetyUp = new JoystickButton(gamepad2, F310.Y);
-		ninetyUp.whenPressed(new RotateArmToAngle(90));
-		ninetyDown = new JoystickButton(gamepad2, F310.A);
-		ninetyDown.whenPressed(new RotateArmToAngle(135));
+//		ninetyUp = new JoystickButton(gamepad2, F310.Y);
+//		ninetyUp.whenPressed(new RotateArmToAngle(90));
+//		ninetyDown = new JoystickButton(gamepad2, F310.A);
+//		ninetyDown.whenPressed(new RotateArmToAngle(135));
 		rotateArm_switchPos = new JoystickButton(gamepad2, F310.A);
-		rotateArm_switchPos.whenPressed(new RotateArmToPosition("A"));
+		rotateArm_switchPos.whenPressed(new RotateArmToPosition(Robot.arm.ARM_SWITCH_POSITION));
+		
+		// TODO -- There should be a button to bring the arm to the lowest position, instead of scale 
+		// low this would work.
 		rotateArm_Scale_Low = new JoystickButton(gamepad2, F310.X);
-		rotateArm_Scale_Low.whenPressed(new RotateArmToPosition("X"));
+		rotateArm_Scale_Low.whenPressed(new RotateArmToPosition(Robot.arm.ARM_SCALE_LOW_POSITION));
 		rotateArm_Scale_Mid = new JoystickButton(gamepad2, F310.B);
-		rotateArm_Scale_Mid.whenPressed(new RotateArmToPosition("B"));
+		rotateArm_Scale_Mid.whenPressed(new RotateArmToPosition(Robot.arm.ARM_SCALE_MID_POSITION));
 		rotateArm_Scale_High = new JoystickButton(gamepad2, F310.Y);
-		rotateArm_Scale_High.whenPressed(new RotateArmToPosition("Y"));
+		rotateArm_Scale_High.whenPressed(new RotateArmToPosition(Robot.arm.ARM_SCALE_HIGH_POSITION));
 	}
 }

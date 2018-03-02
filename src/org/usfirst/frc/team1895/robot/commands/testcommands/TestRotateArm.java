@@ -10,11 +10,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  *
  */
 public class TestRotateArm extends Command {
-	private double angle;
+	private int angle;
 	
     public TestRotateArm() {
         // Use requires() here to declare subsystem dependencies
-    	this.angle = SmartDashboard.getNumber("Test RotateArm Angle", 90);
+    	this.angle = (int)SmartDashboard.getNumber("Test RotateArm Angle", 90);
         requires(Robot.arm);
     }
 

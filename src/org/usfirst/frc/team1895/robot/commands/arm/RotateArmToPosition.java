@@ -12,35 +12,21 @@ import edu.wpi.first.wpilibj.command.Command;
 public class RotateArmToPosition extends Command {
 
 	boolean done;
-	String armPos;
-    public RotateArmToPosition(String armPosition) {
+	int armPosition;
+    public RotateArmToPosition(int armPosition) {
         // Use requires() here to declare subsystem dependencies
         requires(Robot.arm);
-        armPos = armPosition;
+        this.armPosition = armPosition;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	
+    		done = false;
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if(armPos.equals("A")) {
-    		done = Robot.arm.rotateToSwitch();
-    	}
-    	else if(armPos.equals("X")) {
-    		done = Robot.arm.rotateToLowerScale();
-    	}
-    	else if(armPos.equals("B")) {
-    		done = Robot.arm.rotateToMidScale();
-    	}
-    	else if(armPos.equals("Y")) {
-    		done = Robot.arm.rotateToUpperScale();
-    	}
-    	else {
-    		done = true;
-    	}
+    		done = Robot.arm.setPosition(armPosition);
     }
 
     // Make this return true when this Command no longer needs to run execute()

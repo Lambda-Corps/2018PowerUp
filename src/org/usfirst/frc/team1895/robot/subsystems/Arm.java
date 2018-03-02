@@ -42,10 +42,13 @@ public class Arm extends Subsystem {
     // pneumatics
     private final DoubleSolenoid telescoping_solenoid;
     
-    // CLAW-RELATED COMPONENTS
+    // CLAW and Intake RELATED COMPONENTS
     private TalonSRX claw_intake_motor1;
 	private TalonSRX claw_intake_motor2;
-	private static final double CLAW_SPEED = 0.4;
+	private static final double CLAW_INTAKE_SPEED = 0.4;
+	private static final double CLAW_DEPLOY_SPEED = .7;
+	private static final double INTAKE_MOTOR1_SPEED = .7;
+	private static final double INTAKE_MOTOR2_SPEED = .7;
 	
 	private AnalogInput in_rangefinder;
 	private AnalogInput potentiometer;
@@ -57,27 +60,41 @@ public class Arm extends Subsystem {
 	private final double VOLTVAL_QUARTERROT = 0.16095;
 	
 	//potentiometer variables
-	private double pot_voltage;
-	private double arm_speed = 0.4;
+	private final double ARM_SPEED = 0.5;
     
+	// Positional Variables to represent the arm positions for scale and switch
+	// TODO -- Check my numbers here that I've remembered them correctly
+	public static final int ARM_LOWER_SOFT_LIMIT = 1150;
+	public static final int ARM_UPPER_SOFT_LIMIT = 16700;
+	private static final int ARM_EXTENSION_LOWER_LIMIT = 3000;
+	private static int ARM_EXTENSION_UPPER_LIMIT = 13000;
+	
+	public static final int ARM_LOWEST_POSITION = ARM_LOWER_SOFT_LIMIT;
+	public static final int ARM_SWITCH_POSITION = 5600;
+	public static final int ARM_SCALE_LOW_POSITION = 13000;
+	public static final int ARM_SCALE_MID_POSITION = 13001;
+	public static final int ARM_SCALE_HIGH_POSITION = 13002;
+	public static final int ARM_CLIMB_POSITION = ARM_UPPER_SOFT_LIMIT;
+	public static final int ARM_POSITIONAL_TOLERANCE = 750;
+	
     public Arm() {
-    	// motors
-    	claw_intake_motor1 = new TalonSRX(RobotMap.CLAW_INTAKE_MOTOR1_PORT);
-    	claw_intake_motor1.setInverted(true);
+	    	// motors
+	    	claw_intake_motor1 = new TalonSRX(RobotMap.CLAW_INTAKE_MOTOR1_PORT);
+	    	claw_intake_motor1.setInverted(true);
 		claw_intake_motor2 = new TalonSRX(RobotMap.CLAW_INTAKE_MOTOR2_PORT);
-    	claw_intake_motor2.setInverted(true);
-    	claw_intake_motor2.follow(claw_intake_motor1);
-    	wrist_motor = new TalonSRX(RobotMap.WRIST_MOTOR_PORT);
-    	wrist_motor.getSensorCollection().setQuadraturePosition(0, 0);
-    	top_arm_rotation_motor = new TalonSRX(RobotMap.TOP_ARM_ROTATION_MOTOR_PORT);
-    	bot_arm_rotation_motor = new TalonSRX(RobotMap.BOT_ARM_ROTATION_MOTOR_PORT);
-//    	bot_arm_rotation_motor.setInverted(true);
-//    	top_arm_rotation_motor.setInverted(true);
-    	top_arm_rotation_motor.follow(bot_arm_rotation_motor);
-    	resetEncoder();
-    	
-    	//accelerometer
-    	BIA = new BuiltInAccelerometer();
+	    	claw_intake_motor2.setInverted(true);
+	    	claw_intake_motor2.follow(claw_intake_motor1);
+	    	wrist_motor = new TalonSRX(RobotMap.WRIST_MOTOR_PORT);
+	    	wrist_motor.getSensorCollection().setQuadraturePosition(0, 0);
+	    	top_arm_rotation_motor = new TalonSRX(RobotMap.TOP_ARM_ROTATION_MOTOR_PORT);
+	    	bot_arm_rotation_motor = new TalonSRX(RobotMap.BOT_ARM_ROTATION_MOTOR_PORT);
+	//    	bot_arm_rotation_motor.setInverted(true);
+	//    	top_arm_rotation_motor.setInverted(true);
+	    	top_arm_rotation_motor.follow(bot_arm_rotation_motor);
+	    	resetEncoder();
+	    	
+	    	//accelerometer
+	    	BIA = new BuiltInAccelerometer();
 		accel = new ADXL345_I2C(I2C.Port.kOnboard, Accelerometer.Range.k4G);
 		
 		//analog sensors
@@ -88,95 +105,274 @@ public class Arm extends Subsystem {
 		//led1 = new DigitalOutput(9); //COMMENTED OUT FOR STEAMWORKS BOT
 		//TODO:find out if there is range finder on arm if not delete later
 		//range_finder = new AnalogInput(0);	
-		LiveWindow.add(this);
-		LiveWindow.addChild(this, accel);
-
-    	//pneumatics
-    	telescoping_solenoid = new DoubleSolenoid(RobotMap.ARM_TELESCOPING_SOLENOID_A_PORT, RobotMap.ARM_TELESCOPING_SOLENOID_B_PORT);
+//		LiveWindow.add(this);
+//		LiveWindow.addChild(this, accel);
+	
+	    	//pneumatics
+	    	telescoping_solenoid = new DoubleSolenoid(RobotMap.ARM_TELESCOPING_SOLENOID_A_PORT, RobotMap.ARM_TELESCOPING_SOLENOID_B_PORT);
     }
     
 //==Arm Movement=======================================================================================================
     public void driveArm(double armSpeed) {
-    	System.out.println("given arm speed: " + armSpeed);
-    	int armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
-    	int armEncoderUpperLimit = 16000;
-    	int armEncoderLowerLimit = 1150;  //should be pos
-    	//These variable control the angle at which the piston will extend
-    	int extendUpperLimit = 13000;  //test
-    	int extendLowerLimit = 3000;  //test
-    	SmartDashboard.putNumber("arm encoder", armEncoderValue);
-//    	SmartDashboard.putNumber("accelerometer z" , Robot.arm.getZValue());
-//    	SmartDashboard.putNumber("accelerometer y" , Robot.arm.getYValue());
-//    	SmartDashboard.putNumber("accelerometer x" , Robot.arm.getXValue());
-//    	System.out.println("This is the encoder value2 "+ anglex);
-    	if(armSpeed<0) {
-    		if(armEncoderValue>=armEncoderUpperLimit) {
-    			armSpeed = 0;
-    			System.out.println("stopped by upper limit");
+    		// Normalize the input, must be in a -1 <= x <= 1 range
+    		armSpeed = normalizeMotorInput(armSpeed);
+    		armSpeed = removeDeadZoneInput(armSpeed);
+    		
+    		// Square the inputs for smoother arm controls.
+    		armSpeed = Math.copySign(armSpeed* armSpeed, armSpeed);
+    	
+    		// Check where we are with respect to the limits
+	    	int armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
+	    	//These variable control the angle at which the piston will extend
+	    	if(armSpeed<0) {
+	    		if(armEncoderValue>=ARM_UPPER_SOFT_LIMIT) {
+	    			armSpeed = 0;
+	    			System.out.println("stopped by upper limit");
+	    		} 
+	    	} else if(armSpeed>0){
+	    		if(armEncoderValue<=ARM_LOWER_SOFT_LIMIT) {
+	    			armSpeed = 0;
+	    			System.out.println("stopped by lower limit");
+	    		} 
+	    	}
+	    	if(armEncoderValue>ARM_EXTENSION_LOWER_LIMIT && 
+	    	   armEncoderValue<ARM_EXTENSION_UPPER_LIMIT) {
+	    		//led1.set(true);
+	    		telescoping_solenoid.set(DoubleSolenoid.Value.kForward);  //retract
+	    	}
+	    	else {
+	    		//led1.set(false);
+	    		//telescoping_solenoid.set(DoubleSolenoid.Value.kReverse);
+	    	}
+	    	bot_arm_rotation_motor.set(ControlMode.PercentOutput, armSpeed);
+	    	
+	    	//wrist_motor.set(ControlMode.PercentOutput, armSpeed);
+    }
+    
+    private double removeDeadZoneInput(double value) {
+    		// Deadband is normally in the third significant digit (e.g. .003)
+    		// so we'll use the second signficant digit as the limiter.
+		if( value > 0 && value < 0.01 ) {
+			return 0;
+		}
+		
+		if( value < 0 && value > -0.01) {
+			return 0;
+		}
+		return value;
+	}
+
+	private double normalizeMotorInput(double armSpeed) {
+		if( armSpeed < -1.0 ) {
+			return -1.0;
+		}
+		if( armSpeed > 1.0 ) {
+			return 1.0;
+		}
+		return armSpeed;
+	}
+
+	public double getAccelValue() {
+	    	double accelValue = accel.getX();
+	    	return accelValue;
+    }
+    
+    public boolean setPosition(int armPosition) {
+    		boolean bPosReturn = false;
+    		
+    		switch(armPosition) {
+    		case ARM_LOWEST_POSITION:
+    			bPosReturn = setPositionLowest();
+    			break;
+    		case ARM_CLIMB_POSITION:
+    			bPosReturn = setPositionClimb();
+    			break;
+    		case ARM_SWITCH_POSITION:
+    			bPosReturn = setPositionSwitch();
+    			break;
+    		case ARM_SCALE_HIGH_POSITION:
+    			bPosReturn = setPositionScale(ARM_SCALE_HIGH_POSITION);
+    			break;
+    		case ARM_SCALE_MID_POSITION:
+    			bPosReturn = setPositionScale(ARM_SCALE_MID_POSITION);
+    			break;
+    		case ARM_SCALE_LOW_POSITION:
+    			bPosReturn = setPositionScale(ARM_SCALE_LOW_POSITION);
+    			break;
+    		default:
+    			// Don't do anything, just return
+    		}
+
+	    	return bPosReturn;
+    }
+    
+    private boolean setPositionScale(int armScaleHighPosition) {
+	    	boolean bReturnPos = false;
+	    	boolean armHigherThanPosition;
+			// First get the current position in space
+		int currArmPosition = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
+		
+		
+		switch(armScaleHighPosition) {
+		case ARM_SCALE_HIGH_POSITION:
+			armHigherThanPosition = (currArmPosition > ARM_SCALE_HIGH_POSITION);
+			// First condition checks arm is above position, else checks for equal or below
+			if(armHigherThanPosition) {
+				if( currArmPosition - ARM_SCALE_HIGH_POSITION <= ARM_POSITIONAL_TOLERANCE) {
+					// We are there
+					driveArm(0);
+					bReturnPos = true;
+				}
+				
+				// We aren't there yet, drive the motor downward
+				driveArm(-ARM_SPEED);
+			}
+			else {
+				if( ARM_SCALE_HIGH_POSITION - currArmPosition >= ARM_POSITIONAL_TOLERANCE) {
+					// We are there
+					driveArm(0);
+					bReturnPos = true;
+				}
+				
+				driveArm(ARM_SPEED);
+			}
+			break;
+		case ARM_SCALE_MID_POSITION:
+			armHigherThanPosition = (currArmPosition > ARM_SCALE_MID_POSITION);
+			// First condition checks arm is above position, else checks for equal or below
+			if(armHigherThanPosition) {
+				if( currArmPosition - ARM_SCALE_MID_POSITION <= ARM_POSITIONAL_TOLERANCE) {
+					// We are there
+					driveArm(0);
+					bReturnPos = true;
+				}
+				
+				// We aren't there yet, drive the motor downward
+				driveArm(-ARM_SPEED);
+			}
+			else {
+				if( ARM_SCALE_MID_POSITION - currArmPosition >= ARM_POSITIONAL_TOLERANCE) {
+					// We are there
+					driveArm(0);
+					bReturnPos = true;
+				}
+				
+				driveArm(ARM_SPEED);
+			}
+			
+			break;
+		case ARM_SCALE_LOW_POSITION:
+			armHigherThanPosition = (currArmPosition > ARM_SCALE_LOW_POSITION);
+			// First condition checks arm is above position, else checks for equal or below
+			if(armHigherThanPosition) {
+				if( currArmPosition - ARM_SCALE_LOW_POSITION <= ARM_POSITIONAL_TOLERANCE) {
+					// We are there
+					driveArm(0);
+					bReturnPos = true;
+				}
+				
+				// We aren't there yet, drive the motor downward
+				driveArm(-ARM_SPEED);
+			}
+			else {
+				if( ARM_SCALE_LOW_POSITION - currArmPosition >= ARM_POSITIONAL_TOLERANCE) {
+					// We are there
+					driveArm(0);
+					bReturnPos = true;
+				}
+				
+				driveArm(ARM_SPEED);
+			}
+			break;
+		}
+		
+	
+		return bReturnPos;
+	}
+
+	private boolean setPositionSwitch() {
+    		boolean bReturnPos = false;
+    		// First get the current position in space
+		int currArmPosition = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
+		boolean armHigherThanPosition = (currArmPosition > ARM_SWITCH_POSITION);
+		
+		// First condition checks arm is above position, else checks for equal or below
+		if(armHigherThanPosition) {
+			if( currArmPosition - ARM_SWITCH_POSITION <= ARM_POSITIONAL_TOLERANCE) {
+				// We are there
+				driveArm(0);
+				bReturnPos = true;
+			}
+			
+			// We aren't there yet, drive the motor downward
+			driveArm(-ARM_SPEED);
+		}
+		else {
+			if( ARM_SWITCH_POSITION - currArmPosition >= ARM_POSITIONAL_TOLERANCE) {
+				// We are there
+				driveArm(0);
+				bReturnPos = true;
+			}
+			
+			driveArm(ARM_SPEED);
+		}
+		
+		return bReturnPos;
+	}
+
+	// This method will be called by the outer wrapper setPosition
+    // method.  It will drive the arm down to the lowest position
+    // as defined above.
+    private boolean setPositionLowest() {
+    		// First get the current position in space
+    		int currArmPosition = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
+    		
+    		// If we are within the tolerance, then stop
+    		//
+    		// If this wasn't the lowest position there would be two checks, one from
+    		// tolerance + and one from tolerance -.  We are at the bottom so we just
+    		// need to worry about tolerance -.  The tolerance is really only there 
+    		// to compensate for the timing of the scheduler.  Should we move this to 
+    		// be a PID controlled loop, we wouldn't need it.
+    		if( currArmPosition - ARM_LOWEST_POSITION <= ARM_POSITIONAL_TOLERANCE) {
+    			// We are there
+    			driveArm(0);
+    			return true;
     		} 
-    	} else if(armSpeed>0){
-    		if(armEncoderValue<=armEncoderLowerLimit) {
-    			armSpeed = 0;
-    			System.out.println("stopped by lower limit");
-    		} 
-    	}
-    	bot_arm_rotation_motor.set(ControlMode.PercentOutput, armSpeed);
-    	System.out.println("arm speed: " + armSpeed + " encoder " + armEncoderValue);
-    	if(armEncoderValue>extendLowerLimit && armEncoderValue<extendUpperLimit) {
-    		//led1.set(true);
-    		telescoping_solenoid.set(DoubleSolenoid.Value.kForward);  //retract
-    	}
-    	else {
-    		//led1.set(false);
-    		//telescoping_solenoid.set(DoubleSolenoid.Value.kReverse);
-    	}
-    	//wrist_motor.set(ControlMode.PercentOutput, armSpeed);
-    	//System.out.println(wrist_motor.getSensorCollection().getQuadraturePosition());
-    ///	System.out.println(String.format("Arm Encoder:  %5d     Arm Speed:   %6.2f ",armEncoderValue, armSpeed));
-    	//System.out.println("Arm Encoder: " + armEncoderValue + "  Arm Speed;" + armSpeed);
-    	getPotentiometerVoltage();
-    }
+    		
+    		// We aren't within the tolerance, so drive the arm down.
+    		driveArm(-ARM_SPEED);
+    		
+    		return false;
+	}
     
-    public double getAccelValue() {
-    	double accelValue = accel.getX();
-    	return accelValue;
+    // This method will be called by the outer wrapper setPosition
+    // to bring the arm to the climbing position
+    private boolean setPositionClimb() {
+    		// First get the current position in space
+		int currArmPosition = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
+		
+		// If we are within the tolerance, then stop
+		//
+		// If this wasn't the lowest position there would be two checks, one from
+		// tolerance + and one from tolerance -.  We are at the bottom so we just
+		// need to worry about tolerance -.  The tolerance is really only there 
+		// to compensate for the timing of the scheduler.  Should we move this to 
+		// be a PID controlled loop, we wouldn't need it.
+		if( currArmPosition >= ARM_CLIMB_POSITION) {
+			// are there
+			driveArm(0);
+			return true;
+		} 
+		
+		// We aren't there yet, so drive the arm up
+		driveArm(ARM_SPEED);
+		
+		return false;
     }
-    
-    public boolean setPosition(double goalangle) {
-    	double accelValue = accel.getX();
-    	double tolerance = 200; //encoder
-    	//0<angle<180
-    	//Error checking
-    	if(goalangle < 0) {
-    		goalangle = 0;
-    	}
-    	
-    	if(goalangle > 180) {
-    		goalangle = 180;
-    	}
-    	
-    	//convert angle to 0-14000
-    	goalangle = goalangle*(14000/180);
-    	
-    	double armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
-    	System.out.printf("encoder value %5.1f   accel  %5.1f", armEncoderValue, accelValue);
-    	
-    	if(Math.abs(armEncoderValue-goalangle)<tolerance) {
-    		driveArm(0);
-    		return true;
-    	} else if(armEncoderValue < goalangle){
-    		driveArm(-.25);
-    		System.out.println("driving arm negative");
-    	}
-    	else if(armEncoderValue > goalangle) {
-    		driveArm(.25);
-    		System.out.println("driving arm positive");
-    	}
-    	return false;
-    }
-    
-    public void stopClawIntake() {
-    	claw_intake_motor1.set(ControlMode.PercentOutput, 0);
+
+	public void stopClawIntake() {
+    		claw_intake_motor1.set(ControlMode.PercentOutput, 0);
     }
     
 	public void calibrate(){
@@ -192,15 +388,15 @@ public class Arm extends Subsystem {
     
 //==Encoder Methods====================================================================================================
     public double getArmEncoder() {
-    	double armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
-    	//System.out.print(armEncoderValue);
-    	return armEncoderValue;
+	    	double armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
+	    	//System.out.print(armEncoderValue);
+	    	return armEncoderValue;
     }
     
     public double getWristEncoder() {
-    	double wristEncoderValue = wrist_motor.getSensorCollection().getQuadraturePosition();
-    	//System.out.print(wristEncoderValue);
-    	return wristEncoderValue;
+	    	double wristEncoderValue = wrist_motor.getSensorCollection().getQuadraturePosition();
+	    	//System.out.print(wristEncoderValue);
+	    	return wristEncoderValue;
     }
     
 	public void resetEncoder() {
@@ -245,7 +441,7 @@ public class Arm extends Subsystem {
 	public boolean moveToZAxis(double zaxis) {
 		boolean retVal = false;	
 		// Figure out where the arm is in space
-		double yAccel = accel.getY();
+		double yAccel = accel.getZ();
 			
 //			
 //			double z_tolerUp = zaxis + .05;
@@ -298,14 +494,14 @@ public class Arm extends Subsystem {
 		double voltage = potentiometer.getVoltage();
 		//System.out.println("Potentiometer voltage " + voltage);
 //		SmartDashboard.putNumber("potentiometer", voltage);
-		return pot_voltage;
+		return voltage;
 	}
 	
 	public boolean rotateToUpperScale() {
 		boolean done = false;
-		pot_voltage = potentiometer.getVoltage();
-		if(pot_voltage < VOLTVAL_1ROT) {
-			driveArm(arm_speed);
+		double voltage = potentiometer.getVoltage();
+		if(voltage < VOLTVAL_1ROT) {
+			driveArm(ARM_SPEED);
 		} else {
 			done = true;
 			driveArm(0);
@@ -315,9 +511,9 @@ public class Arm extends Subsystem {
 	
 	public boolean rotateToMidScale() {
 		boolean done = false;
-		pot_voltage = potentiometer.getVoltage();
-		if(pot_voltage < VOLTVAL_3QUARTERROT) {
-			driveArm(arm_speed);
+		double voltage = potentiometer.getVoltage();
+		if(voltage < VOLTVAL_3QUARTERROT) {
+			driveArm(ARM_SPEED);
 		} else {
 			done = true;
 			driveArm(0);
@@ -327,9 +523,9 @@ public class Arm extends Subsystem {
 	 
 	public boolean rotateToLowerScale() {
 		boolean done = false;
-		pot_voltage = potentiometer.getVoltage();
-		if(pot_voltage < VOLTVAL_HALFROT) {
-			driveArm(arm_speed);
+		double voltage = potentiometer.getVoltage();
+		if(voltage < VOLTVAL_HALFROT) {
+			driveArm(ARM_SPEED);
 		} else {
 			done = true;
 			driveArm(0);
@@ -339,19 +535,19 @@ public class Arm extends Subsystem {
 	
 	public boolean rotateToSwitch() {
 		boolean done = false;
-		pot_voltage = potentiometer.getVoltage();
-		if(pot_voltage < VOLTVAL_QUARTERROT) {
-			driveArm(arm_speed);
+		double voltage = potentiometer.getVoltage();
+		if(voltage < VOLTVAL_QUARTERROT) {
+			driveArm(ARM_SPEED);
 		} else {
 			done = true;
 			driveArm(0);
 		}
 		return done;
 	}
+	
     public void testDriveArm(double armSpeed) {
-    	int armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
-    	double speed = armSpeed / 2;
-    	bot_arm_rotation_motor.set(ControlMode.PercentOutput, speed);
+	    	double speed = armSpeed / 2;
+	    	bot_arm_rotation_motor.set(ControlMode.PercentOutput, speed);
     }
 	
 //==Wrist Code=========================================================================================================
@@ -359,7 +555,7 @@ public class Arm extends Subsystem {
     
 //==Claw Code===================================================================================================== 
 	public void grabCube_Claw() {
-		double velocity = CLAW_SPEED;
+		double velocity = CLAW_INTAKE_SPEED;
 	    if (velocity > 1.0) velocity = 1.0;
 	    if (velocity <-1.0) velocity = -1.0;
 	    claw_intake_motor1.set(ControlMode.PercentOutput, velocity);

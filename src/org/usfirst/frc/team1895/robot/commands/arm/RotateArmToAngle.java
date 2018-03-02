@@ -9,11 +9,11 @@ import edu.wpi.first.wpilibj.command.Command;
  * USES ENCODERS 
  */
 public class RotateArmToAngle extends Command {
-	private double angle;
+	private int angle;
 	
 	boolean done;
 	
-    public RotateArmToAngle(double angle) {
+    public RotateArmToAngle(int angle) {
         // Use requires() here to declare subsystem dependencies
     	this.angle = angle;
         requires(Robot.arm);
