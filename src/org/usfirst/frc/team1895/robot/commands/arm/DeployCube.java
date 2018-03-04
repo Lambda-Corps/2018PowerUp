@@ -23,15 +23,14 @@ public class DeployCube extends Command {
     	counter = 0;
     	done = false;
     	SmartDashboard.putString("status", "INIT----------------");
+    	Robot.arm.deployCube_Claw();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-		if(counter>=100) {
+		if(counter>=30) {
 			done = true;
 		}
-    	hasCube = Robot.arm.cubeIsIn();
-    	Robot.arm.deployCube_Claw();
     	counter++;
     }
 

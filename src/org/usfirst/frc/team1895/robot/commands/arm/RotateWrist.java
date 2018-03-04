@@ -25,10 +25,8 @@ public class RotateWrist extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.arm.driveArmWrist(SmartDashboard.getNumber("Claw Speed", 0.2));
-    	if(counter>=200) {
-    		done = true;
-    	}
+    	//Robot.arm.driveArmWrist(SmartDashboard.getNumber("Claw Speed", 0.2));
+    	done = true;
     }
 
     // Make this return true when this Command no longer needs to run execute()

@@ -26,14 +26,14 @@ public class Default_Drivetrain extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-	    	double xAxisValue = Robot.oi.gamepad1.getAxis(F310.LX);
+	    	double xAxisValue = Robot.oi.gamepad1.getAxis(F310.RX);
 	    	double yAxisValue = -Robot.oi.gamepad1.getAxis(F310.LY);
 	    	int povValue = Robot.oi.gamepad1.getPOV();
 	
-	    	Robot.drivetrain.arcadeDrive(-Robot.oi.gamepad1.getAxis(F310.LY), Robot.oi.gamepad1.getAxis(F310.RX));
+//	    	Robot.drivetrain.arcadeDrive(Robot.oi.gamepad1.getAxis(F310.LY), Robot.oi.gamepad1.getAxis(F310.RX));
 	
 	    	if ((xAxisValue > 0.01 || xAxisValue < -0.01) || (yAxisValue > 0.01 || yAxisValue < -0.01)) {            //Remove deadband if needed
-	        	Robot.drivetrain.arcadeDrive(-Robot.oi.gamepad1.getAxis(F310.LY), Robot.oi.gamepad1.getAxis(F310.RX));
+	        	Robot.drivetrain.arcadeDrive(yAxisValue, xAxisValue);
 	    	} else {
 	    	       	    
 	    	    switch (povValue) {
@@ -52,8 +52,7 @@ public class Default_Drivetrain extends Command {
 	        	default:
 	        		break;
 	    	    }
-	    	    
-	    	  
+	    	    Robot.drivetrain.arcadeDrive(0, 0);
 	    	}
 
     }

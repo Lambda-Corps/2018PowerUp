@@ -4,8 +4,11 @@ import org.usfirst.frc.team1895.robot.commands.arm.CancelArm;
 import org.usfirst.frc.team1895.robot.commands.arm.CubeIn;
 import org.usfirst.frc.team1895.robot.commands.arm.DeployCube;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToPosition;
+import org.usfirst.frc.team1895.robot.commands.arm.ToggleTelescope;
 import org.usfirst.frc.team1895.robot.commands.climbing.ClimbSequence;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.AlignToCube;
+import org.usfirst.frc.team1895.robot.commands.lowerIntake.RaiseLowerIntake;
+import org.usfirst.frc.team1895.robot.commands.lowerIntake.ToggleLowerIntake;
 import org.usfirst.frc.team1895.robot.oi.F310;
 import org.usfirst.frc.team1895.robot.subsystems.Arm;
 
@@ -31,6 +34,10 @@ public class OI {
 	public JoystickButton grabCube_Claw;
 	public JoystickButton deployCube_LowerIntake;
 	public JoystickButton grabCube_LowerIntake;
+	public JoystickButton retract_LowerIntake;
+	public JoystickButton extend_LowerIntake;
+	public JoystickButton raise_LowerIntake;
+	public JoystickButton lower_LowerIntake;
 	
 	//arm and special arm positions
 	public JoystickButton rotateArm_switchPos;
@@ -39,6 +46,8 @@ public class OI {
 	public JoystickButton rotateArm_Scale_High;
 	public JoystickButton armCancel;
 	
+	public JoystickButton telescopeOut;
+	public JoystickButton telescopeIn;
 	public JoystickButton climbSequence;
 
 	public OI() {
@@ -50,6 +59,7 @@ public class OI {
 		// LT -- Fine Tuning  (not sure if this actually ever gets scheduled)
 		// A  -- Align To Cube
 		// LB -- Grab Cube
+		// RB -- Retract Lower Intake
 		// DPAD UP -- Cancel Scheduled Drivetrain Commands
 		// DPAD Down -- Turn 180 degrees
 		// DPAD Left -- Turn left 90 degrees
@@ -60,15 +70,33 @@ public class OI {
 		alignToCube = new JoystickButton(gamepad1, F310.A);
 		alignToCube.whenPressed(new AlignToCube());
 		
+		climbSequence = new JoystickButton(gamepad1, F310.Y);
+		climbSequence.whenPressed(new ClimbSequence());
+		
 		//lower intake buttons
 		grabCube_LowerIntake = new JoystickButton(gamepad1, F310.LB);
 		grabCube_LowerIntake.whenPressed(new CubeIn());
 		
-		climbSequence = new JoystickButton(gamepad1, F310.Y);
-		climbSequence.whenPressed(new ClimbSequence());
+		retract_LowerIntake = new JoystickButton(gamepad1,F310.RB);
+		//retract_Lower
+		retract_LowerIntake.whenPressed(new RaiseLowerIntake());
+		retract_LowerIntake.whenPressed(new ToggleLowerIntake());
+		
+		
+//		extend_LowerIntake = new JoystickButton(gamepad1, F310.B);
+//		extend_LowerIntake.whenPressed(new ExtendLowerIntake());
+//		
+		raise_LowerIntake = new JoystickButton(gamepad1, F310.B);
+		raise_LowerIntake.whenPressed(new RaiseLowerIntake());
+		
+		telescopeOut = new JoystickButton(gamepad1, F310.X);
+		telescopeOut.whenPressed(new ToggleTelescope());
+//		lower_LowerIntake = new JoystickButton(gamepad1, F310.B);
+//		lower_LowerIntake.whenPressed(new LowerLowerIntake());
+
 		
 		// Gamepad 1 open buttons
-		// B, X, RB, RT
+		// B, X, RT
 		
 		
 		// Setup the secondary driver controller and button mappings
@@ -80,7 +108,7 @@ public class OI {
 		// LT -- Manual Climber
 		// A  -- Move Arm to lowest position
 		// X  -- Move Arm to Switch
-		// B  -- Move Arm to Scale Mid
+		// B  -- Toggle Arm Telescope
 		// Y  -- Move Arm to Scale High
 		// RB -- Deploy Cube (score it)
 		// LB -- Cancel Arm Commands

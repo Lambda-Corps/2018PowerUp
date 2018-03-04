@@ -38,6 +38,7 @@ public class TestDriveToObstacle extends Command {
 
 	// Called once after isFinished returns true
 	protected void end() {
+		SmartDashboard.putNumber("rf distance", Robot.drivetrain.fr_rangefinderDist());
 	}
 
 	// Called when another command which requires one or more of the same

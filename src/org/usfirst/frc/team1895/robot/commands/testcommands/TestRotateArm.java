@@ -9,30 +9,33 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class TestRotateArm extends Command {
 	private int angle;
+	boolean done;
 	
     public TestRotateArm() {
         // Use requires() here to declare subsystem dependencies
-    	this.angle = (int)SmartDashboard.getNumber("Test RotateArm Angle", 90);
+    	this.angle = (int)SmartDashboard.getNumber("Test RotateArm Position", 1150);
         requires(Robot.arm);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	done = false;
+    	this.angle = (int) SmartDashboard.getNumber("Test RotateArm Position", 1150);
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	//System.out.println("we are in the command---------");
-    	Robot.arm.setPosition(angle);
+    	done = Robot.arm.setPosition(angle);
     	
-    //	SmartDashboard.putNumber("Arm Encoder", Robot.arm.getArmEncoder());
-    	//SmartDashboard.putNumber("Wrist Encoder", Robot.arm.getWristEncoder());
-    	//SmartDashboard.putNumber("Accel Value", Robot.arm.getAccelValue());
+    	SmartDashboard.putNumber("Arm Encoder", Robot.arm.getArmEncoder());
+//    	SmartDashboard.putNumber("Wrist Encoder", Robot.arm.getWristEncoder());
+//    	SmartDashboard.putNumber("Accel Value", Robot.arm.getAccelValue());
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return (Robot.arm.setPosition(angle)||Robot.arm.getArmEncoder()>=14000);
+        return done;
     }
 
     // Called once after isFinished returns true

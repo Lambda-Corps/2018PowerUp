@@ -21,12 +21,17 @@ public class LowerLowerIntake extends Command {
     protected void initialize() {
     	counter = 0;
     	done = false;
-    	Robot.lowerIntake.lowerLowerIntake();
+    	if(Robot.lowerIntake.isLowered()) {
+    		done = true;
+    	} else {
+    		done = false;
+    		Robot.lowerIntake.lowerLowerIntake();
+    	}
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if(counter>=30) {
+    	if(counter>=15) {
     		done = true;
     	}
     	counter++;

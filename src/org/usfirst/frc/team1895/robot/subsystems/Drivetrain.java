@@ -30,7 +30,7 @@ public class Drivetrain extends Subsystem {
 	
 	public static boolean amCorrecting;
 	public static final double AUTO_TURN_SPEED = 0.7;
-	public static final double AUTO_DRIVE_SPEED = 0.7;
+	public static final double AUTO_DRIVE_SPEED = 0.9;
 
 	// motors CAN ID #
 	private TalonSRX left_dt_motor1; // 1
@@ -136,6 +136,8 @@ public class Drivetrain extends Subsystem {
 		r_encoder.setDistancePerPulse(.0159); // PowerUp
 //		 l_encoder.setDistancePerPulse(0.0225); //Steamworks
 //		 r_encoder.setDistancePerPulse(0.0225); //Steamworks
+		//l_encoder.setDistancePerPulse(.016);  //new
+		//r_encoder.setDistancePerPulse(.02475);
 
 		// analog sensors
 		try {
@@ -175,7 +177,7 @@ public class Drivetrain extends Subsystem {
 
 	// ==Manual
 	// driving============================================================================
-	public void arcadeDrive(double trans_speed, double yaw) {
+	public void arcadeDrive(double yaw, double trans_speed) {
 		// Normalize the input, must be in a -1 <= x <= 1 range
 		trans_speed = normalizeMotorInput(trans_speed);
 		yaw = normalizeMotorInput(yaw);
@@ -356,7 +358,7 @@ public class Drivetrain extends Subsystem {
 		if (inHigh) {
 			// ..and you dropped below the minimum high speed, switch to low gear
 			if (current_speed < DOWNSHIFT_SPEED) {
-				transmission_solenoid.set(DoubleSolenoid.Value.kForward);
+				//transmission_solenoid.set(DoubleSolenoid.Value.kReverse);
 				inHigh = false;
 			}
 		}
@@ -368,7 +370,7 @@ public class Drivetrain extends Subsystem {
 
 				// ..after ~ 1.5 seconds, shift into high gear
 				if(highgear_count == 100) {
-					transmission_solenoid.set(DoubleSolenoid.Value.kReverse); 
+					//transmission_solenoid.set(DoubleSolenoid.Value.kForward); 
 					inHigh = true;
 					highgear_count = 0;
 				}
@@ -385,7 +387,7 @@ public class Drivetrain extends Subsystem {
 	}
 	
 	public void shiftToLowGear() {
-		transmission_solenoid.set(DoubleSolenoid.Value.kForward);
+		//transmission_solenoid.set(DoubleSolenoid.Value.kReverse);
 	}
 
 	// for ShiftGearsTestStartLG command
@@ -450,6 +452,11 @@ public class Drivetrain extends Subsystem {
 	public void resetEncoders() {
 		l_encoder.reset();
 		r_encoder.reset();
+	}
+	
+	public void setDistancePerPulse(double dpp) {
+		l_encoder.setDistancePerPulse(dpp);
+		r_encoder.setDistancePerPulse(dpp);
 	}
 
 	public double getLeftEncoder() {

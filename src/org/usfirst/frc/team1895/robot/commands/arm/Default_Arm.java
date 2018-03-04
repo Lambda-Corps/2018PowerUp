@@ -21,12 +21,12 @@ public class Default_Arm extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if(Math.abs(Robot.oi.gamepad2.getAxis(F310.LY))>.05) {
-        	Robot.arm.driveArm(0.5*Robot.oi.gamepad2.getAxis(F310.LY));
-    	}
-    	if(Math.abs(Robot.oi.gamepad2.getAxis(F310.RY))>.05) {
-        	Robot.arm.driveArmWrist(0.5*Robot.oi.gamepad2.getAxis(F310.RY));
-    	}
+    	//if(Math.abs(Robot.oi.gamepad2.getAxis(F310.LY))) {
+        	Robot.arm.driveArm(0.8*Robot.oi.gamepad2.getAxis(F310.LY));
+    	//}
+    	//if(Math.abs(Robot.oi.gamepad2.getAxis(F310.RY))) {
+        	Robot.arm.driveArmWrist(-Robot.oi.gamepad2.getAxis(F310.RY));
+    	//}
     }
 
     // Make this return true when this Command no longer needs to run execute()
