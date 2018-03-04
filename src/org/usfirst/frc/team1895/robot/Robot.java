@@ -71,7 +71,7 @@ public class Robot extends TimedRobot {
 		lowerIntake = new LowerIntake();
 		//setPeriod(0.015); // update more frequently - every 25ms
 		camera = new FilteredCamera();
-		// Robot.camera.startVisionThread();
+		 Robot.camera.startVisionThread();
 
 		// choosing start position
 		SmartDashboard.putData("Start Position", pos_chooser);
@@ -292,6 +292,9 @@ public class Robot extends TimedRobot {
 		// SmartDashboard.putNumber("Accel Value Z", Robot.arm.getZValue());
 		SmartDashboard.putNumber("Wrist Encoder 2.0", Robot.arm.getWristEncoder());
 		SmartDashboard.putNumber("Arm potentiometer", Robot.arm.getPotentiometerVoltage());
+		SmartDashboard.putNumber("Accel x", Robot.arm.getXValue());
+		SmartDashboard.putNumber("Accel y", Robot.arm.getYValue());
+		SmartDashboard.putNumber("Accel z", Robot.arm.getZValue());
 		// System.out.println("<joy> LY " + Robot.oi.gamepad.getAxis(F310.LY) + " RX " +
 		// Robot.oi.gamepad.getAxis(F310.RX));
 		// System.out.printf("<joy> LY: %5.1f RX: %5.1f",

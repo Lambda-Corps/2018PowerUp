@@ -73,19 +73,19 @@ public class Arm extends Subsystem {
 //	public static final int ARM_CLIMB_POSITION = ARM_UPPER_SOFT_LIMIT;
 //	public static final int ARM_POSITIONAL_TOLERANCE = 750;
 	
-	public static final double ARM_LOWEST_LIMIT = 0.9826; //0.980;
-	public static final double ARM_LOWER_SOFT_LIMIT = .9826;
-	public static final double ARM_UPPER_SOFT_LIMIT = 16000;
-	private static final double ARM_EXTENSION_LOWER_LIMIT = 3000;
-	private static double ARM_EXTENSION_UPPER_LIMIT = .3503;
+	public static final double ARM_LOWEST_LIMIT = 0.650; //0.980;
+	public static final double ARM_LOWER_SOFT_LIMIT = .67;
+	public static final double ARM_UPPER_SOFT_LIMIT = 0.037;
+	private static final double ARM_EXTENSION_LOWER_LIMIT = 0.5;
+	private static final double ARM_EXTENSION_UPPER_LIMIT = .2;
 	
 	public static final double ARM_LOWEST_POSITION = ARM_LOWER_SOFT_LIMIT;
-	public static final double ARM_SWITCH_POSITION = .8024;
-	public static final double ARM_SCALE_LOW_POSITION = 13000;
-	public static final double ARM_SCALE_MID_POSITION = 13001;
-	public static final double ARM_SCALE_HIGH_POSITION = .4762;
+	public static final double ARM_SWITCH_POSITION = .394;
+	public static final double ARM_SCALE_LOW_POSITION = .139;
+	public static final double ARM_SCALE_MID_POSITION = 0.139;
+	public static final double ARM_SCALE_HIGH_POSITION = .139;
 	public static final double ARM_CLIMB_POSITION = ARM_UPPER_SOFT_LIMIT;
-	public static final double ARM_POSITIONAL_TOLERANCE = .07;
+	public static final double ARM_POSITIONAL_TOLERANCE = .007;
 	
 	private boolean endGameStarted;
 	
@@ -154,18 +154,19 @@ public class Arm extends Subsystem {
     		armSpeed = Math.copySign(armSpeed* armSpeed, armSpeed);
     	
     		// Check where we are with respect to the limits
-	    	int armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
+	    	//int armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
+    		double armPotentiometer = getPotentiometerVoltage();
 //	    	SmartDashboard.putNumber("ARM ENCODER", armEncoderValue);
 //	    	SmartDashboard.putNumber("ARM SPEED", armSpeed);
 	    	//These variable control the angle at which the piston will extend
 	    	if(armSpeed>0) {
-	    		if(armEncoderValue<=ARM_LOWER_SOFT_LIMIT) {
+	    		if(armPotentiometer>ARM_LOWER_SOFT_LIMIT) {
 	    			armSpeed = 0;
 	    			System.out.println("stopped by lower limit");
 	    		} 
 	    		armSpeed *= 0.5;
 	    	} else if(armSpeed<0){
-	    		if(armEncoderValue>=ARM_UPPER_SOFT_LIMIT) {
+	    		if(armPotentiometer <= ARM_UPPER_SOFT_LIMIT) {
 	    			armSpeed = 0;
 	    			System.out.println("stopped by upper limit");
 	    		} 
@@ -173,8 +174,8 @@ public class Arm extends Subsystem {
 	    
 	    	// We only want to manage telescoping during the rounds, not during the endgame
 	    	if(!endGameStarted) {
-		    	if(armEncoderValue>ARM_EXTENSION_LOWER_LIMIT && 
-		    	   armEncoderValue<ARM_EXTENSION_UPPER_LIMIT) {
+		    	if(armPotentiometer>ARM_EXTENSION_LOWER_LIMIT && 
+		    			armPotentiometer<ARM_EXTENSION_UPPER_LIMIT) {
 		    		//led1.set(true);
 		    		telescoping_solenoid.set(DoubleSolenoid.Value.kForward);  //retract
 		    	}
@@ -188,7 +189,7 @@ public class Arm extends Subsystem {
 	    	
 	    	//wrist_motor.set(ControlMode.PercentOutput, armSpeed);
 	    	if(getPotentiometerVoltage() <ARM_SWITCH_POSITION || !hasCube) {
-	    		levelWrist();
+	    		//SlevelWrist();
 	    	}
     }
     
@@ -217,6 +218,9 @@ public class Arm extends Subsystem {
 
 	public double getAccelValue() {
 	    	double accelValue = accel.getX();
+	    	
+	    	bot_arm_rotation_motor.getSensorCollection().s
+	    	
 	    	return accelValue;
     }
     
@@ -636,7 +640,7 @@ public class Arm extends Subsystem {
 		public boolean setMaxWrist() {
 			boolean done = false;
 			if(getWristEncoder() < 120) {
-				driveArmWrist(WRIST_SPEED);
+				//driveArmWrist(WRIST_SPEED);
 			} else {
 				done = true;
 				driveArmWrist(0);
@@ -774,7 +778,7 @@ public class Arm extends Subsystem {
 		if(getPotentiometerVoltage() > ARM_SWITCH_POSITION) {
 			wristSpeed = 0;
 		}
-		driveArmWrist(wristSpeed);
+		//driveArmWrist(wristSpeed);
 	}
     
     
@@ -801,6 +805,13 @@ public class Arm extends Subsystem {
 	public double getInRangeFinder() {
 		return in_rangefinder.getAverageVoltage();
 	}
+	
+	public void getArmCurrent() {
+		double top = bot_arm_rotation_motor.getOutputCurrent();
+		double bottom = top_arm_rotation_motor.getOutputCurrent();
+		System.out.println("ARM Currents: " + top + " " + bottom);
+	}
+	
 	public boolean cubeIsIn() {
 		if(in_rangefinder.getAverageVoltage()>2.0) {
 			hasCube = true;

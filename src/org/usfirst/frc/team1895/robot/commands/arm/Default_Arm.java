@@ -22,10 +22,12 @@ public class Default_Arm extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	//if(Math.abs(Robot.oi.gamepad2.getAxis(F310.LY))) {
+        	System.out.println("Printing arm joystick value" + Robot.oi.gamepad2.getAxis(F310.LY));
         	Robot.arm.driveArm(0.8*Robot.oi.gamepad2.getAxis(F310.LY));
+        	Robot.arm.getArmCurrent();
     	//}
     	//if(Math.abs(Robot.oi.gamepad2.getAxis(F310.RY))) {
-        	Robot.arm.driveArmWrist(-Robot.oi.gamepad2.getAxis(F310.RY));
+        	//Robot.arm.driveArmWrist(-Robot.oi.gamepad2.getAxis(F310.RY));
     	//}
     }
 
