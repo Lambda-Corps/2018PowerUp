@@ -15,8 +15,10 @@ public class RotateArm_Scale_Mid extends CommandGroup {
 
     	addSequential(new ExtendLowerIntake());
     	addSequential(new RaiseLowerIntake());
-    	addSequential(new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION));  //need to find out num degrees here
+    	addSequential(new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION));
 //    	addSequential(new ExtendTelescopingPart()); //possibly?
-
+    	addSequential(new DeployCube());
+    	addSequential(new RetractTelescopingPart());
+    	
     }
 }

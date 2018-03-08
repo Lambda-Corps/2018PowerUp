@@ -219,7 +219,7 @@ public class Arm extends Subsystem {
 	public double getAccelValue() {
 	    	double accelValue = accel.getX();
 	    	
-	    	bot_arm_rotation_motor.getSensorCollection().s
+//	    	bot_arm_rotation_motor.getSensorCollection().s
 	    	
 	    	return accelValue;
     }

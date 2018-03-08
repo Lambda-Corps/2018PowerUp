@@ -22,7 +22,7 @@ public class TestDriveToObstacle extends Command {
 	// Called just before this Command runs the first time
 	protected void initialize() {
 		t_speed = SmartDashboard.getNumber("Test Drive Speed:", .4);
-		t_goalDistance = SmartDashboard.getNumber("Test Drive Distance:", 13);
+		t_goalDistance = SmartDashboard.getNumber("Test DTO Distance:", 50.0);
 		// t_scalar = SmartDashboard.getNumber("Test Drive Tank Scalar:", .94);
 	}
 
