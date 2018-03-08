@@ -4,12 +4,7 @@ import org.usfirst.frc.team1895.robot.commands.arm.CancelArm;
 import org.usfirst.frc.team1895.robot.commands.arm.DeployCube;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToAngle;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToPosition;
-import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_High;
-import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_Low;
-import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_Mid;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.AlignToCube;
-import org.usfirst.frc.team1895.robot.commands.drivetrain.CancelDrivetrain;
-import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.GrabCube_LowerIntake;
 import org.usfirst.frc.team1895.robot.oi.F310;
 
@@ -67,7 +62,7 @@ public class OI {
 		
 		//arm buttons
 		ninetyUp = new JoystickButton(gamepad2, F310.Y);
-		ninetyUp.whenPressed(new RotateArmToAngle(90));
+		ninetyUp.whenPressed(new RotateArmToAngle(90)); 
 		ninetyDown = new JoystickButton(gamepad2, F310.A);
 		ninetyDown.whenPressed(new RotateArmToAngle(135));
 		rotateArm_switchPos = new JoystickButton(gamepad2, F310.A);
