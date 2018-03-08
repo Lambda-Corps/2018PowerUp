@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1895.robot.commands.testcommands;
 
 import org.usfirst.frc.team1895.robot.Robot;
+import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,6 +23,7 @@ public class TestDriveStraightWithoutPID extends Command {
     protected void initialize() {
     	t_goalDis = SmartDashboard.getNumber("Test Drive Distance:", 30.0);
     	t_speed = SmartDashboard.getNumber("Test Drive Speed:", .4);
+    	Robot.drivetrain.setDistancePerPulse(SmartDashboard.getNumber("Dist per pulse", 0.02475));
     	Robot.drivetrain.resetEncoders();
     }
 
@@ -30,8 +32,8 @@ public class TestDriveStraightWithoutPID extends Command {
     	t_goalReached = Robot.drivetrain.driveStraightSetDistance(t_speed, t_goalDis);
     	System.out.println("speed " + t_speed + " distance " + t_goalDis); 
     	
-    	SmartDashboard.putNumber("PID Drive L Encoder Value: ", Robot.drivetrain.getEncoderValue(Robot.drivetrain.LEFT_MOTOR_ENCODER));
-    	SmartDashboard.putNumber("PID Drive R Encoder Value: ", Robot.drivetrain.getEncoderValue(Robot.drivetrain.RIGHT_MOTOR_ENCODER));
+    	SmartDashboard.putNumber("PID Drive L Encoder Value: ", Robot.drivetrain.getEncoderValue(Drivetrain.LEFT_MOTOR_ENCODER));
+    	SmartDashboard.putNumber("PID Drive R Encoder Value: ", Robot.drivetrain.getEncoderValue(Drivetrain.RIGHT_MOTOR_ENCODER));
 
     }
 

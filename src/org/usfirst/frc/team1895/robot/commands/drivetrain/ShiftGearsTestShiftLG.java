@@ -31,7 +31,7 @@ public class ShiftGearsTestShiftLG extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	System.out.println("Low gear has been reached");
+//    	System.out.println("Low gear has been reached");
     }
 
     // Called when another command which requires one or more of the same

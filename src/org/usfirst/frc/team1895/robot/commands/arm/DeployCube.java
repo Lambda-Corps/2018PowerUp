@@ -3,6 +3,7 @@ package org.usfirst.frc.team1895.robot.commands.arm;
 import org.usfirst.frc.team1895.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -11,6 +12,7 @@ public class DeployCube extends Command {
 	
 	public boolean hasCube;
 	public int counter;
+	boolean done;
 
     public DeployCube() {
     	requires(Robot.arm);
@@ -19,17 +21,22 @@ public class DeployCube extends Command {
     // Called just before this Command runs the first time
     protected void initialize() {
     	counter = 0;
+    	done = false;
+    	SmartDashboard.putString("status", "INIT----------------");
+    	Robot.arm.deployCube_Claw();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	hasCube = Robot.arm.cubeIsIn();
-    	Robot.arm.deployCube_Claw();
+		if(counter>=30) {
+			done = true;
+		}
+    	counter++;
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return !hasCube;
+        return done;
     }
 
     // Called once after isFinished returns true

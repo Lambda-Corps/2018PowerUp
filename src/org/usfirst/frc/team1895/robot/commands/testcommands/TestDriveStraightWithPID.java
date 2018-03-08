@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1895.robot.commands.testcommands;
 
 import org.usfirst.frc.team1895.robot.Robot;
+import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -34,8 +35,8 @@ public class TestDriveStraightWithPID extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	//t_done = Robot.drivetrain.driveStraightWithPID(t_Distance); needs method
-    	SmartDashboard.putNumber("PID Drive L Encoder Value: ", Robot.drivetrain.getEncoderValue(Robot.drivetrain.LEFT_MOTOR_ENCODER));
-    	SmartDashboard.putNumber("PID Drive R Encoder Value: ", Robot.drivetrain.getEncoderValue(Robot.drivetrain.RIGHT_MOTOR_ENCODER));
+    	SmartDashboard.putNumber("PID Drive L Encoder Value: ", Robot.drivetrain.getEncoderValue(Drivetrain.LEFT_MOTOR_ENCODER));
+    	SmartDashboard.putNumber("PID Drive R Encoder Value: ", Robot.drivetrain.getEncoderValue(Drivetrain.RIGHT_MOTOR_ENCODER));
     	
     	t_done = Robot.drivetrain.driveStraightWithPID(t_Distance);
     	

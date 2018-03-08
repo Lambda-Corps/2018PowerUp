@@ -3,7 +3,6 @@ package org.usfirst.frc.team1895.robot.commands.drivetrain;
 import org.usfirst.frc.team1895.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -38,8 +37,6 @@ public class DriveStraightWithPID extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	System.out.println("finished");
-    	
     	//System.out.println("LE: " + Robot.drivetrain.getLeftEncoder() + " RE: " + Robot.drivetrain.getRightEncoder());
     }
 

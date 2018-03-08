@@ -3,30 +3,29 @@ package org.usfirst.frc.team1895.robot.commands.arm;
 import org.usfirst.frc.team1895.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
  */
-public class RotateWrist extends Command {
-	
-	int counter;
-	boolean done;
+public class ToggleTelescope extends Command {
 
-    public RotateWrist() {
+	int count = 0;
+	boolean done = false;
+    public ToggleTelescope() {
         // Use requires() here to declare subsystem dependencies
         requires(Robot.arm);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	counter = 0;
+    	Robot.arm.toggleTelescopingArm();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	//Robot.arm.driveArmWrist(SmartDashboard.getNumber("Claw Speed", 0.2));
-    	done = true;
+    	if(count++ == 30) {
+    		done = true;
+    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()

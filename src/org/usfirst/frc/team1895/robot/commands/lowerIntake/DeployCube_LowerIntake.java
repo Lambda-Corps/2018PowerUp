@@ -1,6 +1,7 @@
 package org.usfirst.frc.team1895.robot.commands.lowerIntake;
 
 import org.usfirst.frc.team1895.robot.Robot;
+import org.usfirst.frc.team1895.robot.subsystems.LowerIntake;
 
 import edu.wpi.first.wpilibj.command.Command;
 
@@ -23,8 +24,8 @@ public class DeployCube_LowerIntake extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	hasCube = Robot.arm.cubeIsIn();
-    	Robot.lowerIntake.setLowerIntakeMotors(-1);
+	    	hasCube = Robot.arm.cubeIsIn();
+	    	Robot.lowerIntake.setLowerIntakeMotors(-LowerIntake.INTAKE_MOTOR_LEFT_SPEED);
     	
     }
 
@@ -35,7 +36,7 @@ public class DeployCube_LowerIntake extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.lowerIntake.setLowerIntakeMotors(0);
+    		Robot.lowerIntake.setLowerIntakeMotors(0);
     }
 
     // Called when another command which requires one or more of the same

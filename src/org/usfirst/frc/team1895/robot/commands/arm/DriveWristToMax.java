@@ -3,30 +3,25 @@ package org.usfirst.frc.team1895.robot.commands.arm;
 import org.usfirst.frc.team1895.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
  */
-public class RotateWrist extends Command {
-	
-	int counter;
-	boolean done;
+public class DriveWristToMax extends Command {
 
-    public RotateWrist() {
+	boolean done;
+    public DriveWristToMax() {
         // Use requires() here to declare subsystem dependencies
-        requires(Robot.arm);
+    	requires(Robot.arm);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	counter = 0;
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	//Robot.arm.driveArmWrist(SmartDashboard.getNumber("Claw Speed", 0.2));
-    	done = true;
+    	done = Robot.arm.setMaxWrist();
     }
 
     // Make this return true when this Command no longer needs to run execute()

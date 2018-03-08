@@ -1,18 +1,15 @@
-package org.usfirst.frc.team1895.robot.commands.autonomous;
+package org.usfirst.frc.team1895.robot.commands.arm;
 
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class PrintCommand extends Command {
-	
-	String msg;
+public class ZeroWrist extends Command {
 
-    public PrintCommand(String msg) {
+    public ZeroWrist() {
         // Use requires() here to declare subsystem dependencies
         // eg. requires(chassis);
-    	this.msg = msg;
     }
 
     // Called just before this Command runs the first time
@@ -21,12 +18,11 @@ public class PrintCommand extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	System.out.println(msg);
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return true;
+        return false;
     }
 
     // Called once after isFinished returns true

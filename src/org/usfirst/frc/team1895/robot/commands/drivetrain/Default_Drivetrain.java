@@ -4,7 +4,6 @@ import org.usfirst.frc.team1895.robot.Robot;
 import org.usfirst.frc.team1895.robot.oi.F310;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -27,36 +26,35 @@ public class Default_Drivetrain extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	double xAxisValue = Robot.oi.gamepad1.getAxis(F310.LX);
-    	double yAxisValue = -Robot.oi.gamepad1.getAxis(F310.LY);
-    	int povValue = Robot.oi.gamepad1.getPOV();
+	    	double xAxisValue = Robot.oi.gamepad1.getAxis(F310.RX);
+	    	double yAxisValue = -Robot.oi.gamepad1.getAxis(F310.LY);
+	    	int povValue = Robot.oi.gamepad1.getPOV();
+	
+//	    	Robot.drivetrain.arcadeDrive(Robot.oi.gamepad1.getAxis(F310.LY), Robot.oi.gamepad1.getAxis(F310.RX));
+	
+	    	if ((xAxisValue > 0.01 || xAxisValue < -0.01) || (yAxisValue > 0.01 || yAxisValue < -0.01)) {            //Remove deadband if needed
+	        	Robot.drivetrain.arcadeDrive(yAxisValue, xAxisValue);
+	    	} else {
+	    	       	    
+	    	    switch (povValue) {
+	    	    case 90:
+	        	    Command turnCmd2 = new TurnWithoutPID(.5, 90);
+	        	    turnCmd2.start();
+	        	    break;
+	    	    case 180:
+	        	    Command turnCmd3 = new TurnWithoutPID(.5, 180);
+	        	    turnCmd3.start();
+	        	    break;
+	    	    case 270:
+	        	    Command turnCmd4 = new TurnWithoutPID(.5, -90);
+	        	    turnCmd4.start();
+	        	    break;
+	        	default:
+	        		break;
+	    	    }
+	    	    Robot.drivetrain.arcadeDrive(0, 0);
+	    	}
 
-    //	Robot.drivetrain.arcadeDrive(-Robot.oi.gamepad1.getAxis(F310.LY), Robot.oi.gamepad1.getAxis(F310.RX));
-
-    	if ((xAxisValue > 0.05 || xAxisValue < -0.05) || (yAxisValue > 0.05 || yAxisValue < -0.05)) {            //check if less than value is -0.005
-        	Robot.drivetrain.arcadeDrive(-Robot.oi.gamepad1.getAxis(F310.LY), Robot.oi.gamepad1.getAxis(F310.RX));
-    	} else {
-    	       	    
-    	    switch (povValue) {
-    	    case 90:
-        	    Command turnCmd2 = new TurnWithoutPID(.5, 90);
-        	    turnCmd2.start();
-        	    break;
-    	    case 180:
-        	    Command turnCmd3 = new TurnWithoutPID(.5, 180);
-        	    turnCmd3.start();
-        	    break;
-    	    case 270:
-        	    Command turnCmd4 = new TurnWithoutPID(.5, -90);
-        	    turnCmd4.start();
-        	    break;
-        	default:
-        		break;
-    	    }
-    	    
-    	  
-    	}
-  	
     }
 
     // Make this return true when this Command no longer needs to runexecute()
