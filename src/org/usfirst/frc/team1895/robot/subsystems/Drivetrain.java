@@ -109,13 +109,13 @@ public class Drivetrain extends Subsystem {
 		 left_dt_motor1.configPeakCurrentLimit(15, 0);
 		 left_dt_motor1.configPeakCurrentDuration(100, 0);
 		 left_dt_motor1.enableCurrentLimit(true);
-		 left_dt_motor1.configOpenloopRamp(0.25, 0);
+		 left_dt_motor1.configOpenloopRamp(0.15, 0);
 		 
 		 right_dt_motor1.configContinuousCurrentLimit(10, 0);
 		 right_dt_motor1.configPeakCurrentLimit(15, 0);
 		 right_dt_motor1.configPeakCurrentDuration(100, 0);
 		 right_dt_motor1.enableCurrentLimit(true);
-		 right_dt_motor1.configOpenloopRamp(0.25, 0);
+		 right_dt_motor1.configOpenloopRamp(0.15, 0);
 
 		// pneumatics
 		compressor = new Compressor();

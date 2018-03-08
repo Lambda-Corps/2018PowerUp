@@ -6,40 +6,54 @@ import org.usfirst.frc.team1895.robot.oi.F310;
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
- *
+ * ROTATES ARM TO A CERTAIN POSITION WITH POTENTIOMETER. USED FOR THE BUTTONS THAT BRING THE ARM 
+ * TO VARIOUS SETPOINTS
  */
-public class RotateArm extends Command {
-	private double angle;
-	
-    public RotateArm(double angle) {
+public class RotateArmToPosition extends Command {
+
+	boolean done;
+	String armPos;
+    public RotateArmToPosition(String armPosition) {
         // Use requires() here to declare subsystem dependencies
-    	this.angle = angle;
         requires(Robot.arm);
+        armPos = armPosition;
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.arm.setPosition(angle);
-    	
+    	if(armPos.equals("A")) {
+    		done = Robot.arm.rotateToSwitch();
+    	}
+    	else if(armPos.equals("X")) {
+    		done = Robot.arm.rotateToLowerScale();
+    	}
+    	else if(armPos.equals("B")) {
+    		done = Robot.arm.rotateToMidScale();
+    	}
+    	else if(armPos.equals("Y")) {
+    		done = Robot.arm.rotateToUpperScale();
+    	}
+    	else {
+    		done = true;
+    	}
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return (Robot.arm.setPosition(angle)||Robot.arm.getArmEncoder()>=14000);
+        return done;
     }
 
     // Called once after isFinished returns true
     protected void end() {
-    	Robot.arm.stopClawIntake();
     }
 
     // Called when another command which requires one or more of the same
     // subsystems is scheduled to run
     protected void interrupted() {
-    	Robot.arm.stopClawIntake();
     }
 }
