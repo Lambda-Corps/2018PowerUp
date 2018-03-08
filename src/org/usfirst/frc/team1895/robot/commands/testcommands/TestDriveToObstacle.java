@@ -12,36 +12,37 @@ public class TestDriveToObstacle extends Command {
 
 	double t_speed, t_goalDistance, t_scalar;
 	boolean t_done;
-	
-    public TestDriveToObstacle() {
-        // Use requires() here to declare subsystem dependencies
-        requires(Robot.drivetrain);
-        t_done = false;
-    }
 
-    // Called just before this Command runs the first time
-    protected void initialize() {
-    	t_speed = SmartDashboard.getNumber("Test Drive Speed:", .4);
-    	t_goalDistance = SmartDashboard.getNumber("Test Drive Distance:", 13);
-    	t_scalar = SmartDashboard.getNumber("Test Drive Tank Scalar:", .94);
-    }
+	public TestDriveToObstacle() {
+		// Use requires() here to declare subsystem dependencies
+		requires(Robot.drivetrain);
+		t_done = false;
+	}
 
-    // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
-    	t_done = Robot.drivetrain.drivefr_RFDistance(t_goalDistance, t_speed); // method needed
-    }
+	// Called just before this Command runs the first time
+	protected void initialize() {
+		t_speed = SmartDashboard.getNumber("Test Drive Speed:", .4);
+		t_goalDistance = SmartDashboard.getNumber("Test Drive Distance:", 13);
+		// t_scalar = SmartDashboard.getNumber("Test Drive Tank Scalar:", .94);
+	}
 
-    // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-        return t_done;
-    }
+	// Called repeatedly when this Command is scheduled to run
+	protected void execute() {
+		t_done = Robot.drivetrain.drivefr_RFDistance(t_goalDistance, t_speed); // method needed
+	}
 
-    // Called once after isFinished returns true
-    protected void end() {
-    }
+	// Make this return true when this Command no longer needs to run execute()
+	protected boolean isFinished() {
+		return t_done;
+	}
 
-    // Called when another command which requires one or more of the same
-    // subsystems is scheduled to run
-    protected void interrupted() {
-    }
+	// Called once after isFinished returns true
+	protected void end() {
+		SmartDashboard.putNumber("rf distance", Robot.drivetrain.fr_rangefinderDist());
+	}
+
+	// Called when another command which requires one or more of the same
+	// subsystems is scheduled to run
+	protected void interrupted() {
+	}
 }

@@ -5,15 +5,13 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class WaitCommand extends Command {
+public class OurWaitCommand extends Command {
 
 	double counter;
 	double cycles;
 	boolean done;
 
-	public WaitCommand(int seconds) {
-		// Use requires() here to declare subsystem dependencies
-		// eg. requires(chassis);
+	public OurWaitCommand(double seconds) {
 		counter = 0;
 		cycles = seconds * 66.667;
 		done = false;
@@ -29,7 +27,7 @@ public class WaitCommand extends Command {
 			done = true;
 		}
 		counter++;
-		System.out.println(counter + "/" + cycles);
+//		System.out.println(counter + "/" + cycles);
 	}
 
 	// Make this return true when this Command no longer needs to run execute()

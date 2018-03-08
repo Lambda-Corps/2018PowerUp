@@ -1,32 +1,36 @@
-package org.usfirst.frc.team1895.robot.commands.arm;
+package org.usfirst.frc.team1895.robot.commands.lowerIntake;
 
 import org.usfirst.frc.team1895.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
  */
-public class RotateWrist extends Command {
+public class RaiseLowerIntake extends Command {
 	
 	int counter;
 	boolean done;
 
-    public RotateWrist() {
+    public RaiseLowerIntake() {
         // Use requires() here to declare subsystem dependencies
-        requires(Robot.arm);
+        requires(Robot.lowerIntake);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	counter = 0;
+	    	counter = 0;
+	    	done = false;
+	    	Robot.lowerIntake.extendLowerIntake();
+	    	Robot.lowerIntake.raiseLowerIntake();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	//Robot.arm.driveArmWrist(SmartDashboard.getNumber("Claw Speed", 0.2));
-    	done = true;
+	    	if(counter>=30) {
+	    		done = true;
+	    	}
+	    	counter++;
     }
 
     // Make this return true when this Command no longer needs to run execute()

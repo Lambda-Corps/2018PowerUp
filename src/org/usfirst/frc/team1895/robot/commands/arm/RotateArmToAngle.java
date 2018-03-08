@@ -1,17 +1,17 @@
 package org.usfirst.frc.team1895.robot.commands.arm;
 
 import org.usfirst.frc.team1895.robot.Robot;
-import org.usfirst.frc.team1895.robot.oi.F310;
-
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  * USES ENCODERS 
  */
 public class RotateArmToAngle extends Command {
-	private double angle;
+	private int angle;
 	
-    public RotateArmToAngle(double angle) {
+	boolean done;
+	
+    public RotateArmToAngle(int angle) {
         // Use requires() here to declare subsystem dependencies
     	this.angle = angle;
         requires(Robot.arm);
@@ -19,17 +19,18 @@ public class RotateArmToAngle extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	done = false;
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	Robot.arm.setPosition(angle);
+    	done = Robot.arm.setPosition(angle);
     	
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return (Robot.arm.setPosition(angle)||Robot.arm.getArmEncoder()>=14000);
+        return (done || Robot.arm.getArmEncoder()>=14000 || Robot.arm.getArmEncoder()<=0);
     }
 
     // Called once after isFinished returns true

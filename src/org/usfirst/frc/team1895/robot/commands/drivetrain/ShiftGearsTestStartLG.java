@@ -31,7 +31,7 @@ public class ShiftGearsTestStartLG extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	System.out.println("Start in low gear successful");
+//    	System.out.println("Start in low gear successful");
     }
 
     // Called when another command which requires one or more of the same

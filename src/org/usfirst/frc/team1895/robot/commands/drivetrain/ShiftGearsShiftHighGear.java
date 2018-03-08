@@ -31,7 +31,7 @@ public class ShiftGearsShiftHighGear extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
-    	System.out.println("Has been in high gear for a few seconds. High gear command end");
+//    	System.out.println("Has been in high gear for a few seconds. High gear command end");
     }
 
     // Called when another command which requires one or more of the same

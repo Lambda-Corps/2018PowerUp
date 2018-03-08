@@ -22,7 +22,7 @@ public class Climber extends Subsystem {
     
     public Climber() {
     	climber_motor = new TalonSRX(RobotMap.CLIMBER_MOTOR_PORT);
-    	System.out.println("Init of climber");
+//    	System.out.println("Init of climber");
     }
     
     public void manualClimbing(double velocity) {

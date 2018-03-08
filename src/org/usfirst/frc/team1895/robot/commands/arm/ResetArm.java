@@ -1,43 +1,19 @@
 package org.usfirst.frc.team1895.robot.commands.arm;
 
-import org.usfirst.frc.team1895.robot.Robot;
+import org.usfirst.frc.team1895.robot.subsystems.Arm;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.CommandGroup;
 
 /**
  *
  */
-public class ResetArm extends Command {
+public class ResetArm extends CommandGroup {
 
     public ResetArm() {
-        // Use requires() here to declare subsystem dependencies
-        requires(Robot.arm);
-    }
 
-    // Called just before this Command runs the first time
-    protected void initialize() {
-    }
-
-    // Called repeatedly when this Command is scheduled to run
-    protected void execute() {
+    	addSequential(new RetractTelescopingPart());
+    	addSequential(new RotateArmToPosition(Arm.ARM_LOWEST_POSITION));
+    	addSequential(new ExtendTelescopingPart());
     	
-    	/* Arm retract in
-    	 * Rotate arm, lower back to start config
-    	 */
-    	
-    }
-
-    // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-        return false;
-    }
-
-    // Called once after isFinished returns true
-    protected void end() {
-    }
-
-    // Called when another command which requires one or more of the same
-    // subsystems is scheduled to run
-    protected void interrupted() {
     }
 }
