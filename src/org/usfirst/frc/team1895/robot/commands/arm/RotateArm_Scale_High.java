@@ -17,6 +17,8 @@ public class RotateArm_Scale_High extends CommandGroup {
     	addSequential(new RaiseLowerIntake());
     	addSequential(new RotateArmToPosition(Arm.ARM_SCALE_HIGH_POSITION));  
 //    	addSequential(new ExtendTelescopingPart()); //possibly?
+    	addSequential(new DeployCube());
+    	addSequential(new RetractTelescopingPart());
     	
     }
 }

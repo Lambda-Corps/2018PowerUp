@@ -16,5 +16,8 @@ public class RotateArm_SwitchPos extends CommandGroup {
     	addSequential(new ExtendLowerIntake());
     	addSequential(new RaiseLowerIntake());
     	addSequential(new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)); 
+    	addSequential(new DeployCube());
+    	addSequential(new RetractTelescopingPart());
+    	
     }
 }

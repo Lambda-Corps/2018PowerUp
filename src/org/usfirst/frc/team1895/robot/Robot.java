@@ -10,9 +10,11 @@ import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationD;
 import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationE;
 import org.usfirst.frc.team1895.robot.commands.autonomous.ShiftGearsTestCommand;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.CancelDrivetrain;
-import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithoutPID;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.ExtendLowerIntake;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.RetractLowerIntake;
+import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithPID;
+import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithoutPID;
+import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveToObstacle;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestEmptyCommand;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestRotateArm;
 import org.usfirst.frc.team1895.robot.oi.F310;
@@ -206,35 +208,36 @@ public class Robot extends TimedRobot {
 		Robot.drivetrain.setBrakeMode();
 		Robot.drivetrain.shiftToLowGear();
 		
-//    	SmartDashboard.putNumber("Dist per pulse", 0.02475);
+    	SmartDashboard.putNumber("Dist per pulse", 0.02475);
+
+		// Testing Turning
+//		SmartDashboard.putNumber("Turn: P value: ", .025);
+//		SmartDashboard.putNumber("Turn: I value: ", 0.0);
+//		SmartDashboard.putNumber("Turn: D value: ", -.005);
+//		SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
+//		SmartDashboard.putNumber("Test NP Turn Speed: ", .4);
+
+//		SmartDashboard.putData("Test Turn With PID", new TestTurnWithPID());
+//		SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
+
+		// Distance Related Testing
+//		SmartDashboard.putNumber("Distance: P value: ", .1);
+//		SmartDashboard.putNumber("Distance: I value: ", 0.0);
+//		SmartDashboard.putNumber("Distance: D value: ", -.01);
+		SmartDashboard.putNumber("Test Drive Distance:", 30.0);
+		SmartDashboard.putNumber("Test Drive Speed:", .5);
+//		SmartDashboard.putNumber("Test Drive Tank Scalar:", .94); // in case of drifting
+//		SmartDashboard.putNumber("Test Drive Buffer:", 10);
+		SmartDashboard.putNumber("Test DTO Distance:", 50.0);
 //
-////		// Testing Turning
-////		SmartDashboard.putNumber("Turn: P value: ", .025);
-////		SmartDashboard.putNumber("Turn: I value: ", 0.0);
-////		SmartDashboard.putNumber("Turn: D value: ", -.005);
-////		SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
-////		SmartDashboard.putNumber("Test NP Turn Speed: ", .4);
-////
-////		SmartDashboard.putData("Test Turn With PID", new TestTurnWithPID());
-////		SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
-////
-////		// Distance Related Testing
-////		SmartDashboard.putNumber("Distance: P value: ", .1);
-////		SmartDashboard.putNumber("Distance: I value: ", 0.0);
-////		SmartDashboard.putNumber("Distance: D value: ", -.01);
-//		SmartDashboard.putNumber("Test Drive Distance:", 30.0);
-//		SmartDashboard.putNumber("Test Drive Speed:", .5);
-////		SmartDashboard.putNumber("Test Drive Tank Scalar:", .94); // in case of drifting
-////		SmartDashboard.putNumber("Test Drive Buffer:", 10);
-////
-////		SmartDashboard.putData("Test DriveStraight With PID", new TestDriveStraightWithPID());
-////		SmartDashboard.putData("Test DriveStraight No PID", new TestDriveStraightWithoutPID());
-////		SmartDashboard.putData("Test Drive With RangeFinder", new TestDriveToObstacle());
-////		SmartDashboard.putData("Test Drive Parallel", new TestDriveParallel());
-////
-////		SmartDashboard.putBoolean("Test boolean onLeft Value", false);
-////
-////		// Arm/lower intake commands
+		SmartDashboard.putData("Test DriveStraight With PID", new TestDriveStraightWithPID());
+		SmartDashboard.putData("Test DriveStraight No PID", new TestDriveStraightWithoutPID());
+		SmartDashboard.putData("Test Drive With RangeFinder", new TestDriveToObstacle());
+//		SmartDashboard.putData("Test Drive Parallel", new TestDriveParallel());
+
+//		SmartDashboard.putBoolean("Test boolean onLeft Value", false);
+
+		// Arm/lower intake commands
 		SmartDashboard.putNumber("Test RotateArm Position", 1150);
 		SmartDashboard.putData("Test RotateArm", new TestRotateArm());
 		SmartDashboard.putData("Test DriveWrist to max", new DriveWristToMax());

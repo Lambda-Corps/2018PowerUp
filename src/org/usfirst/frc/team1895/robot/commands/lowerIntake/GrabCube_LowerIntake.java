@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.command.Command;
  *
  */
 public class GrabCube_LowerIntake extends Command {
-	
+
 	double counter;
 	boolean done;
 
@@ -30,14 +30,14 @@ public class GrabCube_LowerIntake extends Command {
 	protected void execute() {
 		Robot.lowerIntake.grabCube();
 		Robot.arm.grabCube();
-		
-		if(Robot.arm.cubeIsClose()) {
+
+		if (Robot.arm.cubeIsClose()) {
 			Robot.lowerIntake.retractLowerIntake();
-			//hasCube = true;
+			// hasCube = true;
 		}
-		
+
 		hasCube = Robot.arm.cubeIsIn();
-		if( hasCube ) {
+		if (hasCube) {
 			// Stop the motors if we have a cube
 			Robot.lowerIntake.setLowerIntakeMotors(0);
 			Robot.arm.stopClaw();
