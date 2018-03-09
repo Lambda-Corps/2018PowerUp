@@ -1,15 +1,15 @@
 package org.usfirst.frc.team1895.robot;
 
+import java.util.ArrayList;
+
+import org.usfirst.frc.team1895.robot.commands.arm.DeployCube;
 import org.usfirst.frc.team1895.robot.commands.arm.DriveWristToMax;
 import org.usfirst.frc.team1895.robot.commands.arm.ExtendTelescopingPart;
 import org.usfirst.frc.team1895.robot.commands.arm.RetractTelescopingPart;
-import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationA;
-import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationB;
-import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationC;
-import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationD;
-import org.usfirst.frc.team1895.robot.commands.autonomous.DestinationE;
-import org.usfirst.frc.team1895.robot.commands.autonomous.ShiftGearsTestCommand;
+import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToPosition;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.CancelDrivetrain;
+import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithoutPID;
+import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.ExtendLowerIntake;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.RetractLowerIntake;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithPID;
@@ -52,11 +52,17 @@ public class Robot extends TimedRobot {
 	public static Arm arm;
 
 	// choosers
-	SendableChooser<String> chooser = new SendableChooser<>();
 	SendableChooser<Integer> pos_chooser = new SendableChooser<>();
+	SendableChooser<String> priority_chooser = new SendableChooser<>();
+	SendableChooser<String> near_far = new SendableChooser<>();
+	SendableChooser<String> cross_field = new SendableChooser<>();
+	SendableChooser<String> switch_scale = new SendableChooser<>();
 
 	public static int startPos;
-	String decision;
+	public static String priority;
+	public static String nearfar;
+	public static String crossfield;
+	public static String switchscale;
 
 	public static int closeSwitchNum;
 	public static int scaleNum;
@@ -71,9 +77,9 @@ public class Robot extends TimedRobot {
 		drivetrain = new Drivetrain();
 		arm = new Arm();
 		lowerIntake = new LowerIntake();
-		//setPeriod(0.015); // update more frequently - every 25ms
+		// setPeriod(0.015); // update more frequently - every 25ms
 		camera = new FilteredCamera();
-		 Robot.camera.startVisionThread();
+		Robot.camera.startVisionThread();
 
 		// choosing start position
 		SmartDashboard.putData("Start Position", pos_chooser);
@@ -82,28 +88,33 @@ public class Robot extends TimedRobot {
 		pos_chooser.addObject("Position Two", 2);
 		pos_chooser.addObject("Position Three", 3);
 
-		// choosing destination
-		// TODO -- make a new default command that just drives forward to cross the
-		// autoline
-		chooser.addDefault("Destination A", "A");
-		chooser.addObject("Destination B", "B");
-		chooser.addObject("Destination C", "C");
-		chooser.addObject("Destination D", "D");
-		chooser.addObject("Destination E", "E");
-		chooser.addObject("Gear Shifting Test Suite", "T");
-		SmartDashboard.putData("Destination", chooser);
-		
+		// choosing initial priority
+		SmartDashboard.putData("Priority", priority_chooser);
+		priority_chooser.addDefault("Switch", "Switch");
+		priority_chooser.addObject("Scale", "Scale");
+		priority_chooser.addObject("Whichever", "Whichever");
+
+		// choosing avoid far side or not
+		SmartDashboard.putData("Score near side or far side", near_far);
+		near_far.addDefault("Near", "Near");
+		near_far.addObject("Far", "Far");
+
+		// choosing avoid far side or not
+		SmartDashboard.putData("Cross Field or not", cross_field);
+		cross_field.addDefault("Cross", "Cross");
+		cross_field.addObject("Stay", "Stay");
+
+		// choosing avoid far side or not
+		SmartDashboard.putData("Switch or Scale(Once across the field)", switch_scale);
+		switch_scale.addDefault("Switch", "Switch");
+		switch_scale.addObject("Scale", "Scale");
+
 		// toggle conditional wait at beginning
 		SmartDashboard.putNumber("AUTO WAIT TIME", 0);
-		
-		//SmartDashboard.putNumber("D Dist", 200);
 
-		
 		climber = new Climber();
 		oi = new OI();
 
-		// System.out.println("Adding command to Dashboard");
-		// SmartDashboard.putData("Arm Command", new RotateArmUp());
 	}
 
 	/**
@@ -140,20 +151,18 @@ public class Robot extends TimedRobot {
 	 */
 	@Override
 	public void autonomousInit() {
+
 		Scheduler.getInstance().removeAll();
 
 		Robot.drivetrain.setBrakeMode();
 		Robot.drivetrain.shiftToLowGear();
-		
 
 		// access FMS data
 		String colorString;
 		// System.out.println("auto init");
 		do {
 			colorString = DriverStation.getInstance().getGameSpecificMessage();
-			// System.out.println("string: " + colorString);
 		} while (colorString.length() == 0);
-		// System.out.println("finished do while");
 		if (colorString.charAt(0) == 'L') { // if switch closest to us has our color on the left, we are 1
 			closeSwitchNum = 1;
 		} else {
@@ -170,7 +179,8 @@ public class Robot extends TimedRobot {
 			farSwitchNum = 2;
 		}
 		autonomousCommand = determineAuto();
-		//autonomousCommand = new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 140);
+		// autonomousCommand = new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED,
+		// 140);
 
 		// schedule the autonomous command (example)
 		if (autonomousCommand != null)
@@ -200,85 +210,93 @@ public class Robot extends TimedRobot {
 		printCount = 0;
 		if (autonomousCommand != null)
 			autonomousCommand.cancel();
-		
+
 		// Remove any of the previously scheduled commands
 		Scheduler.getInstance().removeAll();
 
 		Robot.drivetrain.resetEncoders();
 		Robot.drivetrain.setBrakeMode();
 		Robot.drivetrain.shiftToLowGear();
-		
-    	SmartDashboard.putNumber("Dist per pulse", 0.02475);
+
+		SmartDashboard.putNumber("Dist per pulse", 0.02475);
 
 		// Testing Turning
-//		SmartDashboard.putNumber("Turn: P value: ", .025);
-//		SmartDashboard.putNumber("Turn: I value: ", 0.0);
-//		SmartDashboard.putNumber("Turn: D value: ", -.005);
-//		SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
-//		SmartDashboard.putNumber("Test NP Turn Speed: ", .4);
+		// SmartDashboard.putNumber("Turn: P value: ", .025);
+		// SmartDashboard.putNumber("Turn: I value: ", 0.0);
+		// SmartDashboard.putNumber("Turn: D value: ", -.005);
+		// SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
+		// SmartDashboard.putNumber("Test NP Turn Speed: ", .4);
 
-//		SmartDashboard.putData("Test Turn With PID", new TestTurnWithPID());
-//		SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
+		// SmartDashboard.putData("Test Turn With PID", new TestTurnWithPID());
+		// SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
 
 		// Distance Related Testing
-//		SmartDashboard.putNumber("Distance: P value: ", .1);
-//		SmartDashboard.putNumber("Distance: I value: ", 0.0);
-//		SmartDashboard.putNumber("Distance: D value: ", -.01);
+		// SmartDashboard.putNumber("Distance: P value: ", .1);
+		// SmartDashboard.putNumber("Distance: I value: ", 0.0);
+		// SmartDashboard.putNumber("Distance: D value: ", -.01);
 		SmartDashboard.putNumber("Test Drive Distance:", 30.0);
 		SmartDashboard.putNumber("Test Drive Speed:", .5);
-//		SmartDashboard.putNumber("Test Drive Tank Scalar:", .94); // in case of drifting
-//		SmartDashboard.putNumber("Test Drive Buffer:", 10);
+		// SmartDashboard.putNumber("Test Drive Tank Scalar:", .94); // in case of
+		// drifting
+		// SmartDashboard.putNumber("Test Drive Buffer:", 10);
 		SmartDashboard.putNumber("Test DTO Distance:", 50.0);
-//
+		//
 		SmartDashboard.putData("Test DriveStraight With PID", new TestDriveStraightWithPID());
 		SmartDashboard.putData("Test DriveStraight No PID", new TestDriveStraightWithoutPID());
 		SmartDashboard.putData("Test Drive With RangeFinder", new TestDriveToObstacle());
-//		SmartDashboard.putData("Test Drive Parallel", new TestDriveParallel());
+		// SmartDashboard.putData("Test Drive Parallel", new TestDriveParallel());
 
-//		SmartDashboard.putBoolean("Test boolean onLeft Value", false);
+		// SmartDashboard.putBoolean("Test boolean onLeft Value", false);
 
 		// Arm/lower intake commands
 		SmartDashboard.putNumber("Test RotateArm Position", 1150);
 		SmartDashboard.putData("Test RotateArm", new TestRotateArm());
 		SmartDashboard.putData("Test DriveWrist to max", new DriveWristToMax());
-////
-////		SmartDashboard.putNumber("Claw Speed", 0);
-////		SmartDashboard.putNumber("Arm Speed", 0.2);
-////
-//		SmartDashboard.putData("Test CubeIn", new CubeIn());
-////
-////		SmartDashboard.putData("Test ResetArm", new ResetArm());
-////
-////		SmartDashboard.putData("Test Deploy Cube and Retract", new DeployCubeAndRetract());
+		////
+		//// SmartDashboard.putNumber("Claw Speed", 0);
+		//// SmartDashboard.putNumber("Arm Speed", 0.2);
+		////
+		// SmartDashboard.putData("Test CubeIn", new CubeIn());
+		////
+		//// SmartDashboard.putData("Test ResetArm", new ResetArm());
+		////
+		//// SmartDashboard.putData("Test Deploy Cube and Retract", new
+		//// DeployCubeAndRetract());
 		SmartDashboard.putData("Test Extend Lower Intake", new ExtendLowerIntake());
 		SmartDashboard.putData("Test Retract Lower Intake", new RetractLowerIntake());
-		//SmartDashboard.putData("Test Raise Lower Intake", new RaiseLowerIntake());
-		//SmartDashboard.putData("Test Lower Lower Intake", new LowerLowerIntake());
-////
-////		SmartDashboard.putNumber("Lower Intake Speed", 0.4);
-////
-////		SmartDashboard.putData("Test Grab Cube Lower Intake", new GrabCube_LowerIntake());
+		// SmartDashboard.putData("Test Raise Lower Intake", new RaiseLowerIntake());
+		// SmartDashboard.putData("Test Lower Lower Intake", new LowerLowerIntake());
+		////
+		//// SmartDashboard.putNumber("Lower Intake Speed", 0.4);
+		////
+		//// SmartDashboard.putData("Test Grab Cube Lower Intake", new
+		//// GrabCube_LowerIntake());
 		SmartDashboard.putData("Test Extend Telescoping Part", new ExtendTelescopingPart());
 		SmartDashboard.putData("Test Retract Telescoping Part", new RetractTelescopingPart());
-//		SmartDashboard.putData("Test RotateArm_Scale_High", new RotateArm_Scale_High());
-////		SmartDashboard.putData("Test RotateArm_Scale_Low", new RotateArm_Scale_Low());
-////		SmartDashboard.putData("Test RotateArm_Scale_Mid", new RotateArm_Scale_Mid());
-//		SmartDashboard.putData("Test RotateArm_SwitchPos", new RotateArm_SwitchPos());
-////
-//		SmartDashboard.putData("TestDriveStraightWithoutPID 50 in", new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 50));
-//		
-////		SmartDashboard.putNumber("Cube Close Value", 1);
-////		
-////		SmartDashboard.putData("Rotate Arm to Zero", new RotateArmToZero());
-////		
-////		SmartDashboard.putData("Rotate Wrist", new RotateWrist());
-//		
-//		SmartDashboard.putData("Drive To Obstacle", new TestDriveToObstacle());
-////		SmartDashboard.putData("Drive Parallel", new TestDriveParallel());
-//		
-//		SmartDashboard.putNumber("fr RF scalar", 40);
-//		
-//		SmartDashboard.putData("Climb Sequence", new ClimbSequence());
+		// SmartDashboard.putData("Test RotateArm_Scale_High", new
+		// RotateArm_Scale_High());
+		//// SmartDashboard.putData("Test RotateArm_Scale_Low", new
+		// RotateArm_Scale_Low());
+		//// SmartDashboard.putData("Test RotateArm_Scale_Mid", new
+		// RotateArm_Scale_Mid());
+		// SmartDashboard.putData("Test RotateArm_SwitchPos", new
+		// RotateArm_SwitchPos());
+		////
+		// SmartDashboard.putData("TestDriveStraightWithoutPID 50 in", new
+		// DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 50));
+		//
+		//// SmartDashboard.putNumber("Cube Close Value", 1);
+		////
+		//// SmartDashboard.putData("Rotate Arm to Zero", new RotateArmToZero());
+		////
+		//// SmartDashboard.putData("Rotate Wrist", new RotateWrist());
+		//
+		// SmartDashboard.putData("Drive To Obstacle", new TestDriveToObstacle());
+		//// SmartDashboard.putData("Drive Parallel", new TestDriveParallel());
+		//
+		// SmartDashboard.putNumber("fr RF scalar", 40);
+		//
+		// SmartDashboard.putData("Climb Sequence", new ClimbSequence());
 
 	}
 
@@ -289,7 +307,7 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		//SmartDashboard.putNumber("Short Range Finder", Robot.arm.getInRangeFinder());
+		// SmartDashboard.putNumber("Short Range Finder", Robot.arm.getInRangeFinder());
 		// SmartDashboard.putNumber("Accel Value X", Robot.arm.getXValue());
 		// SmartDashboard.putNumber("Accel Value Y", Robot.arm.getYValue());
 		// SmartDashboard.putNumber("Accel Value Z", Robot.arm.getZValue());
@@ -317,12 +335,11 @@ public class Robot extends TimedRobot {
 			turnCmd.start();
 		}
 
-//		SmartDashboard.putNumber("RM Current: ", Robot.drivetrain.getRMCurrent());
-//		SmartDashboard.putNumber("LM Current: ", Robot.drivetrain.getLMCurrent());
-		
-//		SmartDashboard.putNumber("intake RF", Robot.arm.getIntakeRF());
-		
-		
+		// SmartDashboard.putNumber("RM Current: ", Robot.drivetrain.getRMCurrent());
+		// SmartDashboard.putNumber("LM Current: ", Robot.drivetrain.getLMCurrent());
+
+		// SmartDashboard.putNumber("intake RF", Robot.arm.getIntakeRF());
+
 		SmartDashboard.putNumber("encoder", Robot.arm.getArmEncoder());
 	}
 
@@ -334,9 +351,9 @@ public class Robot extends TimedRobot {
 		Scheduler.getInstance().run();
 		double value = Robot.oi.gamepad2.getAxis(F310.LY);
 		Robot.arm.testDriveArm(value);
-		
+
 		SmartDashboard.putNumber("in rf", Robot.arm.getIntakeRF());
-		
+
 	}
 
 	// This function will take in the our starting position from the smart
@@ -344,22 +361,49 @@ public class Robot extends TimedRobot {
 	// and use the desired destination to figure out which command sequence to run.
 	public Command determineAuto() {
 		startPos = pos_chooser.getSelected().intValue();
-		decision = chooser.getSelected();
+		priority = priority_chooser.getSelected();
+		nearfar = near_far.getSelected();
+		crossfield = cross_field.getSelected();
+		switchscale = switch_scale.getSelected();
 
-		if (decision.equals("A")) {
-			return new DestinationA();
-		} else if (decision.equals("B")) {
-			return new DestinationB();
-		} else if (decision.equals("C")) {
-			return new DestinationC();
-		} else if (decision.equals("D")) {
-			return new DestinationD();
-		} else if (decision.equals("E")) {
-			return new DestinationE();
-		} else if (decision.equals("T")) {
-			return new ShiftGearsTestCommand();
-		} else {
-			return new TestEmptyCommand();
+		ArrayList<Command> commandList = new ArrayList<Command>();
+		switch (startPos) {
+		case 1:
+			commandList.add(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 150));
+			if (closeSwitchNum == 1 && priority == "Switch") {
+				commandList.add(new TurnWithoutPID(0.7, 90));
+				commandList.add(new RotateArmToPosition(Arm.ARM_SWITCH_POSITION));
+				commandList.add(new DriveStraightWithoutPID(0.7, 20));
+				// TODO insert the rangefinder to avoid penalty here
+				commandList.add(new DeployCube());
+			} else if (scaleNum == 1 && priority == "Scale" && nearfar == "Far") {
+				
+			}
+			break;
+
+		case 2:
+
+			break;
+
+		case 3:
+
+			break;
 		}
+
+		// if (decision.equals("A")) {
+		// return new DestinationA();
+		// } else if (decision.equals("B")) {
+		// return new DestinationB();
+		// } else if (decision.equals("C")) {
+		// return new DestinationC();
+		// } else if (decision.equals("D")) {
+		// return new DestinationD();
+		// } else if (decision.equals("E")) {
+		// return new DestinationE();
+		// } else if (decision.equals("T")) {
+		// return new ShiftGearsTestCommand();
+		// } else {
+		return new TestEmptyCommand();
+		// }
 	}
 }
