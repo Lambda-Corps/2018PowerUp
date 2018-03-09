@@ -95,7 +95,7 @@ public class Robot extends TimedRobot {
 		priority_chooser.addObject("Whichever", "Whichever");
 
 		// choosing avoid far side or not
-		SmartDashboard.putData("Score near side or far side", near_far);
+		SmartDashboard.putData("Score side (only pick near if we should avoid far)", near_far);
 		near_far.addDefault("Near", "Near");
 		near_far.addObject("Far", "Far");
 
@@ -371,13 +371,20 @@ public class Robot extends TimedRobot {
 		case 1:
 			commandList.add(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 150));
 			if (closeSwitchNum == 1 && priority == "Switch") {
-				commandList.add(new TurnWithoutPID(0.7, 90));
+				commandList.add(new TurnWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 90));
 				commandList.add(new RotateArmToPosition(Arm.ARM_SWITCH_POSITION));
-				commandList.add(new DriveStraightWithoutPID(0.7, 20));
+				commandList.add(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 20));
 				// TODO insert the rangefinder to avoid penalty here
 				commandList.add(new DeployCube());
 			} else if (scaleNum == 1 && priority == "Scale" && nearfar == "Far") {
-				
+				commandList.add(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 100));
+				commandList.add(new RotateArmToPosition(Arm.ARM_SCALE_HIGH_POSITION));
+				commandList.add(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 20));
+				// TODO insert the rangefinder to avoid penalty here
+				commandList.add(new DeployCube());
+			} else if (closeSwitchNum == 2 && priority == "Switch" && nearfar == "Far") {
+				commandList.add(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 130));
+				//TODO: finish this case
 			}
 			break;
 
