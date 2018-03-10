@@ -7,6 +7,8 @@ import org.usfirst.frc.team1895.robot.commands.arm.DriveWristToMax;
 import org.usfirst.frc.team1895.robot.commands.arm.ExtendTelescopingPart;
 import org.usfirst.frc.team1895.robot.commands.arm.RetractTelescopingPart;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToPosition;
+import org.usfirst.frc.team1895.robot.commands.autonomous.AutoCommandBuilder;
+import org.usfirst.frc.team1895.robot.commands.autonomous.CommandHolder;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.CancelDrivetrain;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithoutPID;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
@@ -27,6 +29,7 @@ import org.usfirst.frc.team1895.robot.subsystems.LowerIntake;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.PrintCommand;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -40,8 +43,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 @SuppressWarnings("unused")
 public class Robot extends TimedRobot {
-
-	public static Drivetrain drivetrain;
+	public static final int SWITCH_LEFT = 0;
+	public static final int SWITCH_RIGHT = 1;
+	public static final int SCALE_RIGHT =1;
+	public static final int SCALE_LEFT = 0;
+	
+			
+	public static Drivetrain drivetrain; 
 	public static OI oi;
 	public static Climber climber;
 	public static FilteredCamera camera;
@@ -64,9 +72,9 @@ public class Robot extends TimedRobot {
 	public static String crossfield;
 	public static String switchscale;
 
-	public static int closeSwitchNum;
-	public static int scaleNum;
-	public static int farSwitchNum;
+	public static int ourSwitchSide;
+	public static int ourScaleSide;
+	public static int theirSwitchSide;
 
 	/**
 	 * This function is run when the robot is first started up and should be used
@@ -158,25 +166,29 @@ public class Robot extends TimedRobot {
 		Robot.drivetrain.shiftToLowGear();
 
 		// access FMS data
+		// Game message comes in the form of three letters representing ourSwitch, Scale, theirSwitch.
+		// The message is looking at the field from the alliance driver's perspective.
+		// For example, the game message "LLL" would represent our color alliance side chosen for all 
+		// three to be our driver's left.
 		String colorString;
 		// System.out.println("auto init");
 		do {
 			colorString = DriverStation.getInstance().getGameSpecificMessage();
 		} while (colorString.length() == 0);
 		if (colorString.charAt(0) == 'L') { // if switch closest to us has our color on the left, we are 1
-			closeSwitchNum = 1;
+			ourSwitchSide = SWITCH_LEFT;
 		} else {
-			closeSwitchNum = 2;
+			ourSwitchSide = SWITCH_RIGHT;
 		}
 		if (colorString.charAt(1) == 'L') {
-			scaleNum = 1;
+			ourScaleSide = SCALE_LEFT;
 		} else {
-			scaleNum = 2;
+			ourScaleSide = SCALE_RIGHT;
 		}
 		if (colorString.charAt(2) == 'L') { // if switch farthest from us has our color on the left, we are 1
-			farSwitchNum = 1;
+			theirSwitchSide = SWITCH_LEFT;
 		} else {
-			farSwitchNum = 2;
+			theirSwitchSide = SWITCH_RIGHT;
 		}
 		autonomousCommand = determineAuto();
 		// autonomousCommand = new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED,
@@ -366,29 +378,46 @@ public class Robot extends TimedRobot {
 		crossfield = cross_field.getSelected();
 		switchscale = switch_scale.getSelected();
 
-		ArrayList<Command> commandList = new ArrayList<Command>();
+		ArrayList<CommandHolder> commandList = new ArrayList<CommandHolder>();
 		switch (startPos) {
 		case 1:
-			commandList.add(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 150));
-			if (closeSwitchNum == 1 && priority == "Switch") {
-				commandList.add(new TurnWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 90));
-				commandList.add(new RotateArmToPosition(Arm.ARM_SWITCH_POSITION));
-				commandList.add(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 20));
-				// TODO insert the rangefinder to avoid penalty here
-				commandList.add(new DeployCube());
-			} else if (scaleNum == 1 && priority == "Scale" && nearfar == "Far") {
-				commandList.add(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 100));
-				commandList.add(new RotateArmToPosition(Arm.ARM_SCALE_HIGH_POSITION));
-				commandList.add(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 20));
-				// TODO insert the rangefinder to avoid penalty here
-				commandList.add(new DeployCube());
-			} else if (closeSwitchNum == 2 && priority == "Switch" && nearfar == "Far") {
-				commandList.add(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 130));
-				//TODO: finish this case
-			}
+//			commandList.add(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 150));
+//			if (closeSwitchNum == 1 && priority == "Switch") {
+//				commandList.add(new TurnWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 90));
+//				commandList.add(new RotateArmToPosition(Arm.ARM_SWITCH_POSITION));
+//				commandList.add(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 20));
+//				// TODO insert the rangefinder to avoid penalty here
+//				commandList.add(new DeployCube());
+//			} else if (scaleNum == 1 && priority == "Scale" && nearfar == "Far") {
+//				commandList.add(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 100));
+//				commandList.add(new RotateArmToPosition(Arm.ARM_SCALE_HIGH_POSITION));
+//				commandList.add(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 20));
+//				// TODO insert the rangefinder to avoid penalty here
+//				commandList.add(new DeployCube());
+//			} else if (closeSwitchNum == 2 && priority == "Switch" && nearfar == "Far") {
+//				commandList.add(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 130));
+//				//TODO: finish this case
+//			}
 			break;
 
 		case 2:
+			if( ourSwitchSide == SWITCH_RIGHT) {
+				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("Raise arm to switch")));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,new PrintCommand("Drive to RangeFinder Distance")));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("DeployCube")));
+
+			}
+			else {
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("DriveStraight for XX Inches")));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,new PrintCommand("Turn Left XX Degrees")));
+				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("Raise Arm to Switch")));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("DriveStraight for XX Inches")));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,new PrintCommand("Turn Right XX Degrees")));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,new PrintCommand("Drive to RangeFinder Distance")));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("DeployCube")));
+			}
+			
+			
 
 			break;
 
@@ -403,14 +432,16 @@ public class Robot extends TimedRobot {
 		// return new DestinationB();
 		// } else if (decision.equals("C")) {
 		// return new DestinationC();
-		// } else if (decision.equals("D")) {
+		// } els if (decision.equals("D")) {
 		// return new DestinationD();
 		// } else if (decision.equals("E")) {
 		// return new DestinationE();
 		// } else if (decision.equals("T")) {
 		// return new ShiftGearsTestCommand();
 		// } else {
-		return new TestEmptyCommand();
+		
+		Command autoCommand = new AutoCommandBuilder (commandList);
+		return autoCommand;
 		// }
 	}
 }
