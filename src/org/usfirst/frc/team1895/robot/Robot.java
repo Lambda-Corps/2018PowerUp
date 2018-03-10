@@ -19,6 +19,7 @@ import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWit
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveToObstacle;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestEmptyCommand;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestRotateArm;
+import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithoutPID;
 import org.usfirst.frc.team1895.robot.oi.F310;
 import org.usfirst.frc.team1895.robot.subsystems.Arm;
 import org.usfirst.frc.team1895.robot.subsystems.Climber;
@@ -86,8 +87,8 @@ public class Robot extends TimedRobot {
 		arm = new Arm();
 		lowerIntake = new LowerIntake();
 		// setPeriod(0.015); // update more frequently - every 25ms
-		camera = new FilteredCamera();
-		Robot.camera.startVisionThread();
+//		camera = new FilteredCamera();
+//		Robot.camera.startVisionThread();
 
 		// choosing start position
 		SmartDashboard.putData("Start Position", pos_chooser);
@@ -236,24 +237,24 @@ public class Robot extends TimedRobot {
 		// SmartDashboard.putNumber("Turn: P value: ", .025);
 		// SmartDashboard.putNumber("Turn: I value: ", 0.0);
 		// SmartDashboard.putNumber("Turn: D value: ", -.005);
-		// SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
-		// SmartDashboard.putNumber("Test NP Turn Speed: ", .4);
+		 SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
+		 SmartDashboard.putNumber("Test NP Turn Speed: ", drivetrain.AUTO_TURN_SPEED);
 
 		// SmartDashboard.putData("Test Turn With PID", new TestTurnWithPID());
-		// SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
+		 SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
 
 		// Distance Related Testing
 		// SmartDashboard.putNumber("Distance: P value: ", .1);
 		// SmartDashboard.putNumber("Distance: I value: ", 0.0);
 		// SmartDashboard.putNumber("Distance: D value: ", -.01);
 		SmartDashboard.putNumber("Test Drive Distance:", 30.0);
-		SmartDashboard.putNumber("Test Drive Speed:", .5);
+		SmartDashboard.putNumber("Test Drive Speed:", drivetrain.AUTO_DRIVE_SPEED);
 		// SmartDashboard.putNumber("Test Drive Tank Scalar:", .94); // in case of
 		// drifting
 		// SmartDashboard.putNumber("Test Drive Buffer:", 10);
 		SmartDashboard.putNumber("Test DTO Distance:", 50.0);
 		//
-		SmartDashboard.putData("Test DriveStraight With PID", new TestDriveStraightWithPID());
+//		SmartDashboard.putData("Test DriveStraight With PID", new TestDriveStraightWithPID());
 		SmartDashboard.putData("Test DriveStraight No PID", new TestDriveStraightWithoutPID());
 		SmartDashboard.putData("Test Drive With RangeFinder", new TestDriveToObstacle());
 		// SmartDashboard.putData("Test Drive Parallel", new TestDriveParallel());
@@ -261,10 +262,10 @@ public class Robot extends TimedRobot {
 		// SmartDashboard.putBoolean("Test boolean onLeft Value", false);
 
 		// Arm/lower intake commands
-		SmartDashboard.putNumber("Test RotateArm Position", 1150);
-		SmartDashboard.putData("Test RotateArm", new TestRotateArm());
-		SmartDashboard.putData("Test DriveWrist to max", new DriveWristToMax());
-		////
+//		SmartDashboard.putNumber("Test RotateArm Position", 1150);
+//		SmartDashboard.putData("Test RotateArm", new TestRotateArm());
+//		SmartDashboard.putData("Test DriveWrist to max", new DriveWristToMax());
+//		////
 		//// SmartDashboard.putNumber("Claw Speed", 0);
 		//// SmartDashboard.putNumber("Arm Speed", 0.2);
 		////
@@ -274,8 +275,8 @@ public class Robot extends TimedRobot {
 		////
 		//// SmartDashboard.putData("Test Deploy Cube and Retract", new
 		//// DeployCubeAndRetract());
-		SmartDashboard.putData("Test Extend Lower Intake", new ExtendLowerIntake());
-		SmartDashboard.putData("Test Retract Lower Intake", new RetractLowerIntake());
+//		SmartDashboard.putData("Test Extend Lower Intake", new ExtendLowerIntake());
+//		SmartDashboard.putData("Test Retract Lower Intake", new RetractLowerIntake());
 		// SmartDashboard.putData("Test Raise Lower Intake", new RaiseLowerIntake());
 		// SmartDashboard.putData("Test Lower Lower Intake", new LowerLowerIntake());
 		////
@@ -283,8 +284,8 @@ public class Robot extends TimedRobot {
 		////
 		//// SmartDashboard.putData("Test Grab Cube Lower Intake", new
 		//// GrabCube_LowerIntake());
-		SmartDashboard.putData("Test Extend Telescoping Part", new ExtendTelescopingPart());
-		SmartDashboard.putData("Test Retract Telescoping Part", new RetractTelescopingPart());
+//		SmartDashboard.putData("Test Extend Telescoping Part", new ExtendTelescopingPart());
+//		SmartDashboard.putData("Test Retract Telescoping Part", new RetractTelescopingPart());
 		// SmartDashboard.putData("Test RotateArm_Scale_High", new
 		// RotateArm_Scale_High());
 		//// SmartDashboard.putData("Test RotateArm_Scale_Low", new
@@ -377,6 +378,8 @@ public class Robot extends TimedRobot {
 		nearfar = near_far.getSelected();
 		crossfield = cross_field.getSelected();
 		switchscale = switch_scale.getSelected();
+		
+		System.out.println("Determining Auto Sequence for Switch: " + ourSwitchSide);
 
 		ArrayList<CommandHolder> commandList = new ArrayList<CommandHolder>();
 		switch (startPos) {
