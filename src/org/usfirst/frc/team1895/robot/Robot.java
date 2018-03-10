@@ -239,6 +239,7 @@ public class Robot extends TimedRobot {
 		// SmartDashboard.putNumber("Turn: D value: ", -.005);
 		 SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
 		 SmartDashboard.putNumber("Test NP Turn Speed: ", drivetrain.AUTO_TURN_SPEED);
+		 SmartDashboard.putNumber("Test Turn Tolerance: ", 3);
 
 		// SmartDashboard.putData("Test Turn With PID", new TestTurnWithPID());
 		 SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
@@ -324,11 +325,11 @@ public class Robot extends TimedRobot {
 		// SmartDashboard.putNumber("Accel Value X", Robot.arm.getXValue());
 		// SmartDashboard.putNumber("Accel Value Y", Robot.arm.getYValue());
 		// SmartDashboard.putNumber("Accel Value Z", Robot.arm.getZValue());
-		SmartDashboard.putNumber("Wrist Encoder 2.0", Robot.arm.getWristEncoder());
-		SmartDashboard.putNumber("Arm potentiometer", Robot.arm.getPotentiometerVoltage());
-		SmartDashboard.putNumber("Accel x", Robot.arm.getXValue());
-		SmartDashboard.putNumber("Accel y", Robot.arm.getYValue());
-		SmartDashboard.putNumber("Accel z", Robot.arm.getZValue());
+//		SmartDashboard.putNumber("Wrist Encoder 2.0", Robot.arm.getWristEncoder());
+//		SmartDashboard.putNumber("Arm potentiometer", Robot.arm.getPotentiometerVoltage());
+//		SmartDashboard.putNumber("Accel x", Robot.arm.getXValue());
+//		SmartDashboard.putNumber("Accel y", Robot.arm.getYValue());
+//		SmartDashboard.putNumber("Accel z", Robot.arm.getZValue());
 		// System.out.println("<joy> LY " + Robot.oi.gamepad.getAxis(F310.LY) + " RX " +
 		// Robot.oi.gamepad.getAxis(F310.RX));
 		// System.out.printf("<joy> LY: %5.1f RX: %5.1f",
@@ -353,7 +354,10 @@ public class Robot extends TimedRobot {
 
 		// SmartDashboard.putNumber("intake RF", Robot.arm.getIntakeRF());
 
-		SmartDashboard.putNumber("encoder", Robot.arm.getArmEncoder());
+//		SmartDashboard.putNumber("encoder", Robot.arm.getArmEncoder());
+		SmartDashboard.putNumber("LeftEncoder", drivetrain.getLeftEncoder());
+		SmartDashboard.putNumber("RightEncoder", drivetrain.getRightEncoder());
+
 	}
 
 	/**
@@ -411,13 +415,13 @@ public class Robot extends TimedRobot {
 
 			}
 			else {
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("DriveStraight for XX Inches")));
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,new PrintCommand("Turn Left XX Degrees")));
-				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("Raise Arm to Switch")));
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("DriveStraight for XX Inches")));
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,new PrintCommand("Turn Right XX Degrees")));
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,new PrintCommand("Drive to RangeFinder Distance")));
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("DeployCube")));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 16)));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, -65)));
+//				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("Raise Arm to Switch")));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 120)));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, 65)));
+//				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,new PrintCommand("Drive to RangeFinder Distance")));
+//				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("DeployCube")));
 			}
 			
 			

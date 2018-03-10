@@ -30,7 +30,9 @@ public class TestDriveStraightWithoutPID extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     	t_goalReached = Robot.drivetrain.driveStraightSetDistance(t_speed, t_goalDis);
-    	System.out.println("speed " + t_speed + " distance " + t_goalDis); 
+    	if( t_goalReached) {
+    		Robot.drivetrain.arcadeDrive(0, 0);
+    	}
     	
     	SmartDashboard.putNumber("PID Drive L Encoder Value: ", Robot.drivetrain.getEncoderValue(Drivetrain.LEFT_MOTOR_ENCODER));
     	SmartDashboard.putNumber("PID Drive R Encoder Value: ", Robot.drivetrain.getEncoderValue(Drivetrain.RIGHT_MOTOR_ENCODER));
