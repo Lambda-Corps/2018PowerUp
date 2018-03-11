@@ -29,7 +29,7 @@ public class DestinationA extends CommandGroup {
 		addSequential(new WaitCommand(SmartDashboard.getNumber("AUTO WAIT TIME", 0)));
 
 		// retrieve FMS data to determine where scale is
-		if (Robot.closeSwitchNum == 1) { // our switch is on the left
+		if (Robot.ourSwitchSide == 1) { // our switch is on the left
 			ourLeftSwitch = true;
 		} else {
 			ourLeftSwitch = false;

@@ -26,13 +26,17 @@ public class TestTurnWithoutPID extends Command {
     protected void initialize() {
     	goalAngle = SmartDashboard.getNumber("Test Turn Angle: ", 90.0);
     	speed = SmartDashboard.getNumber("Test NP Turn Speed: ", 0.4);
+    	tolerance = SmartDashboard.getNumber("Test Turn Tolerance: ", 3);
     	Robot.drivetrain.resetAHRSGyro();
+    	System.out.println("Starting testturnnopid.");
+    	isDone = false;
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	SmartDashboard.putNumber("Test Turn Gyro Angle: ", Robot.drivetrain.getAHRSGyroAngle());
     	currentAngle = Robot.drivetrain.getAHRSGyroAngle();
+    	SmartDashboard.putNumber("Test Turn Gyro Angle: ", currentAngle);
+    	
     	System.out.println("angle: " + currentAngle);
     	if(Math.abs(goalAngle - currentAngle) < tolerance) {  //if within tolerance
     		System.out.println("Done!");
@@ -43,6 +47,8 @@ public class TestTurnWithoutPID extends Command {
     	} else if(currentAngle > goalAngle){  //If right of target angle
     		Robot.drivetrain.arcadeDrive(0, -speed);  //turn counterclockwise
     	}
+    	
+    	System.out.println("Executing testturnnopid");
     }
 
     // Make this return true when this Command no longer needs to run execute()
@@ -52,6 +58,9 @@ public class TestTurnWithoutPID extends Command {
 
     // Called once after isFinished returns true
     protected void end() {
+    	currentAngle = Robot.drivetrain.getAHRSGyroAngle();
+    	SmartDashboard.putNumber("Test Turn Gyro Angle: ", currentAngle);
+    	System.out.println("Ending testturnnopid");
     }
 
     // Called when another command which requires one or more of the same

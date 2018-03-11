@@ -807,9 +807,9 @@ public class Arm extends Subsystem {
 	}
 	
 	public void getArmCurrent() {
-		double top = bot_arm_rotation_motor.getOutputCurrent();
-		double bottom = top_arm_rotation_motor.getOutputCurrent();
-		System.out.println("ARM Currents: " + top + " " + bottom);
+//		double top = bot_arm_rotation_motor.getOutputCurrent();
+//		double bottom = top_arm_rotation_motor.getOutputCurrent();
+//		System.out.println("ARM Currents: " + top + " " + bottom);
 	}
 	
 	public boolean cubeIsIn() {

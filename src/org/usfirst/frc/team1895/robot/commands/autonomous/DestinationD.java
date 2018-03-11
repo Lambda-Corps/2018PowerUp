@@ -22,7 +22,7 @@ public class DestinationD extends CommandGroup {
 		addSequential(new PrintCommand("D"));
 		addSequential(new WaitCommand(SmartDashboard.getNumber("AUTO WAIT TIME", 0)));
 
-		if (Robot.closeSwitchNum == 1) { // our switch is on the left
+		if (Robot.ourSwitchSide == 1) { // our switch is on the left
 			ourLeftSwitch = true;
 		} else { // our switch is on the right
 			ourLeftSwitch = false;
