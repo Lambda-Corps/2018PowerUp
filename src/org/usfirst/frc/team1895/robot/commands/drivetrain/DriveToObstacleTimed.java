@@ -2,19 +2,20 @@ package org.usfirst.frc.team1895.robot.commands.drivetrain;
 
 import org.usfirst.frc.team1895.robot.Robot;
 
-import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.command.TimedCommand;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
  */
-public class DriveToObstacle extends Command {
+public class DriveToObstacleTimed extends TimedCommand {
 
 	double goalDistance;
 	boolean done;
 	double speed;
 	
-    public DriveToObstacle(double speed, double distancetoObstacle) {
+    public DriveToObstacleTimed(double speed, double distancetoObstacle, double time) {
+    	super("DriveToObstacleTimed", time);
         // Use requires() here to declare subsystem dependencies
         requires(Robot.drivetrain);
         //goalDistance = distancetoObstacle;
@@ -34,11 +35,6 @@ public class DriveToObstacle extends Command {
     	//System.out.println(Robot.drivetrain.fr_rangefinderDist());
 		SmartDashboard.putNumber("front rf", Robot.drivetrain.fr_rangefinderDist());
     	done = Robot.drivetrain.drivefr_RFDistance(goalDistance, speed);
-    }
-
-    // Make this return true when this Command no longer needs to run execute()
-    protected boolean isFinished() {
-        return done;
     }
 
     // Called once after isFinished returns true

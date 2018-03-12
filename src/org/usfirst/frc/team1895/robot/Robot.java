@@ -3,21 +3,15 @@ package org.usfirst.frc.team1895.robot;
 import java.util.ArrayList;
 
 import org.usfirst.frc.team1895.robot.commands.arm.DeployCube;
-import org.usfirst.frc.team1895.robot.commands.arm.DriveWristToMax;
-import org.usfirst.frc.team1895.robot.commands.arm.ExtendTelescopingPart;
-import org.usfirst.frc.team1895.robot.commands.arm.RetractTelescopingPart;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToPosition;
 import org.usfirst.frc.team1895.robot.commands.autonomous.AutoCommandBuilder;
 import org.usfirst.frc.team1895.robot.commands.autonomous.CommandHolder;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.CancelDrivetrain;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithoutPID;
+import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveToObstacleTimed;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
-import org.usfirst.frc.team1895.robot.commands.lowerIntake.ExtendLowerIntake;
-import org.usfirst.frc.team1895.robot.commands.lowerIntake.RetractLowerIntake;
-import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithoutPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveToObstacle;
-import org.usfirst.frc.team1895.robot.commands.testcommands.TestRotateArm;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithoutPID;
 import org.usfirst.frc.team1895.robot.oi.F310;
 import org.usfirst.frc.team1895.robot.subsystems.Arm;
@@ -397,37 +391,80 @@ public class Robot extends TimedRobot {
 		ArrayList<CommandHolder> commandList = new ArrayList<CommandHolder>();
 		switch (startPos) {
 		case 1:
-			// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-			// new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 150)));
-			if (ourSwitchSide == SWITCH_RIGHT && priority == "Switch") {
-				commandList.add(
-						new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("go for right switch")));
-				// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-				// new TurnWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 90)));
-				// commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND,
-				// new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
-				// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-				// new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 20)));
-				// // TODO insert the rangefinder to avoid penalty here
-				// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new
-				// DeployCube()));
-			} else if (ourSwitchSide == SWITCH_LEFT && priority == "Scale" && nearfar == "Far") {
-				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("go for")));
-				// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-				// new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 100)));
-				// commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND,
-				// new RotateArmToPosition(Arm.ARM_SCALE_HIGH_POSITION)));
-				// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-				// new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 20)));
-				// // TODO insert the rangefinder to avoid penalty here
-				// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new
-				// DeployCube()));
-			} else if (ourSwitchSide == SWITCH_RIGHT && priority == "Switch" && nearfar == "Far") {
-				// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-				// new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 130)));
-				// TODO: finish this case
+			// unconditional drive fwd (cross auto line and score in position B)
+			commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+					new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 150))); 
+
+			if (priority == "Scale") { // SCALE PRIORITY
+				// drive farther (to btwn switch and scale)
+				if (ourScaleSide == SCALE_LEFT) { // SCALE LEFT - GO SCORE
+					// go for 1DL
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+							new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, 15))); 
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+							new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 75))); 
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+							new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION))); 
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+							new DeployCube()));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+							new RotateArmToPosition(Arm.ARM_SCALE_LOW_POSITION))); 
+					//second cube on scale or switch
+				} else {
+					if (crossfield == "Cross") { // SCALE RIGHT, CAN CROSS - GO SCORE
+						// go for 1DR
+						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+								new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 60)));
+						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+								new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, 90))); 
+						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+								new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 180))); 
+						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+								new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, -90)));
+						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+								new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 25))); 
+						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+								new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION))); 
+						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+								new DeployCube()));
+						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+								new RotateArmToPosition(Arm.ARM_SCALE_LOW_POSITION))); 
+						//second cube on scale or switch
+					} else { // SCALE RIGHT, CAN'T CROSS
+						if (ourSwitchSide == SWITCH_LEFT) { // SWITCH LEFT - GO SCORE SWITCH
+							// go for 1CL
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+									new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 60)));
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+									new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, 90))); 
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+									new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 45)));
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+									new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, 90))); 
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+									new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED,9 , 0.5)));	
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+									new RotateArmToPosition(Arm.ARM_SWITCH_POSITION))); 
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+									new DeployCube()));
+							
+						} else { // SWITCH RIGHT - GO SCORE SWITCH (FROM MID FIELD)
+							// go to mid field boundary and score from there
+							//86in to mid field boundary (bump)
+						}
+					}
+				}
 			}
+			if (priority == "Switch") {
+				if (ourSwitchSide == SWITCH_LEFT) { // SWITCH LEFT - GO SCORE SWITCH
+					// go for 1BL
+				} else { // SWITCH RIGHT - GO SCORE SWITCH (FROM MID FIELD)
+					// go to mid field boundary and score from there
+				}
+			}
+
 			break;
+
 		case 2:
 			if (ourSwitchSide == SWITCH_RIGHT) {
 				commandList.add(
@@ -455,29 +492,72 @@ public class Robot extends TimedRobot {
 			break;
 		case 3:
 
-			if (ourSwitchSide == SWITCH_RIGHT && priority == "Switch") {
-				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("3BR")));
-				// 3BR
-			} else if (ourScaleSide == SCALE_RIGHT && priority == "Scale") {
-				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("3ER")));
-				// 3ER
-			} else if (ourSwitchSide == SWITCH_LEFT && priority == "Switch" && nearfar == "Far") {
-				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("3CL")));
-				// 3CL
-			} else if (ourScaleSide == SCALE_LEFT && priority == "Scale" && nearfar == "Far") {
-				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("3DL")));
-				// 3DL
+			// unconditional drive fwd
+			commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+					new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 150)));
 
-				// if we can't go into the far part to score - go for non-priority
-			} else if (ourSwitchSide == SWITCH_RIGHT && priority == "Scale") {
-				// 3BR
-				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("3BR2")));
-			} else if (ourScaleSide == SCALE_RIGHT && priority == "Switch") {
-				// 3ER
-				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("3ER2")));
-			} else {
-				// cross auto line
-				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("cross auto line")));
+			if (priority == "Scale") { // SCALE PRIORITY
+				// drive farther (to btwn switch and scale)
+				if (ourScaleSide == SCALE_RIGHT) { // SCALE RIGHT - GO SCORE
+					// go for 3DR
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+							new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, -15))); 
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+							new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 75))); 
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+							new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION))); 
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+							new DeployCube()));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+							new RotateArmToPosition(Arm.ARM_SCALE_LOW_POSITION))); 
+				} else {
+					if (crossfield == "Cross") { // SCALE RIGHT, CAN CROSS - GO SCORE
+						// go for 3DL
+						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+								new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 60)));
+						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+								new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, -90))); 
+						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+								new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 180))); 
+						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+								new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, 90)));
+						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+								new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 25))); 
+						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+								new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION))); 
+						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+								new DeployCube()));
+						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+								new RotateArmToPosition(Arm.ARM_SCALE_LOW_POSITION))); 
+					} else { // SCALE LEFT, CAN'T CROSS
+						if (ourSwitchSide == SWITCH_RIGHT) { // SWITCH RIGHT - GO SCORE SWITCH
+							// go for 3CR
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+									new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 60)));
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+									new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, -90))); 
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+									new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 45)));
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+									new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, -90))); 
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+									new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED,9 , 0.5)));	
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+									new RotateArmToPosition(Arm.ARM_SWITCH_POSITION))); 
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+									new DeployCube()));
+						} else { // SWITCH LEFT - GO SCORE SWITCH (FROM MID FIELD)
+							// go to mid field boundary and score from there
+						}
+					}
+				}
+			}
+			if (priority == "Switch") {
+				if (ourSwitchSide == SWITCH_RIGHT) { // SWITCH RIGHT - GO SCORE SWITCH
+					// go for 1BR
+				} else { // SWITCH LEFT - GO SCORE SWITCH (FROM MID FIELD)
+					// go to mid field boundary and score from there
+				}
 			}
 
 			break;
