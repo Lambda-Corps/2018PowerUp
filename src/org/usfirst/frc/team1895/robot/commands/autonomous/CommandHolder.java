@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj.command.Command;
 // that we build for auto as either Parallel or Sequential
 // when we build up the CommandGroup
 public class CommandHolder {
+	
 	public static final int SEQUENTIAL_COMMAND = 0;
 	public static final int PARALLEL_COMMAND = 1;
 	

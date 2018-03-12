@@ -530,7 +530,7 @@ public class Drivetrain extends Subsystem {
 
 	public double fr_rangefinderDist() {
 		double voltage = fr_rangefinder.getAverageVoltage();
-		double inches = SmartDashboard.getNumber("fr RF scalar", 40) * voltage; // from LinReg
+		double inches = 83 * voltage; // from testing on Steamworks bot
 		return inches;
 	}
 

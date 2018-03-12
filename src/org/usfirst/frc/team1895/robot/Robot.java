@@ -17,7 +17,6 @@ import org.usfirst.frc.team1895.robot.commands.lowerIntake.RetractLowerIntake;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithoutPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveToObstacle;
-import org.usfirst.frc.team1895.robot.commands.testcommands.TestEmptyCommand;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestRotateArm;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithoutPID;
 import org.usfirst.frc.team1895.robot.oi.F310;
@@ -46,11 +45,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends TimedRobot {
 	public static final int SWITCH_LEFT = 0;
 	public static final int SWITCH_RIGHT = 1;
-	public static final int SCALE_RIGHT =1;
+	public static final int SCALE_RIGHT = 1;
 	public static final int SCALE_LEFT = 0;
-	
-			
-	public static Drivetrain drivetrain; 
+
+	public static Drivetrain drivetrain;
 	public static OI oi;
 	public static Climber climber;
 	public static FilteredCamera camera;
@@ -87,8 +85,8 @@ public class Robot extends TimedRobot {
 		arm = new Arm();
 		lowerIntake = new LowerIntake();
 		// setPeriod(0.015); // update more frequently - every 25ms
-//		camera = new FilteredCamera();
-//		Robot.camera.startVisionThread();
+		// camera = new FilteredCamera();
+		// Robot.camera.startVisionThread();
 
 		// choosing start position
 		SmartDashboard.putData("Start Position", pos_chooser);
@@ -167,9 +165,11 @@ public class Robot extends TimedRobot {
 		Robot.drivetrain.shiftToLowGear();
 
 		// access FMS data
-		// Game message comes in the form of three letters representing ourSwitch, Scale, theirSwitch.
+		// Game message comes in the form of three letters representing ourSwitch,
+		// Scale, theirSwitch.
 		// The message is looking at the field from the alliance driver's perspective.
-		// For example, the game message "LLL" would represent our color alliance side chosen for all 
+		// For example, the game message "LLL" would represent our color alliance side
+		// chosen for all
 		// three to be our driver's left.
 		String colorString;
 		// System.out.println("auto init");
@@ -233,16 +233,18 @@ public class Robot extends TimedRobot {
 
 		SmartDashboard.putNumber("Dist per pulse", 0.02475);
 
+		SmartDashboard.putNumber("Rangefinder (front)", Robot.drivetrain.fr_rangefinderDist());
+
 		// Testing Turning
 		// SmartDashboard.putNumber("Turn: P value: ", .025);
 		// SmartDashboard.putNumber("Turn: I value: ", 0.0);
 		// SmartDashboard.putNumber("Turn: D value: ", -.005);
-		 SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
-		 SmartDashboard.putNumber("Test NP Turn Speed: ", drivetrain.AUTO_TURN_SPEED);
-		 SmartDashboard.putNumber("Test Turn Tolerance: ", 3);
+		SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
+		SmartDashboard.putNumber("Test NP Turn Speed: ", drivetrain.AUTO_TURN_SPEED);
+		SmartDashboard.putNumber("Test Turn Tolerance: ", 3);
 
 		// SmartDashboard.putData("Test Turn With PID", new TestTurnWithPID());
-		 SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
+		SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
 
 		// Distance Related Testing
 		// SmartDashboard.putNumber("Distance: P value: ", .1);
@@ -255,7 +257,8 @@ public class Robot extends TimedRobot {
 		// SmartDashboard.putNumber("Test Drive Buffer:", 10);
 		SmartDashboard.putNumber("Test DTO Distance:", 50.0);
 		//
-//		SmartDashboard.putData("Test DriveStraight With PID", new TestDriveStraightWithPID());
+		// SmartDashboard.putData("Test DriveStraight With PID", new
+		// TestDriveStraightWithPID());
 		SmartDashboard.putData("Test DriveStraight No PID", new TestDriveStraightWithoutPID());
 		SmartDashboard.putData("Test Drive With RangeFinder", new TestDriveToObstacle());
 		// SmartDashboard.putData("Test Drive Parallel", new TestDriveParallel());
@@ -263,10 +266,10 @@ public class Robot extends TimedRobot {
 		// SmartDashboard.putBoolean("Test boolean onLeft Value", false);
 
 		// Arm/lower intake commands
-//		SmartDashboard.putNumber("Test RotateArm Position", 1150);
-//		SmartDashboard.putData("Test RotateArm", new TestRotateArm());
-//		SmartDashboard.putData("Test DriveWrist to max", new DriveWristToMax());
-//		////
+		// SmartDashboard.putNumber("Test RotateArm Position", 1150);
+		// SmartDashboard.putData("Test RotateArm", new TestRotateArm());
+		// SmartDashboard.putData("Test DriveWrist to max", new DriveWristToMax());
+		// ////
 		//// SmartDashboard.putNumber("Claw Speed", 0);
 		//// SmartDashboard.putNumber("Arm Speed", 0.2);
 		////
@@ -276,8 +279,9 @@ public class Robot extends TimedRobot {
 		////
 		//// SmartDashboard.putData("Test Deploy Cube and Retract", new
 		//// DeployCubeAndRetract());
-//		SmartDashboard.putData("Test Extend Lower Intake", new ExtendLowerIntake());
-//		SmartDashboard.putData("Test Retract Lower Intake", new RetractLowerIntake());
+		// SmartDashboard.putData("Test Extend Lower Intake", new ExtendLowerIntake());
+		// SmartDashboard.putData("Test Retract Lower Intake", new
+		// RetractLowerIntake());
 		// SmartDashboard.putData("Test Raise Lower Intake", new RaiseLowerIntake());
 		// SmartDashboard.putData("Test Lower Lower Intake", new LowerLowerIntake());
 		////
@@ -285,8 +289,10 @@ public class Robot extends TimedRobot {
 		////
 		//// SmartDashboard.putData("Test Grab Cube Lower Intake", new
 		//// GrabCube_LowerIntake());
-//		SmartDashboard.putData("Test Extend Telescoping Part", new ExtendTelescopingPart());
-//		SmartDashboard.putData("Test Retract Telescoping Part", new RetractTelescopingPart());
+		// SmartDashboard.putData("Test Extend Telescoping Part", new
+		// ExtendTelescopingPart());
+		// SmartDashboard.putData("Test Retract Telescoping Part", new
+		// RetractTelescopingPart());
 		// SmartDashboard.putData("Test RotateArm_Scale_High", new
 		// RotateArm_Scale_High());
 		//// SmartDashboard.putData("Test RotateArm_Scale_Low", new
@@ -308,7 +314,7 @@ public class Robot extends TimedRobot {
 		// SmartDashboard.putData("Drive To Obstacle", new TestDriveToObstacle());
 		//// SmartDashboard.putData("Drive Parallel", new TestDriveParallel());
 		//
-		// SmartDashboard.putNumber("fr RF scalar", 40);
+		SmartDashboard.putNumber("fr RF scalar", 40);
 		//
 		// SmartDashboard.putData("Climb Sequence", new ClimbSequence());
 
@@ -325,11 +331,12 @@ public class Robot extends TimedRobot {
 		// SmartDashboard.putNumber("Accel Value X", Robot.arm.getXValue());
 		// SmartDashboard.putNumber("Accel Value Y", Robot.arm.getYValue());
 		// SmartDashboard.putNumber("Accel Value Z", Robot.arm.getZValue());
-//		SmartDashboard.putNumber("Wrist Encoder 2.0", Robot.arm.getWristEncoder());
-//		SmartDashboard.putNumber("Arm potentiometer", Robot.arm.getPotentiometerVoltage());
-//		SmartDashboard.putNumber("Accel x", Robot.arm.getXValue());
-//		SmartDashboard.putNumber("Accel y", Robot.arm.getYValue());
-//		SmartDashboard.putNumber("Accel z", Robot.arm.getZValue());
+		// SmartDashboard.putNumber("Wrist Encoder 2.0", Robot.arm.getWristEncoder());
+		// SmartDashboard.putNumber("Arm potentiometer",
+		// Robot.arm.getPotentiometerVoltage());
+		// SmartDashboard.putNumber("Accel x", Robot.arm.getXValue());
+		// SmartDashboard.putNumber("Accel y", Robot.arm.getYValue());
+		// SmartDashboard.putNumber("Accel z", Robot.arm.getZValue());
 		// System.out.println("<joy> LY " + Robot.oi.gamepad.getAxis(F310.LY) + " RX " +
 		// Robot.oi.gamepad.getAxis(F310.RX));
 		// System.out.printf("<joy> LY: %5.1f RX: %5.1f",
@@ -354,9 +361,11 @@ public class Robot extends TimedRobot {
 
 		// SmartDashboard.putNumber("intake RF", Robot.arm.getIntakeRF());
 
-//		SmartDashboard.putNumber("encoder", Robot.arm.getArmEncoder());
+		// SmartDashboard.putNumber("encoder", Robot.arm.getArmEncoder());
 		SmartDashboard.putNumber("LeftEncoder", drivetrain.getLeftEncoder());
 		SmartDashboard.putNumber("RightEncoder", drivetrain.getRightEncoder());
+
+		SmartDashboard.putNumber("Rangefinder (front)", Robot.drivetrain.fr_rangefinderDist());
 
 	}
 
@@ -382,73 +391,99 @@ public class Robot extends TimedRobot {
 		nearfar = near_far.getSelected();
 		crossfield = cross_field.getSelected();
 		switchscale = switch_scale.getSelected();
-		
+
 		System.out.println("Determining Auto Sequence for Switch: " + ourSwitchSide);
 
 		ArrayList<CommandHolder> commandList = new ArrayList<CommandHolder>();
 		switch (startPos) {
 		case 1:
-//			commandList.add(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 150));
-//			if (closeSwitchNum == 1 && priority == "Switch") {
-//				commandList.add(new TurnWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 90));
-//				commandList.add(new RotateArmToPosition(Arm.ARM_SWITCH_POSITION));
-//				commandList.add(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 20));
-//				// TODO insert the rangefinder to avoid penalty here
-//				commandList.add(new DeployCube());
-//			} else if (scaleNum == 1 && priority == "Scale" && nearfar == "Far") {
-//				commandList.add(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 100));
-//				commandList.add(new RotateArmToPosition(Arm.ARM_SCALE_HIGH_POSITION));
-//				commandList.add(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 20));
-//				// TODO insert the rangefinder to avoid penalty here
-//				commandList.add(new DeployCube());
-//			} else if (closeSwitchNum == 2 && priority == "Switch" && nearfar == "Far") {
-//				commandList.add(new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 130));
-//				//TODO: finish this case
-//			}
+			// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+			// new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 150)));
+			if (ourSwitchSide == SWITCH_RIGHT && priority == "Switch") {
+				commandList.add(
+						new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("go for right switch")));
+				// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+				// new TurnWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 90)));
+				// commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND,
+				// new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
+				// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+				// new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 20)));
+				// // TODO insert the rangefinder to avoid penalty here
+				// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new
+				// DeployCube()));
+			} else if (ourSwitchSide == SWITCH_LEFT && priority == "Scale" && nearfar == "Far") {
+				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("go for")));
+				// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+				// new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 100)));
+				// commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND,
+				// new RotateArmToPosition(Arm.ARM_SCALE_HIGH_POSITION)));
+				// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+				// new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 20)));
+				// // TODO insert the rangefinder to avoid penalty here
+				// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new
+				// DeployCube()));
+			} else if (ourSwitchSide == SWITCH_RIGHT && priority == "Switch" && nearfar == "Far") {
+				// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+				// new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 130)));
+				// TODO: finish this case
+			}
 			break;
-
 		case 2:
-			if( ourSwitchSide == SWITCH_RIGHT) {
-				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("Raise arm to switch")));
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,new PrintCommand("Drive to RangeFinder Distance")));
+			if (ourSwitchSide == SWITCH_RIGHT) {
+				commandList.add(
+						new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("Raise arm to switch")));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+						new PrintCommand("Drive to RangeFinder Distance")));
 				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("DeployCube")));
 
+			} else {
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+						new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 16)));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+						new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, -65)));
+				// commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new
+				// PrintCommand("Raise Arm to Switch")));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+						new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 120)));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+						new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, 65)));
+				// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,new
+				// PrintCommand("Drive to RangeFinder Distance")));
+				// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new
+				// PrintCommand("DeployCube")));
 			}
-			else {
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 16)));
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, -65)));
-//				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("Raise Arm to Switch")));
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 120)));
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, 65)));
-//				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,new PrintCommand("Drive to RangeFinder Distance")));
-//				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("DeployCube")));
-			}
-			
-			
-
 			break;
-
 		case 3:
+
+			if (ourSwitchSide == SWITCH_RIGHT && priority == "Switch") {
+				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("3BR")));
+				// 3BR
+			} else if (ourScaleSide == SCALE_RIGHT && priority == "Scale") {
+				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("3ER")));
+				// 3ER
+			} else if (ourSwitchSide == SWITCH_LEFT && priority == "Switch" && nearfar == "Far") {
+				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("3CL")));
+				// 3CL
+			} else if (ourScaleSide == SCALE_LEFT && priority == "Scale" && nearfar == "Far") {
+				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("3DL")));
+				// 3DL
+
+				// if we can't go into the far part to score - go for non-priority
+			} else if (ourSwitchSide == SWITCH_RIGHT && priority == "Scale") {
+				// 3BR
+				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("3BR2")));
+			} else if (ourScaleSide == SCALE_RIGHT && priority == "Switch") {
+				// 3ER
+				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("3ER2")));
+			} else {
+				// cross auto line
+				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("cross auto line")));
+			}
 
 			break;
 		}
 
-		// if (decision.equals("A")) {
-		// return new DestinationA();
-		// } else if (decision.equals("B")) {
-		// return new DestinationB();
-		// } else if (decision.equals("C")) {
-		// return new DestinationC();
-		// } els if (decision.equals("D")) {
-		// return new DestinationD();
-		// } else if (decision.equals("E")) {
-		// return new DestinationE();
-		// } else if (decision.equals("T")) {
-		// return new ShiftGearsTestCommand();
-		// } else {
-		
-		Command autoCommand = new AutoCommandBuilder (commandList);
+		Command autoCommand = new AutoCommandBuilder(commandList);
 		return autoCommand;
-		// }
 	}
 }
