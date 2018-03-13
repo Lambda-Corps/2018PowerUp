@@ -12,6 +12,7 @@ import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveToObstacleTimed;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithoutPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveToObstacle;
+import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithoutPID;
 import org.usfirst.frc.team1895.robot.oi.F310;
 import org.usfirst.frc.team1895.robot.subsystems.Arm;
@@ -91,24 +92,23 @@ public class Robot extends TimedRobot {
 
 		// choosing initial priority
 		SmartDashboard.putData("Priority", priority_chooser);
-		priority_chooser.addDefault("Switch", "Switch");
-		priority_chooser.addObject("Scale", "Scale");
-		priority_chooser.addObject("Whichever", "Whichever");
+		priority_chooser.addDefault("Primary Goal = Switch", "Switch");
+		priority_chooser.addObject("Primary Goal = Scale", "Scale");
 
 		// choosing avoid far side or not
 		SmartDashboard.putData("Score side (only pick near if we should avoid far)", near_far);
-		near_far.addDefault("Near", "Near");
-		near_far.addObject("Far", "Far");
+		near_far.addDefault("Avoid far side", "Near");
+		near_far.addObject("Can go to far side", "Far");
 
 		// choosing avoid far side or not
 		SmartDashboard.putData("Cross Field or not", cross_field);
-		cross_field.addDefault("Cross", "Cross");
-		cross_field.addObject("Stay", "Stay");
+		cross_field.addDefault("Cross field ok", "Cross");
+		cross_field.addObject("Avoid crossing field", "Stay");
 
 		// choosing avoid far side or not
 		SmartDashboard.putData("Switch or Scale(Once across the field)", switch_scale);
-		switch_scale.addDefault("Switch", "Switch");
-		switch_scale.addObject("Scale", "Scale");
+		switch_scale.addDefault("Secondary Goal = Switch", "Switch");
+		switch_scale.addObject("Secondary Goal = Scale", "Scale");
 
 		// toggle conditional wait at beginning
 		SmartDashboard.putNumber("AUTO WAIT TIME", 0);
@@ -230,14 +230,14 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Rangefinder (front)", Robot.drivetrain.fr_rangefinderDist());
 
 		// Testing Turning
-		// SmartDashboard.putNumber("Turn: P value: ", .025);
-		// SmartDashboard.putNumber("Turn: I value: ", 0.0);
-		// SmartDashboard.putNumber("Turn: D value: ", -.005);
+		 SmartDashboard.putNumber("Turn: P value: ", .025);
+		 SmartDashboard.putNumber("Turn: I value: ", 0.0);
+		 SmartDashboard.putNumber("Turn: D value: ", -.005);
 		SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
 		SmartDashboard.putNumber("Test NP Turn Speed: ", drivetrain.AUTO_TURN_SPEED);
 		SmartDashboard.putNumber("Test Turn Tolerance: ", 3);
 
-		// SmartDashboard.putData("Test Turn With PID", new TestTurnWithPID());
+		 SmartDashboard.putData("Test Turn With PID", new TestTurnWithPID());
 		SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
 
 		// Distance Related Testing
@@ -386,18 +386,23 @@ public class Robot extends TimedRobot {
 		crossfield = cross_field.getSelected();
 		switchscale = switch_scale.getSelected();
 
-		System.out.println("Determining Auto Sequence for Switch: " + ourSwitchSide);
+		System.out.println("Determining Auto Sequence for Switch: " + ourSwitchSide + ", Scale: " + ourScaleSide);
 
 		ArrayList<CommandHolder> commandList = new ArrayList<CommandHolder>();
+		commandList.clear();
 		switch (startPos) {
 		case 1:
 			// unconditional drive fwd (cross auto line and score in position B)
 			commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-					new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 150))); 
+					new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 150)));
 
 			if (priority == "Scale") { // SCALE PRIORITY
+				System.out.println("the scale is the priority");
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("scale is pri")));
 				// drive farther (to btwn switch and scale)
 				if (ourScaleSide == SCALE_LEFT) { // SCALE LEFT - GO SCORE
+					System.out.println("the scale is left");
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("scale is L")));
 					// go for 1DL
 					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
 							new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, 15))); 
@@ -457,7 +462,7 @@ public class Robot extends TimedRobot {
 			}
 			if (priority == "Switch") {
 				if (ourSwitchSide == SWITCH_LEFT) { // SWITCH LEFT - GO SCORE SWITCH
-					// go for 1BL
+					// go for 1CL
 				} else { // SWITCH RIGHT - GO SCORE SWITCH (FROM MID FIELD)
 					// go to mid field boundary and score from there
 				}
