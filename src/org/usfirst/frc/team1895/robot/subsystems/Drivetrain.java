@@ -132,10 +132,10 @@ public class Drivetrain extends Subsystem {
 		r_encoder = new Encoder(RobotMap.RIGHT_ENCODER_A_PORT, RobotMap.RIGHT_ENCODER_B_PORT, true);
 //		l_encoder.setReverseDirection(true);
 
-		l_encoder.setDistancePerPulse(.0159); // PowerUp
-		r_encoder.setDistancePerPulse(.0159); // PowerUp
-//		 l_encoder.setDistancePerPulse(0.0225); //Steamworks
-//		 r_encoder.setDistancePerPulse(0.0225); //Steamworks
+//		l_encoder.setDistancePerPulse(.0159); // PowerUp
+//		r_encoder.setDistancePerPulse(.0159); // PowerUp
+		 l_encoder.setDistancePerPulse(0.0225); //Steamworks
+		 r_encoder.setDistancePerPulse(0.0225); //Steamworks
 		//l_encoder.setDistancePerPulse(.016);  //new
 		//r_encoder.setDistancePerPulse(.02475);
 
@@ -530,7 +530,7 @@ public class Drivetrain extends Subsystem {
 
 	public double fr_rangefinderDist() {
 		double voltage = fr_rangefinder.getAverageVoltage();
-		double inches = SmartDashboard.getNumber("fr RF scalar", 40) * voltage; // from LinReg
+		double inches = 83 * voltage; // from testing on Steamworks bot
 		return inches;
 	}
 
