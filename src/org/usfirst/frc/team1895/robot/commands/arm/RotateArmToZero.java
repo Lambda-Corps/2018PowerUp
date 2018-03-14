@@ -12,7 +12,7 @@ import edu.wpi.first.wpilibj.command.CommandGroup;
 public class RotateArmToZero extends CommandGroup {
 
     public RotateArmToZero() {
-    	
+    		
 	    	addSequential(new ExtendLowerIntake());
 	    	addSequential(new RaiseLowerIntake());
 	    	addSequential(new RotateArmToPosition(Arm.ARM_LOWEST_POSITION)); 

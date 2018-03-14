@@ -3,7 +3,13 @@ package org.usfirst.frc.team1895.robot;
 import java.util.ArrayList;
 
 import org.usfirst.frc.team1895.robot.commands.arm.DeployCube;
+import org.usfirst.frc.team1895.robot.commands.arm.ExtendTelescopingPart;
+import org.usfirst.frc.team1895.robot.commands.arm.RetractTelescopingPart;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToPosition;
+import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_High;
+import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_Low;
+import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_Mid;
+import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_SwitchPos;
 import org.usfirst.frc.team1895.robot.commands.autonomous.AutoCommandBuilder;
 import org.usfirst.frc.team1895.robot.commands.autonomous.CommandHolder;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.CancelDrivetrain;
@@ -283,19 +289,13 @@ public class Robot extends TimedRobot {
 		////
 		//// SmartDashboard.putData("Test Grab Cube Lower Intake", new
 		//// GrabCube_LowerIntake());
-		// SmartDashboard.putData("Test Extend Telescoping Part", new
-		// ExtendTelescopingPart());
-		// SmartDashboard.putData("Test Retract Telescoping Part", new
-		// RetractTelescopingPart());
-		// SmartDashboard.putData("Test RotateArm_Scale_High", new
-		// RotateArm_Scale_High());
-		//// SmartDashboard.putData("Test RotateArm_Scale_Low", new
-		// RotateArm_Scale_Low());
-		//// SmartDashboard.putData("Test RotateArm_Scale_Mid", new
-		// RotateArm_Scale_Mid());
-		// SmartDashboard.putData("Test RotateArm_SwitchPos", new
-		// RotateArm_SwitchPos());
-		////
+		SmartDashboard.putData("Test Extend Telescoping Part", new ExtendTelescopingPart());
+		SmartDashboard.putData("Test Retract Telescoping Part", new RetractTelescopingPart());
+		SmartDashboard.putData("Test RotateArm_Scale_High", new RotateArm_Scale_High());
+		SmartDashboard.putData("Test RotateArm_Scale_Low", new RotateArm_Scale_Low());
+		SmartDashboard.putData("Test RotateArm_Scale_Mid", new RotateArm_Scale_Mid());
+		SmartDashboard.putData("Test RotateArm_SwitchPos", new RotateArm_SwitchPos());
+		
 		// SmartDashboard.putData("TestDriveStraightWithoutPID 50 in", new
 		// DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 50));
 		//
@@ -308,7 +308,7 @@ public class Robot extends TimedRobot {
 		// SmartDashboard.putData("Drive To Obstacle", new TestDriveToObstacle());
 		//// SmartDashboard.putData("Drive Parallel", new TestDriveParallel());
 		//
-		SmartDashboard.putNumber("fr RF scalar", 40);
+		//SmartDashboard.putNumber("fr RF scalar", 40);
 		//
 		// SmartDashboard.putData("Climb Sequence", new ClimbSequence());
 
@@ -356,11 +356,13 @@ public class Robot extends TimedRobot {
 		// SmartDashboard.putNumber("intake RF", Robot.arm.getIntakeRF());
 
 		// SmartDashboard.putNumber("encoder", Robot.arm.getArmEncoder());
-		SmartDashboard.putNumber("LeftEncoder", drivetrain.getLeftEncoder());
-		SmartDashboard.putNumber("RightEncoder", drivetrain.getRightEncoder());
+		//SmartDashboard.putNumber("LeftEncoder", drivetrain.getLeftEncoder());
+		//SmartDashboard.putNumber("RightEncoder", drivetrain.getRightEncoder());
 
-		SmartDashboard.putNumber("Rangefinder (front)", Robot.drivetrain.fr_rangefinderDist());
+		//SmartDashboard.putNumber("Rangefinder (front)", Robot.drivetrain.fr_rangefinderDist());
 
+		SmartDashboard.putNumber("Arm potentiometer voltage", Robot.arm.getPotentiometerVoltage());
+		SmartDashboard.putNumber("Arm encoder value", Robot.arm.getArmEncoder());
 	}
 
 	/**

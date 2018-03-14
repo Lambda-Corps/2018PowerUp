@@ -28,9 +28,10 @@ public class ExtendTelescopingPart extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     		// Run for 1/3 of a second
-    		if (counter++ == 20) {
-    			done = true;
-    		}
+//    		if (counter++ == 5) {
+//    			done = true;
+//    		}
+    	done = true;
     }
 
     // Make this return true when this Command no longer needs to run execute()

@@ -27,9 +27,10 @@ public class RetractTelescopingPart extends Command {
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
     		// Run this command for a 1/2 second
-	    	if(counter>=30) {
-	    		done = true;
-	    	}
+//	    	if(counter>=30) {
+//	    		done = true;
+//	    	}
+    	done = true;
 	    	
 	    	counter++;
     }
