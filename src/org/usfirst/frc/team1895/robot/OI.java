@@ -9,7 +9,7 @@ import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_Mid;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_SwitchPos;
 import org.usfirst.frc.team1895.robot.commands.arm.ToggleTelescope;
 import org.usfirst.frc.team1895.robot.commands.climbing.ClimbSequence;
-import org.usfirst.frc.team1895.robot.commands.drivetrain.AlignToCube;
+import org.usfirst.frc.team1895.robot.commands.lowerIntake.LowerLowerIntake;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.RaiseLowerIntake;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.ToggleLowerIntake;
 import org.usfirst.frc.team1895.robot.oi.F310;
@@ -69,8 +69,8 @@ public class OI {
 		// Y  -- Climbing Sequence for the endgame
 
 		//drivetrain buttons
-		alignToCube = new JoystickButton(gamepad1, F310.A);
-		alignToCube.whenPressed(new AlignToCube());
+		//alignToCube = new JoystickButton(gamepad1, F310.A);
+		//alignToCube.whenPressed(new AlignToCube());
 		
 		climbSequence = new JoystickButton(gamepad1, F310.Y);
 		climbSequence.whenPressed(new ClimbSequence());
@@ -87,13 +87,13 @@ public class OI {
 //		extend_LowerIntake = new JoystickButton(gamepad1, F310.B);
 //		extend_LowerIntake.whenPressed(new ExtendLowerIntake());
 //		
-		raise_LowerIntake = new JoystickButton(gamepad1, F310.B);
+		raise_LowerIntake = new JoystickButton(gamepad1, F310.A);
 		raise_LowerIntake.whenPressed(new RaiseLowerIntake());
 		
 		telescopeOut = new JoystickButton(gamepad1, F310.X);
 		telescopeOut.whenPressed(new ToggleTelescope());
-//		lower_LowerIntake = new JoystickButton(gamepad1, F310.B);
-//		lower_LowerIntake.whenPressed(new LowerLowerIntake());
+		lower_LowerIntake = new JoystickButton(gamepad1, F310.B);
+		lower_LowerIntake.whenPressed(new LowerLowerIntake());
 
 		
 		// Gamepad 1 open buttons

@@ -135,10 +135,10 @@ public class Drivetrain extends Subsystem {
 		r_encoder = new Encoder(RobotMap.RIGHT_ENCODER_A_PORT, RobotMap.RIGHT_ENCODER_B_PORT, true);
 //		l_encoder.setReverseDirection(true);
 
-//		l_encoder.setDistancePerPulse(.0159); // PowerUp
-//		r_encoder.setDistancePerPulse(.0159); // PowerUp
-		 l_encoder.setDistancePerPulse(0.0225); //Steamworks
-		 r_encoder.setDistancePerPulse(0.0225); //Steamworks
+		l_encoder.setDistancePerPulse(.0159); // PowerUp
+		r_encoder.setDistancePerPulse(.0159); // PowerUp
+//		 l_encoder.setDistancePerPulse(0.0225); //Steamworks
+//		 r_encoder.setDistancePerPulse(0.0225); //Steamworks
 		//l_encoder.setDistancePerPulse(.016);  //new
 		//r_encoder.setDistancePerPulse(.02475);
 
@@ -244,44 +244,45 @@ public class Drivetrain extends Subsystem {
 
 		// If there is no yaw input, we want to make sure we correct any drift
 		// we have over time. 
-		if (Math.abs(yaw) == 0) { // if no x input --> correcting mode
-			if(!amCorrecting) {
-				amCorrecting = true;
-				resetEncoders();
-			}
-			double l_distance = l_encoder.getDistance();
-			double r_distance = r_encoder.getDistance();
-			if (Math.abs(l_distance - r_distance) < tolerance) {
-				// already straight
-			} else {
-				// forward
-				if (trans_speed > 0) {
-					// determine whether drifting left or right
-					if (l_distance > r_distance) { // drifting right, need to go left
-						left_speed *= scalar; // go left
-					} else { // drifting left, need to go right
-						right_speed *= scalar; // go right
-					}
-				} else { // backward
-					// determine whether drifting left or right
-					if (l_distance > r_distance) { // drifting right, need to go left
-						right_speed *= scalar; // go left
-					} else { // drifting left, need to go right
-						left_speed *= scalar; // go right
-					}
-				}
-			}
-		} else {
-			amCorrecting = false;
-		}
+//		if (Math.abs(yaw) == 0) { // if no x input --> correcting mode
+//			if(!amCorrecting) {
+//				amCorrecting = true;
+//				resetEncoders();
+//			}
+//			double l_distance = l_encoder.getDistance();
+//			double r_distance = r_encoder.getDistance();
+//			if (Math.abs(l_distance - r_distance) < tolerance) {
+//				// already straight
+//			} else {
+//				// forward
+//				if (trans_speed > 0) {
+//					// determine whether drifting left or right
+//					if (l_distance > r_distance) { // drifting right, need to go left
+//						left_speed *= scalar; // go left
+//					} else { // drifting left, need to go right
+//						right_speed *= scalar; // go right
+//					}
+//				} else { // backward
+//					// determine whether drifting left or right
+//					if (l_distance > r_distance) { // drifting right, need to go left
+//						right_speed *= scalar; // go left
+//					} else { // drifting left, need to go right
+//						left_speed *= scalar; // go right
+//					}
+//				}
+//			}
+//		} else {
+//			amCorrecting = false;
+//		}
 		// The .985 and .972 scalar values were determined through testing that our left motors
 		// were outputting more power than the right.
-		if(trans_speed>0) {  //forward
-			left_dt_motor1.set(ControlMode.PercentOutput, left_speed * .985); // .978 -- .95
+		if(yaw>0) {  //forward
+//			left_dt_motor1.set(ControlMode.PercentOutput, left_speed * .985 * 0.97); // .978 -- .95
+			left_dt_motor1.set(ControlMode.PercentOutput, left_speed*.982); // .978 -- .95
 			right_dt_motor1.set(ControlMode.PercentOutput, right_speed);
 		} else {
 			left_dt_motor1.set(ControlMode.PercentOutput, left_speed);
-			right_dt_motor1.set(ControlMode.PercentOutput, right_speed * 0.972);
+			right_dt_motor1.set(ControlMode.PercentOutput, right_speed*.937);
 		}
 
 
