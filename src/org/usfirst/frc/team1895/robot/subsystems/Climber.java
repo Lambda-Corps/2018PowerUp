@@ -23,7 +23,13 @@ public class Climber extends Subsystem {
     public Climber() {
     	climber_motor = new TalonSRX(RobotMap.CLIMBER_MOTOR_PORT);
 //    	System.out.println("Init of climber");
-    }
+    	climber_motor.getSensorCollection().setQuadraturePosition(0, 0);
+    	//testing for steamworks bot
+//    	climber_motor.configForwardSoftLimitThreshold(2500, 0);
+//    	climber_motor.configReverseSoftLimitThreshold(-2500, 0); 
+//    	climber_motor.configReverseSoftLimitEnable(true, 0);
+//      	climber_motor.configForwardSoftLimitEnable(true, 0);
+   }
     
     public void manualClimbing(double velocity) {
     	

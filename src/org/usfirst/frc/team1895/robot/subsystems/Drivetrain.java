@@ -102,7 +102,9 @@ public class Drivetrain extends Subsystem {
 		right_dt_motor2.setInverted(true);
 		left_dt_motor2.follow(left_dt_motor1);
 		right_dt_motor2.follow(right_dt_motor1);
-		
+
+    	left_dt_motor1.configReverseSoftLimitEnable(false, 0);
+    	left_dt_motor2.configForwardSoftLimitEnable(false, 0);
     	
 		/*
 		// TODO -- Test this code so we can uncomment if it works.

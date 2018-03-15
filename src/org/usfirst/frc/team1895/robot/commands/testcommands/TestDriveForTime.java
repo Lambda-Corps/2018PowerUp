@@ -1,40 +1,38 @@
-package org.usfirst.frc.team1895.robot.commands.lowerIntake;
+package org.usfirst.frc.team1895.robot.commands.testcommands;
 
 import org.usfirst.frc.team1895.robot.Robot;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
  */
-public class RetractLowerIntake extends Command {
-	
-	int counter;
-	boolean done;
+public class TestDriveForTime extends Command {
 
-    public RetractLowerIntake() {
+	double counter;
+	int c = 0;
+    public TestDriveForTime() {
         // Use requires() here to declare subsystem dependencies
-        requires(Robot.lowerIntake);
+        requires(Robot.drivetrain);
+        counter = SmartDashboard.getNumber("Seconds for DriveForTime", 1)*30; //multiply seconds by how many times the code runs in a second
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	counter = 0;
-    	done = false;
-    	Robot.lowerIntake.retractLowerIntake();
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if(counter>=10) {
-    		done = true;
+    	if(c <= counter) {
+    		Robot.drivetrain.arcadeDrive(0, 0.5);
+    		c++;
     	}
-    	counter++;
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return done;
+        return false;
     }
 
     // Called once after isFinished returns true

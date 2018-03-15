@@ -102,6 +102,8 @@ public class Arm extends Subsystem {
 	    	top_arm_rotation_motor = new TalonSRX(RobotMap.TOP_ARM_ROTATION_MOTOR_PORT);
 	    	bot_arm_rotation_motor = new TalonSRX(RobotMap.BOT_ARM_ROTATION_MOTOR_PORT);
 	    	
+	    	resetEncoder();
+	    	
 	    	top_arm_rotation_motor.configForwardSoftLimitThreshold(ARM_UPPER_SOFT_LIMIT, 0);
 	    	bot_arm_rotation_motor.configForwardSoftLimitThreshold(ARM_UPPER_SOFT_LIMIT, 0);
 	    	top_arm_rotation_motor.configReverseSoftLimitThreshold(0, 0); 
@@ -128,7 +130,6 @@ public class Arm extends Subsystem {
 	//    	bot_arm_rotation_motor.setInverted(true);
 	//    	top_arm_rotation_motor.setInverted(true);
 	    	top_arm_rotation_motor.follow(bot_arm_rotation_motor);
-	    	resetEncoder();
 	    	
 	    	//accelerometer
 	    	BIA = new BuiltInAccelerometer();
@@ -804,9 +805,17 @@ public class Arm extends Subsystem {
 	public void grabCube() {
 	    claw_intake_motor1.set(ControlMode.PercentOutput, CLAW_INTAKE_SPEED);
 	}
+	
+	public void test_grabCube(double speed) {
+	    claw_intake_motor1.set(ControlMode.PercentOutput, speed);
+	}
 
 	public void deployCube_Claw() {
 	    claw_intake_motor1.set(ControlMode.PercentOutput, CLAW_DEPLOY_SPEED);
+	    hasCube = false;
+	}
+	public void deployCube_Claw(double speed) {
+	    claw_intake_motor1.set(ControlMode.PercentOutput, speed);
 	    hasCube = false;
 	}
 	

@@ -73,8 +73,8 @@ public class OI {
 		// Y  -- Climbing Sequence for the endgame
 
 		//drivetrain buttons
-		alignToCube = new JoystickButton(gamepad1, F310.A);
-		alignToCube.whenPressed(new AlignToCube());
+		//alignToCube = new JoystickButton(gamepad1, F310.A);
+		//alignToCube.whenPressed(new AlignToCube());
 		
 		climbSequence = new JoystickButton(gamepad1, F310.Y);
 		climbSequence.whenPressed(new ClimbSequence());
@@ -90,7 +90,7 @@ public class OI {
 		//extend_LowerIntake = new JoystickButton(gamepad1, F310.B);
 		//extend_LowerIntake.whenPressed(new ExtendLowerIntake());
 //		
-		raise_LowerIntake = new JoystickButton(gamepad1, F310.Y);
+		raise_LowerIntake = new JoystickButton(gamepad1, F310.A);
 		raise_LowerIntake.whenPressed(new RaiseLowerIntake());
 		
 		telescopeOut = new JoystickButton(gamepad1, F310.X);

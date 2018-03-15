@@ -2,6 +2,7 @@ package org.usfirst.frc.team1895.robot;
 
 import java.util.ArrayList;
 
+import org.usfirst.frc.team1895.robot.commands.arm.CubeIn;
 import org.usfirst.frc.team1895.robot.commands.arm.DeployCube;
 import org.usfirst.frc.team1895.robot.commands.arm.ExtendTelescopingPart;
 import org.usfirst.frc.team1895.robot.commands.arm.RetractTelescopingPart;
@@ -16,9 +17,8 @@ import org.usfirst.frc.team1895.robot.commands.drivetrain.CancelDrivetrain;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithoutPID;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveToObstacleTimed;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
-import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithoutPID;
-import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveToObstacle;
-import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithoutPID;
+import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveForTime;
+import org.usfirst.frc.team1895.robot.commands.testcommands.TestGrabCube;
 import org.usfirst.frc.team1895.robot.oi.F310;
 import org.usfirst.frc.team1895.robot.subsystems.Arm;
 import org.usfirst.frc.team1895.robot.subsystems.Climber;
@@ -231,36 +231,36 @@ public class Robot extends TimedRobot {
 		Robot.drivetrain.setBrakeMode();
 		Robot.drivetrain.shiftToLowGear();
 
-		SmartDashboard.putNumber("Dist per pulse", 0.02475);
-
-		SmartDashboard.putNumber("Rangefinder (front)", Robot.drivetrain.fr_rangefinderDist());
+//		SmartDashboard.putNumber("Dist per pulse", 0.02475);
+//
+//		SmartDashboard.putNumber("Rangefinder (front)", Robot.drivetrain.fr_rangefinderDist());
 
 		// Testing Turning
 		// SmartDashboard.putNumber("Turn: P value: ", .025);
 		// SmartDashboard.putNumber("Turn: I value: ", 0.0);
 		// SmartDashboard.putNumber("Turn: D value: ", -.005);
-		SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
-		SmartDashboard.putNumber("Test NP Turn Speed: ", drivetrain.AUTO_TURN_SPEED);
-		SmartDashboard.putNumber("Test Turn Tolerance: ", 3);
-
+//		SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
+//		SmartDashboard.putNumber("Test NP Turn Speed: ", drivetrain.AUTO_TURN_SPEED);
+//		SmartDashboard.putNumber("Test Turn Tolerance: ", 3);
+		
 		// SmartDashboard.putData("Test Turn With PID", new TestTurnWithPID());
-		SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
+		//SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
 
 		// Distance Related Testing
 		// SmartDashboard.putNumber("Distance: P value: ", .1);
 		// SmartDashboard.putNumber("Distance: I value: ", 0.0);
 		// SmartDashboard.putNumber("Distance: D value: ", -.01);
-		SmartDashboard.putNumber("Test Drive Distance:", 30.0);
-		SmartDashboard.putNumber("Test Drive Speed:", drivetrain.AUTO_DRIVE_SPEED);
+		//SmartDashboard.putNumber("Test Drive Distance:", 30.0);
+		//SmartDashboard.putNumber("Test Drive Speed:", drivetrain.AUTO_DRIVE_SPEED);
 		// SmartDashboard.putNumber("Test Drive Tank Scalar:", .94); // in case of
 		// drifting
 		// SmartDashboard.putNumber("Test Drive Buffer:", 10);
-		SmartDashboard.putNumber("Test DTO Distance:", 50.0);
+		//SmartDashboard.putNumber("Test DTO Distance:", 50.0);
 		//
 		// SmartDashboard.putData("Test DriveStraight With PID", new
 		// TestDriveStraightWithPID());
-		SmartDashboard.putData("Test DriveStraight No PID", new TestDriveStraightWithoutPID());
-		SmartDashboard.putData("Test Drive With RangeFinder", new TestDriveToObstacle());
+		//SmartDashboard.putData("Test DriveStraight No PID", new TestDriveStraightWithoutPID());
+		//SmartDashboard.putData("Test Drive With RangeFinder", new TestDriveToObstacle());
 		// SmartDashboard.putData("Test Drive Parallel", new TestDriveParallel());
 
 		// SmartDashboard.putBoolean("Test boolean onLeft Value", false);
@@ -289,6 +289,16 @@ public class Robot extends TimedRobot {
 		////
 		//// SmartDashboard.putData("Test Grab Cube Lower Intake", new
 		//// GrabCube_LowerIntake());
+		
+		SmartDashboard.putNumber("Seconds for DriveForTime", 1);
+		SmartDashboard.putNumber("Lower Intake grab cube speed:", 0.2);
+		SmartDashboard.putNumber("Claw Intake grab cube speed", 0.6); //left
+		SmartDashboard.putNumber("Speed2", 0.2);
+		
+		SmartDashboard.putData("Test CubeIn Sequence", new CubeIn());
+		SmartDashboard.putData("Test GrabCube_Lower Intake", new TestGrabCube());
+		SmartDashboard.putData("Test DriveForTime Command", new TestDriveForTime());
+		
 		SmartDashboard.putData("Test Extend Telescoping Part", new ExtendTelescopingPart());
 		SmartDashboard.putData("Test Retract Telescoping Part", new RetractTelescopingPart());
 		SmartDashboard.putData("Test RotateArm_Scale_High", new RotateArm_Scale_High());

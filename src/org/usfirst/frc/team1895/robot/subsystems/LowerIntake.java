@@ -91,5 +91,10 @@ public class LowerIntake extends Subsystem {
 		left_lower_intake_motor.set(ControlMode.PercentOutput, INTAKE_MOTOR_LEFT_SPEED);
 		right_lower_intake_motor.set(ControlMode.PercentOutput, INTAKE_MOTOR_RIGHT_SPEED);	
 	}
+	
+	public void test_grabCube(double speed, double speed2) {
+		left_lower_intake_motor.set(ControlMode.PercentOutput, speed);
+		right_lower_intake_motor.set(ControlMode.PercentOutput, speed2);	
+	}
 }
 
