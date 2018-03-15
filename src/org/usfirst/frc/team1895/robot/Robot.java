@@ -7,11 +7,12 @@ import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToPosition;
 import org.usfirst.frc.team1895.robot.commands.autonomous.AutoCommandBuilder;
 import org.usfirst.frc.team1895.robot.commands.autonomous.CommandHolder;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.CancelDrivetrain;
-import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithoutPID;
+import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithPID;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveToObstacleTimed;
-import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
+import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithPID;
+import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithoutPID;
-import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveToObstacle;
+
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithoutPID;
 import org.usfirst.frc.team1895.robot.oi.F310;
@@ -230,31 +231,35 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Rangefinder (front)", Robot.drivetrain.fr_rangefinderDist());
 
 		// Testing Turning
-		 SmartDashboard.putNumber("Turn: P value: ", .025);
-		 SmartDashboard.putNumber("Turn: I value: ", 0.0);
-		 SmartDashboard.putNumber("Turn: D value: ", -.005);
 		SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
-		SmartDashboard.putNumber("Test NP Turn Speed: ", drivetrain.AUTO_TURN_SPEED);
-		SmartDashboard.putNumber("Test Turn Tolerance: ", 3);
+		SmartDashboard.putNumber("Test Turn Tolerance: ", 3.0);
 
-		 SmartDashboard.putData("Test Turn With PID", new TestTurnWithPID());
+		SmartDashboard.putData("Test Turn With PID", new TestTurnWithPID());
+		SmartDashboard.putNumber("Turn: P value: ", .025);
+		SmartDashboard.putNumber("Turn: I value: ", 0.0);
+		SmartDashboard.putNumber("Turn: D value: ", -.005);
+
 		SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
+		SmartDashboard.putNumber("Test NP Turn Speed: ", drivetrain.AUTO_TURN_SPEED);
 
 		// Distance Related Testing
-		// SmartDashboard.putNumber("Distance: P value: ", .1);
-		// SmartDashboard.putNumber("Distance: I value: ", 0.0);
-		// SmartDashboard.putNumber("Distance: D value: ", -.01);
 		SmartDashboard.putNumber("Test Drive Distance:", 30.0);
+
+		SmartDashboard.putData("Test DriveStraight With PID", new TestDriveStraightWithPID());
+		SmartDashboard.putNumber("Distance: P value: ", .1);
+		SmartDashboard.putNumber("Distance: I value: ", 0.0);
+		SmartDashboard.putNumber("Distance: D value: ", -.01);
+
+		SmartDashboard.putData("Test DriveStraight No PID", new TestDriveStraightWithoutPID());
 		SmartDashboard.putNumber("Test Drive Speed:", drivetrain.AUTO_DRIVE_SPEED);
+
 		// SmartDashboard.putNumber("Test Drive Tank Scalar:", .94); // in case of
 		// drifting
 		// SmartDashboard.putNumber("Test Drive Buffer:", 10);
-		SmartDashboard.putNumber("Test DTO Distance:", 50.0);
+		// SmartDashboard.putNumber("Test DTO Distance:", 50.0);
 		//
-		// SmartDashboard.putData("Test DriveStraight With PID", new
-		// TestDriveStraightWithPID());
-		SmartDashboard.putData("Test DriveStraight No PID", new TestDriveStraightWithoutPID());
-		SmartDashboard.putData("Test Drive With RangeFinder", new TestDriveToObstacle());
+		// SmartDashboard.putData("Test Drive With RangeFinder", new
+		// TestDriveToObstacle());
 		// SmartDashboard.putData("Test Drive Parallel", new TestDriveParallel());
 
 		// SmartDashboard.putBoolean("Test boolean onLeft Value", false);
@@ -297,7 +302,7 @@ public class Robot extends TimedRobot {
 		// RotateArm_SwitchPos());
 		////
 		// SmartDashboard.putData("TestDriveStraightWithoutPID 50 in", new
-		// DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 50));
+		// DriveStraightWithPID(50));
 		//
 		//// SmartDashboard.putNumber("Cube Close Value", 1);
 		////
@@ -308,7 +313,7 @@ public class Robot extends TimedRobot {
 		// SmartDashboard.putData("Drive To Obstacle", new TestDriveToObstacle());
 		//// SmartDashboard.putData("Drive Parallel", new TestDriveParallel());
 		//
-		SmartDashboard.putNumber("fr RF scalar", 40);
+		// SmartDashboard.putNumber("fr RF scalar", 40);
 		//
 		// SmartDashboard.putData("Climb Sequence", new ClimbSequence());
 
@@ -393,8 +398,7 @@ public class Robot extends TimedRobot {
 		switch (startPos) {
 		case 1:
 			// unconditional drive fwd (cross auto line and score in position B)
-			commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-					new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 150)));
+			commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(150)));
 
 			if (priority == "Scale") { // SCALE PRIORITY
 				System.out.println("the scale is the priority");
@@ -404,67 +408,82 @@ public class Robot extends TimedRobot {
 					System.out.println("the scale is left");
 					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("scale is L")));
 					// go for 1DL
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(5)));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(20)));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(85)));
 					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, 15))); 
+							new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION)));
+					// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+					// new DriveStraightWithPID(10)));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
 					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 75))); 
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION))); 
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new DeployCube()));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new RotateArmToPosition(Arm.ARM_SCALE_LOW_POSITION))); 
-					//second cube on scale or switch
+							new RotateArmToPosition(Arm.ARM_SCALE_LOW_POSITION)));
+					// second cube on scale or switch
 				} else {
 					if (crossfield == "Cross") { // SCALE RIGHT, CAN CROSS - GO SCORE
 						// go for 1DR
+						commandList
+								.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
+						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
+						commandList.add(
+								new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(180)));
+						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-90)));
+						commandList
+								.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(25)));
 						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-								new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 60)));
+								new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION)));
+						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
 						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-								new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, 90))); 
-						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-								new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 180))); 
-						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-								new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, -90)));
-						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-								new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 25))); 
-						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-								new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION))); 
-						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-								new DeployCube()));
-						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-								new RotateArmToPosition(Arm.ARM_SCALE_LOW_POSITION))); 
-						//second cube on scale or switch
+								new RotateArmToPosition(Arm.ARM_SCALE_LOW_POSITION)));
+						// second cube on scale or switch
 					} else { // SCALE RIGHT, CAN'T CROSS
 						if (ourSwitchSide == SWITCH_LEFT) { // SWITCH LEFT - GO SCORE SWITCH
 							// go for 1CL
+							commandList.add(
+									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
+							commandList.add(
+									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(45)));
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
 							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 60)));
+									new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 9, 0.5)));
 							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, 90))); 
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 45)));
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, 90))); 
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED,9 , 0.5)));	
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new RotateArmToPosition(Arm.ARM_SWITCH_POSITION))); 
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new DeployCube()));
-							
+									new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
+
 						} else { // SWITCH RIGHT - GO SCORE SWITCH (FROM MID FIELD)
 							// go to mid field boundary and score from there
-							//86in to mid field boundary (bump)
+							// 86in to mid field boundary (bump)
+
+							// ***UNTESTED***
+							commandList.add(
+									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
+							commandList.add(
+									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(86)));
+
 						}
 					}
 				}
 			}
 			if (priority == "Switch") {
 				if (ourSwitchSide == SWITCH_LEFT) { // SWITCH LEFT - GO SCORE SWITCH
-					// go for 1CL
+					// go for 1BL
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(45)));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+							new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 9, 0.5)));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+							new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
 				} else { // SWITCH RIGHT - GO SCORE SWITCH (FROM MID FIELD)
 					// go to mid field boundary and score from there
+
+					// ***UNTESTED***
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(86)));
 				}
 			}
 
@@ -479,16 +498,12 @@ public class Robot extends TimedRobot {
 				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("DeployCube")));
 
 			} else {
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-						new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 16)));
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-						new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, -65)));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(16)));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-65)));
 				// commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new
 				// PrintCommand("Raise Arm to Switch")));
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-						new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 120)));
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-						new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, 65)));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(120)));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(65)));
 				// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,new
 				// PrintCommand("Drive to RangeFinder Distance")));
 				// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new
@@ -498,61 +513,62 @@ public class Robot extends TimedRobot {
 		case 3:
 
 			// unconditional drive fwd
-			commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-					new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 150)));
+			commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(150)));
 
 			if (priority == "Scale") { // SCALE PRIORITY
 				// drive farther (to btwn switch and scale)
 				if (ourScaleSide == SCALE_RIGHT) { // SCALE RIGHT - GO SCORE
 					// go for 3DR
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-15)));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(75)));
 					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, -15))); 
+							new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION)));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
 					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 75))); 
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION))); 
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new DeployCube()));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new RotateArmToPosition(Arm.ARM_SCALE_LOW_POSITION))); 
+							new RotateArmToPosition(Arm.ARM_SCALE_LOW_POSITION)));
 				} else {
 					if (crossfield == "Cross") { // SCALE RIGHT, CAN CROSS - GO SCORE
 						// go for 3DL
+						commandList
+								.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
+						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-90)));
+						commandList.add(
+								new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(180)));
+						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
+						commandList
+								.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(25)));
 						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-								new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 60)));
+								new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION)));
+						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
 						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-								new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, -90))); 
-						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-								new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 180))); 
-						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-								new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, 90)));
-						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-								new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 25))); 
-						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-								new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION))); 
-						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-								new DeployCube()));
-						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-								new RotateArmToPosition(Arm.ARM_SCALE_LOW_POSITION))); 
+								new RotateArmToPosition(Arm.ARM_SCALE_LOW_POSITION)));
 					} else { // SCALE LEFT, CAN'T CROSS
 						if (ourSwitchSide == SWITCH_RIGHT) { // SWITCH RIGHT - GO SCORE SWITCH
 							// go for 3CR
+							commandList.add(
+									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-90)));
+							commandList.add(
+									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(45)));
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-90)));
 							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 60)));
+									new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 9, 0.5)));
 							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, -90))); 
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED, 45)));
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, -90))); 
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED,9 , 0.5)));	
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new RotateArmToPosition(Arm.ARM_SWITCH_POSITION))); 
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new DeployCube()));
+									new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
 						} else { // SWITCH LEFT - GO SCORE SWITCH (FROM MID FIELD)
-							// go to mid field boundary and score from there
+							// go for 1CL
+							commandList.add(
+									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-90)));
+							commandList.add(
+									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(86)));
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+									new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 9, 0.5)));
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+									new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
+							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
 						}
 					}
 				}
@@ -560,8 +576,23 @@ public class Robot extends TimedRobot {
 			if (priority == "Switch") {
 				if (ourSwitchSide == SWITCH_RIGHT) { // SWITCH RIGHT - GO SCORE SWITCH
 					// go for 1BR
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+							new TurnWithPID(-90)));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+							new DriveStraightWithPID(45)));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+							new TurnWithPID(-90)));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+							new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 9, 0.5)));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+							new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
 				} else { // SWITCH LEFT - GO SCORE SWITCH (FROM MID FIELD)
 					// go to mid field boundary and score from there
+					// ***UNTESTED***
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-90)));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(86)));
 				}
 			}
 

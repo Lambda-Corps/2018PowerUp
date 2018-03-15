@@ -29,8 +29,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Drivetrain extends Subsystem {
 	
 	public static boolean amCorrecting;
-	public static final double AUTO_TURN_SPEED = 0.7;
-	public static final double AUTO_DRIVE_SPEED = 0.9;
+
+	public static final double AUTO_TURN_SPEED = 0.6;
+//	public static final double AUTO_TURN_SPEED = 0.7;
+//	public static final double AUTO_DRIVE_SPEED = 0.9;
+	public static final double AUTO_DRIVE_SPEED = .7;
 
 	// motors CAN ID #
 	private TalonSRX left_dt_motor1; // 1
@@ -67,9 +70,9 @@ public class Drivetrain extends Subsystem {
 	private PIDController pidControllerDriving;
 	private PIDController pidControllerTurning;
 
-	final double pGainDriv = 1, iGainDriv = 0, dGainDriv = 0;
+	final double pGainDriv = 0.1, iGainDriv = 0, dGainDriv = 0;
 
-	final double pGainTurn = 0, iGainTurn = 0, dGainTurn = 0;
+	final double pGainTurn = 0.05, iGainTurn = 0, dGainTurn = 0.01;
 
 	boolean pid_done = false;
 
@@ -673,7 +676,7 @@ public class Drivetrain extends Subsystem {
 		double pidOutput = myPIDOutputDriving.get();
 		if (Double.isNaN(pidOutput)) {
 		} else {
-			arcadeDrive(pidOutput, error); // note 0.8 scalar
+			arcadeDrive(pidOutput, 0); // note 0.8 scalar
 //			System.out.println("trying to drive (not accounting for scalar) " + pidOutput);
 		}
 
@@ -693,13 +696,13 @@ public class Drivetrain extends Subsystem {
 
 	public boolean turnWithPID(double desiredTurnAngle) {
 
-		pidControllerTurning.setAbsoluteTolerance(1.0);
+		pidControllerTurning.setAbsoluteTolerance(SmartDashboard.getNumber("Test Turn Tolerance: ", 3.0));
 
 		double pidOutput = myPIDOutputTurning.get();
 
 		if (Double.isNaN(pidOutput)) {
 		} else {
-			arcadeDrive(0.0, pidOutput);
+			arcadeDrive(0, pidOutput);
 		}
 
 		pid_done = pidControllerTurning.onTarget();
