@@ -11,9 +11,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class RotateArmToPosition extends Command {
 
 	boolean done;
-	double armPosition;
+	int armPosition;
 
-	public RotateArmToPosition(double armPosition) {
+	public RotateArmToPosition(int armPosition) {
 		// Use requires() here to declare subsystem dependencies
 		requires(Robot.arm);
 		this.armPosition = armPosition;

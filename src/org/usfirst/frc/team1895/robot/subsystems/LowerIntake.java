@@ -48,6 +48,16 @@ public class LowerIntake extends Subsystem {
 	}
 
 //==Solenoids===================================================================================================
+	public void toggleLowerIntakeArms() {
+		DoubleSolenoid.Value val = lower_intake_solenoid_UpDown.get();
+		if(val == DoubleSolenoid.Value.kForward) {
+			lower_intake_solenoid_UpDown.set(DoubleSolenoid.Value.kReverse);
+		} else {
+			lower_intake_solenoid_UpDown.set(DoubleSolenoid.Value.kForward);
+		}
+
+	}
+	
 	public void extendLowerIntake() {
 		lower_intake_solenoid_ExRe.set(DoubleSolenoid.Value.kForward);
 		System.out.println("extend lower intake method");

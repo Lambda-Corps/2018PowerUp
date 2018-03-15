@@ -60,32 +60,32 @@ public class Arm extends Subsystem {
     
 	// Positional Variables to represent the arm positions for scale and switch
 	// TODO -- Check my numbers here that I've remembered them correctly
-//	public static final int ARM_LOWER_SOFT_LIMIT = 700;
-//	public static final int ARM_UPPER_SOFT_LIMIT = 16000;
-//	private static final int ARM_EXTENSION_LOWER_LIMIT = 3000;
-//	private static int ARM_EXTENSION_UPPER_LIMIT = 11500;
+	public static final int ARM_LOWER_SOFT_LIMIT = 700;
+	public static final int ARM_UPPER_SOFT_LIMIT = 16000;
+	private static final int ARM_EXTENSION_LOWER_LIMIT = 3000;
+	private static int ARM_EXTENSION_UPPER_LIMIT = 11500;
 	
-//	public static final int ARM_LOWEST_POSITION = ARM_LOWER_SOFT_LIMIT;
-//	public static final int ARM_SWITCH_POSITION = 5600;
-//	public static final int ARM_SCALE_LOW_POSITION = 13000;
-//	public static final int ARM_SCALE_MID_POSITION = 13001;
-//	public static final int ARM_SCALE_HIGH_POSITION = 13002;
-//	public static final int ARM_CLIMB_POSITION = ARM_UPPER_SOFT_LIMIT;
-//	public static final int ARM_POSITIONAL_TOLERANCE = 750;
+	public static final int ARM_LOWEST_POSITION = ARM_LOWER_SOFT_LIMIT;
+	public static final int ARM_SWITCH_POSITION = 5600;
+	public static final int ARM_SCALE_LOW_POSITION = 13000;
+	public static final int ARM_SCALE_MID_POSITION = 13001;
+	public static final int ARM_SCALE_HIGH_POSITION = 13002;
+	public static final int ARM_CLIMB_POSITION = ARM_UPPER_SOFT_LIMIT;
+	public static final int ARM_POSITIONAL_TOLERANCE = 750;
 	
-	public static final double ARM_LOWEST_LIMIT = 0.650; //0.980;
-	public static final double ARM_LOWER_SOFT_LIMIT = .67;
-	public static final double ARM_UPPER_SOFT_LIMIT = 0.037;
-	private static final double ARM_EXTENSION_LOWER_LIMIT = 0.5;
-	private static final double ARM_EXTENSION_UPPER_LIMIT = .2;
-	
-	public static final double ARM_LOWEST_POSITION = ARM_LOWER_SOFT_LIMIT;
-	public static final double ARM_SWITCH_POSITION = .394;
-	public static final double ARM_SCALE_LOW_POSITION = .139;
-	public static final double ARM_SCALE_MID_POSITION = 0.139;
-	public static final double ARM_SCALE_HIGH_POSITION = .139;
-	public static final double ARM_CLIMB_POSITION = ARM_UPPER_SOFT_LIMIT;
-	public static final double ARM_POSITIONAL_TOLERANCE = .007;
+//	public static final double ARM_LOWEST_LIMIT = 0.650; //0.980;
+//	public static final double ARM_LOWER_SOFT_LIMIT = .67;
+//	public static final double ARM_UPPER_SOFT_LIMIT = 0.037;
+//	private static final double ARM_EXTENSION_LOWER_LIMIT = 0.5;
+//	private static final double ARM_EXTENSION_UPPER_LIMIT = .2;
+//	
+//	public static final double ARM_LOWEST_POSITION = ARM_LOWER_SOFT_LIMIT;
+//	public static final double ARM_SWITCH_POSITION = .394;
+//	public static final double ARM_SCALE_LOW_POSITION = .139;
+//	public static final double ARM_SCALE_MID_POSITION = 0.139;
+//	public static final double ARM_SCALE_HIGH_POSITION = .139;
+//	public static final double ARM_CLIMB_POSITION = ARM_UPPER_SOFT_LIMIT;
+//	public static final double ARM_POSITIONAL_TOLERANCE = .007;
 	
 	private boolean endGameStarted;
 	
@@ -224,7 +224,7 @@ public class Arm extends Subsystem {
 	    	return accelValue;
     }
     
-    public boolean setPosition(double armPosition) {
+    public boolean setPosition(int armPosition) {
     		boolean bPosReturn = false;
 			SmartDashboard.putString("status", "method");
     		 if(armPosition == ARM_LOWEST_POSITION) {
@@ -245,7 +245,7 @@ public class Arm extends Subsystem {
     		 else if(armPosition ==ARM_SCALE_LOW_POSITION) {
      			bPosReturn = setPositionScalePOT(ARM_SCALE_LOW_POSITION);
     		 }
-
+    	
 	    	return bPosReturn;
     }
     
@@ -652,15 +652,15 @@ public class Arm extends Subsystem {
 //==Telescoping Arm Code===============================================================================================
 	public void toggleTelescopingArm() {
 		DoubleSolenoid.Value val = telescoping_solenoid.get();
-    	if( val == DoubleSolenoid.Value.kReverse ) {
-    		telescoping_solenoid.set( DoubleSolenoid.Value.kForward);
-    		return;
-    	}
-    	else {
-    		telescoping_solenoid.set( DoubleSolenoid.Value.kReverse);
-    		return;
-    	}
+		if (val == DoubleSolenoid.Value.kReverse) {
+			telescoping_solenoid.set(DoubleSolenoid.Value.kForward);
+			return;
+		} else {
+			telescoping_solenoid.set(DoubleSolenoid.Value.kReverse);
+			return;
+		}
 	}
+	
 	public void extendTelescopingArm() {
 		
 	    	int armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
