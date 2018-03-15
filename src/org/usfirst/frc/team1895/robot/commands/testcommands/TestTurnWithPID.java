@@ -20,6 +20,8 @@ public class TestTurnWithPID extends Command {
 
     // Called just before this Command runs the first time
     protected void initialize() {
+    	Robot.drivetrain.resetAHRSGyro();
+
     	t_p = SmartDashboard.getNumber("Turn: P value: ", .025);
     	t_i = SmartDashboard.getNumber("Turn: I value: ", 0.0);
     	t_d = SmartDashboard.getNumber("Turn: D value: ", -.005);
@@ -29,10 +31,7 @@ public class TestTurnWithPID extends Command {
     	Robot.drivetrain.makeNewPidTurning(t_p, t_i, t_d);  //get p,i,d from smartdashboard
     	Robot.drivetrain.setTurningPIDSetpoints(t_GoalAngle);
     	System.out.println("P = " + t_p + " I = " + t_i + " D = " + t_d + " dist = " + t_GoalAngle);
-   	
-    	
     	// Reset the Gyro state and enable the PID controller
-    	Robot.drivetrain.resetAHRSGyro();
     	//Robot.drivetrain.setUpPIDTurning(t_GoalAngle);
     }
 
@@ -51,6 +50,7 @@ public class TestTurnWithPID extends Command {
     protected void end() {
     	System.out.println("finished");
     	t_GoalAngle = 0.0;
+    	t_done = false;
     }
 
     // Called when another command which requires one or more of the same
