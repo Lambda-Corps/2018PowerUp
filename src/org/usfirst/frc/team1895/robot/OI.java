@@ -81,7 +81,7 @@ public class OI {
 		
 		retract_LowerIntake = new JoystickButton(gamepad1,F310.RB);
 		//retract_Lower
-		retract_LowerIntake.whenPressed(new RaiseLowerIntake());  //TODO: which one?
+		//retract_LowerIntake.whenPressed(new RaiseLowerIntake());  //TODO: which one?
 		retract_LowerIntake.whenPressed(new ToggleLowerIntake());
 		
 //		extend_LowerIntake = new JoystickButton(gamepad1, F310.B);
