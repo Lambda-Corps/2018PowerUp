@@ -29,8 +29,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Drivetrain extends Subsystem {
 	
 	public static boolean amCorrecting;
-	public static final double AUTO_TURN_SPEED = 0.7;
-	public static final double AUTO_DRIVE_SPEED = 0.9;
+
+	public static final double AUTO_TURN_SPEED = 0.6;
+//	public static final double AUTO_TURN_SPEED = 0.7;
+//	public static final double AUTO_DRIVE_SPEED = 0.9;
+	public static final double AUTO_DRIVE_SPEED = .7;
 
 	// motors CAN ID #
 	private TalonSRX left_dt_motor1; // 1
@@ -67,9 +70,9 @@ public class Drivetrain extends Subsystem {
 	private PIDController pidControllerDriving;
 	private PIDController pidControllerTurning;
 
-	final double pGainDriv = 1, iGainDriv = 0, dGainDriv = 0;
+	final double pGainDriv = 0.1, iGainDriv = 0, dGainDriv = 0;
 
-	final double pGainTurn = 0, iGainTurn = 0, dGainTurn = 0;
+	final double pGainTurn = 0.05, iGainTurn = 0, dGainTurn = 0.01;
 
 	boolean pid_done = false;
 
@@ -135,10 +138,10 @@ public class Drivetrain extends Subsystem {
 		r_encoder = new Encoder(RobotMap.RIGHT_ENCODER_A_PORT, RobotMap.RIGHT_ENCODER_B_PORT, true);
 //		l_encoder.setReverseDirection(true);
 
-//		l_encoder.setDistancePerPulse(.0159); // PowerUp
-//		r_encoder.setDistancePerPulse(.0159); // PowerUp
-		 l_encoder.setDistancePerPulse(0.0225); //Steamworks
-		 r_encoder.setDistancePerPulse(0.0225); //Steamworks
+		l_encoder.setDistancePerPulse(.0159); // PowerUp
+		r_encoder.setDistancePerPulse(.0159); // PowerUp
+//		 l_encoder.setDistancePerPulse(0.0225); //Steamworks
+//		 r_encoder.setDistancePerPulse(0.0225); //Steamworks
 		//l_encoder.setDistancePerPulse(.016);  //new
 		//r_encoder.setDistancePerPulse(.02475);
 
@@ -244,44 +247,45 @@ public class Drivetrain extends Subsystem {
 
 		// If there is no yaw input, we want to make sure we correct any drift
 		// we have over time. 
-		if (Math.abs(yaw) == 0) { // if no x input --> correcting mode
-			if(!amCorrecting) {
-				amCorrecting = true;
-				resetEncoders();
-			}
-			double l_distance = l_encoder.getDistance();
-			double r_distance = r_encoder.getDistance();
-			if (Math.abs(l_distance - r_distance) < tolerance) {
-				// already straight
-			} else {
-				// forward
-				if (trans_speed > 0) {
-					// determine whether drifting left or right
-					if (l_distance > r_distance) { // drifting right, need to go left
-						left_speed *= scalar; // go left
-					} else { // drifting left, need to go right
-						right_speed *= scalar; // go right
-					}
-				} else { // backward
-					// determine whether drifting left or right
-					if (l_distance > r_distance) { // drifting right, need to go left
-						right_speed *= scalar; // go left
-					} else { // drifting left, need to go right
-						left_speed *= scalar; // go right
-					}
-				}
-			}
-		} else {
-			amCorrecting = false;
-		}
+//		if (Math.abs(yaw) == 0) { // if no x input --> correcting mode
+//			if(!amCorrecting) {
+//				amCorrecting = true;
+//				resetEncoders();
+//			}
+//			double l_distance = l_encoder.getDistance();
+//			double r_distance = r_encoder.getDistance();
+//			if (Math.abs(l_distance - r_distance) < tolerance) {
+//				// already straight
+//			} else {
+//				// forward
+//				if (trans_speed > 0) {
+//					// determine whether drifting left or right
+//					if (l_distance > r_distance) { // drifting right, need to go left
+//						left_speed *= scalar; // go left
+//					} else { // drifting left, need to go right
+//						right_speed *= scalar; // go right
+//					}
+//				} else { // backward
+//					// determine whether drifting left or right
+//					if (l_distance > r_distance) { // drifting right, need to go left
+//						right_speed *= scalar; // go left
+//					} else { // drifting left, need to go right
+//						left_speed *= scalar; // go right
+//					}
+//				}
+//			}
+//		} else {
+//			amCorrecting = false;
+//		}
 		// The .985 and .972 scalar values were determined through testing that our left motors
 		// were outputting more power than the right.
-		if(trans_speed>0) {  //forward
-			left_dt_motor1.set(ControlMode.PercentOutput, left_speed * .985); // .978 -- .95
+		if(yaw>0) {  //forward
+//			left_dt_motor1.set(ControlMode.PercentOutput, left_speed * .985 * 0.97); // .978 -- .95
+			left_dt_motor1.set(ControlMode.PercentOutput, left_speed*.982); // .978 -- .95
 			right_dt_motor1.set(ControlMode.PercentOutput, right_speed);
 		} else {
 			left_dt_motor1.set(ControlMode.PercentOutput, left_speed);
-			right_dt_motor1.set(ControlMode.PercentOutput, right_speed * 0.972);
+			right_dt_motor1.set(ControlMode.PercentOutput, right_speed*.937);
 		}
 
 
@@ -676,7 +680,7 @@ public class Drivetrain extends Subsystem {
 		double pidOutput = myPIDOutputDriving.get();
 		if (Double.isNaN(pidOutput)) {
 		} else {
-			arcadeDrive(pidOutput, error); // note 0.8 scalar
+			arcadeDrive(pidOutput, 0); // note 0.8 scalar
 //			System.out.println("trying to drive (not accounting for scalar) " + pidOutput);
 		}
 
@@ -696,13 +700,13 @@ public class Drivetrain extends Subsystem {
 
 	public boolean turnWithPID(double desiredTurnAngle) {
 
-		pidControllerTurning.setAbsoluteTolerance(1.0);
+		pidControllerTurning.setAbsoluteTolerance(SmartDashboard.getNumber("Test Turn Tolerance: ", 3.0));
 
 		double pidOutput = myPIDOutputTurning.get();
 
 		if (Double.isNaN(pidOutput)) {
 		} else {
-			arcadeDrive(0.0, pidOutput);
+			arcadeDrive(0, pidOutput);
 		}
 
 		pid_done = pidControllerTurning.onTarget();
