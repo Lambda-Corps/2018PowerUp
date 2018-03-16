@@ -6,7 +6,6 @@ import org.usfirst.frc.team1895.robot.commands.arm.DeployCube;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToPosition;
 import org.usfirst.frc.team1895.robot.commands.arm.ToggleTelescope;
 import org.usfirst.frc.team1895.robot.commands.climbing.ClimbSequence;
-import org.usfirst.frc.team1895.robot.commands.drivetrain.AlignToCube;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.ToggleLowerIntake;
 import org.usfirst.frc.team1895.robot.commands.lowerIntake.ToggleLowerIntakeArms;
 import org.usfirst.frc.team1895.robot.oi.F310;

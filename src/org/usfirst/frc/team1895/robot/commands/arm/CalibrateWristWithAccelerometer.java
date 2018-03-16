@@ -1,36 +1,28 @@
 package org.usfirst.frc.team1895.robot.commands.arm;
 
-import org.usfirst.frc.team1895.robot.Robot;
-
 import edu.wpi.first.wpilibj.command.Command;
 
 /**
  *
  */
-public class RotateWrist extends Command {
-	
-	int counter;
-	boolean done;
+public class CalibrateWristWithAccelerometer extends Command {
 
-    public RotateWrist() {
+    public CalibrateWristWithAccelerometer() {
         // Use requires() here to declare subsystem dependencies
-        requires(Robot.arm);
+        // eg. requires(chassis);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	counter = 0;
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	//Robot.arm.driveArmWrist(SmartDashboard.getNumber("Claw Speed", 0.2));
-    	done = true;
     }
 
     // Make this return true when this Command no longer needs to run execute()
     protected boolean isFinished() {
-        return done;
+        return false;
     }
 
     // Called once after isFinished returns true

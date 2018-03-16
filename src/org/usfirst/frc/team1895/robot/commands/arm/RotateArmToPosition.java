@@ -25,8 +25,6 @@ public class RotateArmToPosition extends Command {
 	protected void initialize() {
 		SmartDashboard.putString("status", "init");
 		done = false;
-		this.armPosition = armPosition;
-//		System.out.println("init");
 
 	}
 

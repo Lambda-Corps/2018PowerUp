@@ -2,6 +2,8 @@ package org.usfirst.frc.team1895.robot;
 
 import java.util.ArrayList;
 
+import org.usfirst.frc.team1895.robot.commands.arm.CalibrateArmWithPotentiometer;
+import org.usfirst.frc.team1895.robot.commands.arm.CalibrateWristWithAccelerometer;
 import org.usfirst.frc.team1895.robot.commands.arm.CubeIn;
 import org.usfirst.frc.team1895.robot.commands.arm.DeployCube;
 import org.usfirst.frc.team1895.robot.commands.arm.ExtendTelescopingPart;
@@ -250,7 +252,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Turn: D value: ", -.005);
 
 		SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
-		SmartDashboard.putNumber("Test NP Turn Speed: ", drivetrain.AUTO_TURN_SPEED);
+		SmartDashboard.putNumber("Test NP Turn Speed: ", Drivetrain.AUTO_TURN_SPEED);
 
 		// Distance Related Testing
 		SmartDashboard.putNumber("Test Drive Distance:", 30.0);
@@ -261,7 +263,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putNumber("Distance: D value: ", -.01);
 
 		SmartDashboard.putData("Test DriveStraight No PID", new TestDriveStraightWithoutPID());
-		SmartDashboard.putNumber("Test Drive Speed:", drivetrain.AUTO_DRIVE_SPEED);
+		SmartDashboard.putNumber("Test Drive Speed:", Drivetrain.AUTO_DRIVE_SPEED);
 
 		// SmartDashboard.putNumber("Test Drive Tank Scalar:", .94); // in case of
 		// drifting
@@ -410,6 +412,10 @@ public class Robot extends TimedRobot {
 
 		ArrayList<CommandHolder> commandList = new ArrayList<CommandHolder>();
 		commandList.clear();
+		
+		// First things first, calibrate the arm
+		commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new CalibrateArmWithPotentiometer()));
+		commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new CalibrateWristWithAccelerometer()));
 		switch (startPos) {
 		case 1:
 			// unconditional drive fwd (cross auto line and score in position B)
@@ -432,9 +438,9 @@ public class Robot extends TimedRobot {
 					// new DriveStraightWithPID(10)));
 					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
 					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new RotateArmToPosition(Arm.ARM_SCALE_LOW_POSITION)));
+							new RotateArmToPosition(Arm.ARM_LOWEST_POSITION)));
 					// second cube on scale or switch
-				} else {
+				} else { 
 					if (crossfield == "Cross") { // SCALE RIGHT, CAN CROSS - GO SCORE
 						// go for 1DR
 						commandList
@@ -449,7 +455,7 @@ public class Robot extends TimedRobot {
 								new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION)));
 						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
 						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-								new RotateArmToPosition(Arm.ARM_SCALE_LOW_POSITION)));
+								new RotateArmToPosition(Arm.ARM_LOWEST_POSITION)));
 						// second cube on scale or switch
 					} else { // SCALE RIGHT, CAN'T CROSS
 						if (ourSwitchSide == SWITCH_LEFT) { // SWITCH LEFT - GO SCORE SWITCH

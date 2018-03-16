@@ -53,8 +53,11 @@ public class Arm extends Subsystem {
 	private final double VOLTVAL_QUARTERROT = 0.16095;
 	
 	//potentiometer variables
-	private final double ARM_SPEED = 0.6;
+	private final double ARM_SPEED = 1.0;
+	private final double ARM_SPEED_CALIBRATION = .4;
 	private final double WRIST_SPEED = 0.25;
+	private final double WRIST_SPEED_CALIBRATION = .25;
+	private final int WRIST_UPPER_SOFT_LIMIT = 120;
 	
 	boolean hasCube = false;
     
@@ -100,33 +103,22 @@ public class Arm extends Subsystem {
 	    	claw_intake_motor2.setInverted(true);
 	    	claw_intake_motor2.follow(claw_intake_motor1);
 	    	wrist_motor = new TalonSRX(RobotMap.WRIST_MOTOR_PORT);
-	    	wrist_motor.getSensorCollection().setQuadraturePosition(0, 0);
+	    	
 	    	top_arm_rotation_motor = new TalonSRX(RobotMap.TOP_ARM_ROTATION_MOTOR_PORT);
 	    	bot_arm_rotation_motor = new TalonSRX(RobotMap.BOT_ARM_ROTATION_MOTOR_PORT);
 	    	
-	    	resetEncoder();
-	    	
-	    	top_arm_rotation_motor.configForwardSoftLimitThreshold(ARM_UPPER_SOFT_LIMIT, 0);
-	    	bot_arm_rotation_motor.configForwardSoftLimitThreshold(ARM_UPPER_SOFT_LIMIT, 0);
-	    	top_arm_rotation_motor.configReverseSoftLimitThreshold(0, 0); 
-	    	bot_arm_rotation_motor.configReverseSoftLimitThreshold(0, 0);
-	    	top_arm_rotation_motor.configReverseSoftLimitEnable(true, 0);
-	    	bot_arm_rotation_motor.configForwardSoftLimitEnable(true, 0);
-	    	
-	    	
-			// TODO -- Test this code so we can uncomment if it works.
-			// current limited to 7 amps when current is >10amps for 100 milliseconds
-			 top_arm_rotation_motor.configContinuousCurrentLimit(7, 0);
-			 top_arm_rotation_motor.configPeakCurrentLimit(10, 0);
-			 top_arm_rotation_motor.configPeakCurrentDuration(100, 0);
-			 top_arm_rotation_motor.enableCurrentLimit(true);
-			 top_arm_rotation_motor.configOpenloopRamp(0.5, 0);
-			 
-			 bot_arm_rotation_motor.configContinuousCurrentLimit(7, 0);
-			 bot_arm_rotation_motor.configPeakCurrentLimit(10, 0);
-			 bot_arm_rotation_motor.configPeakCurrentDuration(100, 0);
-			 bot_arm_rotation_motor.enableCurrentLimit(true);
-			 bot_arm_rotation_motor.configOpenloopRamp(0.5, 0);
+		// current limited to 7 amps when current is >10amps for 100 milliseconds
+		 top_arm_rotation_motor.configContinuousCurrentLimit(7, 0);
+		 top_arm_rotation_motor.configPeakCurrentLimit(10, 0);
+		 top_arm_rotation_motor.configPeakCurrentDuration(100, 0);
+		 top_arm_rotation_motor.enableCurrentLimit(true);
+		 top_arm_rotation_motor.configOpenloopRamp(0.5, 0);
+		 
+		 bot_arm_rotation_motor.configContinuousCurrentLimit(7, 0);
+		 bot_arm_rotation_motor.configPeakCurrentLimit(10, 0);
+		 bot_arm_rotation_motor.configPeakCurrentDuration(100, 0);
+		 bot_arm_rotation_motor.enableCurrentLimit(true);
+		 bot_arm_rotation_motor.configOpenloopRamp(0.5, 0);
 			 
 	    	
 	//    	bot_arm_rotation_motor.setInverted(true);
@@ -198,10 +190,7 @@ public class Arm extends Subsystem {
 	    	bot_arm_rotation_motor.set(ControlMode.PercentOutput, armSpeed);
 	    	//System.out.println("Setting Arm to: " + armSpeed);  
 	    	
-	    	//wrist_motor.set(ControlMode.PercentOutput, armSpeed);
-	    	if(getPotentiometerVoltage() <ARM_SWITCH_POSITION || !hasCube) {
-	    		//SlevelWrist();
-	    	}
+	    	//levelWrist();
     }
     
     private double removeDeadZoneInput(double value) {
@@ -564,7 +553,7 @@ public class Arm extends Subsystem {
 	    	return wristEncoderValue;
     }
     
-	public void resetEncoder() {
+	private void resetArmEncoder() {
 		bot_arm_rotation_motor.getSensorCollection().setQuadraturePosition(0, 0);
 	}
 	
@@ -572,22 +561,59 @@ public class Arm extends Subsystem {
 	public boolean calibrateArmToLowest() {
 		boolean done = false;
 		double armPotVal = getPotentiometerVoltage();
+		
+		// If the voltage is lower, this signifies that the arm is higher in space than 
+		// we want it.  Move the arm down at a slower rate until the potentiometer 
+		// voltage is higher or equal
 		if(armPotVal < ARM_LOWEST_POT_VALUE) {
-			driveArm(ARM_SPEED); //drive down
+			driveArm(ARM_SPEED_CALIBRATION); //drive down
 		} 
+		else {
+			driveArm(0);
+			
+			resetArmEncoder();
+	    	
+		    	top_arm_rotation_motor.configForwardSoftLimitThreshold(ARM_UPPER_SOFT_LIMIT, 0);
+		    	bot_arm_rotation_motor.configForwardSoftLimitThreshold(ARM_UPPER_SOFT_LIMIT, 0);
+		    	top_arm_rotation_motor.configReverseSoftLimitThreshold(0, 0); 
+		    	bot_arm_rotation_motor.configReverseSoftLimitThreshold(0, 0);
+		    	top_arm_rotation_motor.configReverseSoftLimitEnable(true, 0);
+		    	bot_arm_rotation_motor.configForwardSoftLimitEnable(true, 0);
+			done = true;
+		}
+		
+		return done;
+	}
+	
+	private void resetWristEncoder() {
+		wrist_motor.getSensorCollection().setQuadraturePosition(0, 0);
+	}
+	
+	public boolean calibrateWristToZero() {
+		boolean done = false;
+		
+		// TODO -- We need to see how the accelerometer is mounted, and get the 
+		// axis values flushed out.  Then we can use whichever axis angle is 
+		// the one that tells us we are at the "zero" position.
+		//
+		// The done ==true is just a placeholder for the real conditional.
+		if(done == true ) {
+			driveArmWrist(WRIST_SPEED_CALIBRATION); //drive down
+		} 
+		else {
+			driveArmWrist(0);
+			
+			resetWristEncoder();
+	    	
+		    	wrist_motor.configForwardSoftLimitThreshold(WRIST_UPPER_SOFT_LIMIT, 0);
+		    	wrist_motor.configReverseSoftLimitThreshold(0, 0); 
+		    wrist_motor.configForwardSoftLimitEnable(true, 0);
+			done = true;
+		}
+		
 		return done;
 	}
     
-  //TODO: change these to match power-up
-//	public double getVoltage(){
-//		return range_finder.getVoltage();
-//	}
-//	
-//	public double getShoulderVaule(){
-//		return shoulder.getPosition();
-//
-//	}
-	
 //==Arm Get Methods========================================================================================================
 	public double getXValue(){
 		return accel.getX();
@@ -780,18 +806,14 @@ public class Arm extends Subsystem {
 			//move the wrist up
 			if((wristEncVal - targetEncVal) <= tolerance) {
 				wristSpeed = 0;
-				System.out.println("don't drive wrist");
 			}
-			System.out.println("wrist should go up");
 			
 		}
 		else if(wristEncVal < targetEncVal) {
 			//move the wrist down
 			if((targetEncVal - wristEncVal) <= tolerance) {
 				wristSpeed = 0;
-				System.out.println("don't drive wrist");
 			}
-			System.out.println("wrist should go down");
 			wristSpeed *= -1;
 		} else {
 			wristSpeed = 0;
@@ -799,7 +821,7 @@ public class Arm extends Subsystem {
 		if(getPotentiometerVoltage() > ARM_SWITCH_POSITION) {
 			wristSpeed = 0;
 		}
-		//driveArmWrist(wristSpeed);
+		driveArmWrist(wristSpeed);
 	}
     
     
@@ -826,12 +848,6 @@ public class Arm extends Subsystem {
 	}
 	
 	public double getIntakeRF() {
-		return in_rangefinder.getAverageVoltage();
-	}
-	
-	// TODO --  Fix this, it may falsely trigger when the cube is in
-	// the intake, but oriented in a way we haven't grabbed it yet.
-	public double getInRangeFinder() {
 		return in_rangefinder.getAverageVoltage();
 	}
 	

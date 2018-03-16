@@ -44,6 +44,7 @@ public class Drivetrain extends Subsystem {
 	// pneumatics
 	@SuppressWarnings("unused")
 	private final Compressor compressor;
+	@SuppressWarnings("unused")
 	private final DoubleSolenoid transmission_solenoid;
 
 	// Gyro
@@ -242,8 +243,6 @@ public class Drivetrain extends Subsystem {
 		// from the gyro, the tolerance is how far we deviate (in degrees) before we
 		// self correct, and the scalar is the percentage we use to reduce the over
 		// corrected side.
-		double tolerance = 0.1;
-		double scalar = 0.9; // Correlate it with the trans_speed
 
 		// If there is no yaw input, we want to make sure we correct any drift
 		// we have over time. 

@@ -7,25 +7,22 @@ import edu.wpi.first.wpilibj.command.Command;
 /**
  *
  */
-public class RotateWrist extends Command {
-	
-	int counter;
-	boolean done;
+public class CalibrateArmWithPotentiometer extends Command {
 
-    public RotateWrist() {
+	boolean done;
+    public CalibrateArmWithPotentiometer() {
         // Use requires() here to declare subsystem dependencies
         requires(Robot.arm);
     }
 
     // Called just before this Command runs the first time
     protected void initialize() {
-    	counter = 0;
+    		done = false;
     }
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	//Robot.arm.driveArmWrist(SmartDashboard.getNumber("Claw Speed", 0.2));
-    	done = true;
+    		done = Robot.arm.calibrateArmToLowest();
     }
 
     // Make this return true when this Command no longer needs to run execute()
