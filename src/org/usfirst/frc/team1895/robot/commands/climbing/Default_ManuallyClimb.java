@@ -31,6 +31,10 @@ public class Default_ManuallyClimb extends Command {
 	    	//if (WinchcontrolAxis > 0.2) { //can only climb up
 	    		Robot.climber.manualClimbing(WinchcontrolAxis);
 	    	}
+//	    	else if(Robot.oi.gamepad2.getAxis(F310.RT) > .2) {
+//	    		Robot.climber.manualClimbing(-.5); //for gamepad2
+//	    		System.out.println("Climbing down");
+//	    	}
 	    	else {
 	    		Robot.climber.manualClimbing(0);
 	

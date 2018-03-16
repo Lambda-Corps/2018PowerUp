@@ -69,8 +69,8 @@ public class OI {
 		// Y  -- Climbing Sequence for the endgame
 
 		//drivetrain buttons
-		alignToCube = new JoystickButton(gamepad1, F310.A);
-		alignToCube.whenPressed(new AlignToCube());
+		//alignToCube = new JoystickButton(gamepad1, F310.A);
+		//alignToCube.whenPressed(new AlignToCube());
 		
 		climbSequence = new JoystickButton(gamepad1, F310.Y);
 		climbSequence.whenPressed(new ClimbSequence());
@@ -79,6 +79,7 @@ public class OI {
 		grabCube_LowerIntake = new JoystickButton(gamepad1, F310.LB);
 		grabCube_LowerIntake.whenPressed(new CubeIn());
 		
+
 		retract_LowerIntake = new JoystickButton(gamepad1,F310.RB);  //Extend and Retract
 		//retract_Lower
 		retract_LowerIntake.whenPressed(new ToggleLowerIntake());
@@ -91,7 +92,7 @@ public class OI {
 		telescopeOut.whenPressed(new ToggleTelescope());
 		
 		// Gamepad 1 open buttons
-		// B, RT
+		// RT
 		
 		
 		// Setup the secondary driver controller and button mappings
@@ -119,6 +120,7 @@ public class OI {
 		rotateArm_Scale_High = new JoystickButton(gamepad2, F310.Y);
 		rotateArm_Scale_High.whenPressed(new RotateArmToPosition(Arm.ARM_SCALE_HIGH_POSITION));
 //		rotateArm_Scale_High.whenPressed(new RotateArm_Scale_High());
+
 		armCancel = new JoystickButton(gamepad2, F310.LB);
 		armCancel.whenPressed(new CancelArm());
 		

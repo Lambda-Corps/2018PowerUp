@@ -27,8 +27,8 @@ public class LowerIntake extends Subsystem {
 	private final DoubleSolenoid lower_intake_solenoid_ExRe;
 	private final DoubleSolenoid lower_intake_solenoid_UpDown;
 	
-	public static final double INTAKE_MOTOR_LEFT_SPEED = .4;
-	public static final double INTAKE_MOTOR_RIGHT_SPEED = .6;
+	public static final double INTAKE_MOTOR_LEFT_SPEED = .2;
+	public static final double INTAKE_MOTOR_RIGHT_SPEED = .25;
 
 	public LowerIntake() {
 		//motors
@@ -59,12 +59,11 @@ public class LowerIntake extends Subsystem {
 	}
 	
 	public void extendLowerIntake() {
-		lower_intake_solenoid_ExRe.set(DoubleSolenoid.Value.kForward);
-		System.out.println("extend lower intake method");
+		lower_intake_solenoid_ExRe.set(DoubleSolenoid.Value.kReverse);
 	}
 	
 	public void retractLowerIntake() {
-		lower_intake_solenoid_ExRe.set(DoubleSolenoid.Value.kReverse);
+		lower_intake_solenoid_ExRe.set(DoubleSolenoid.Value.kForward);
 	}
 	
 	public void raiseLowerIntake() {
@@ -101,6 +100,11 @@ public class LowerIntake extends Subsystem {
 	public void grabCube() {
 		left_lower_intake_motor.set(ControlMode.PercentOutput, INTAKE_MOTOR_LEFT_SPEED);
 		right_lower_intake_motor.set(ControlMode.PercentOutput, INTAKE_MOTOR_RIGHT_SPEED);	
+	}
+	
+	public void test_grabCube(double speed, double speed2) {
+		left_lower_intake_motor.set(ControlMode.PercentOutput, speed);
+		right_lower_intake_motor.set(ControlMode.PercentOutput, speed2);	
 	}
 }
 
