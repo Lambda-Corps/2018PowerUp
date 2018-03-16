@@ -72,23 +72,7 @@ public class Arm extends Subsystem {
 	public static final int ARM_SCALE_HIGH_POSITION = 13002;
 	public static final int ARM_CLIMB_POSITION = ARM_UPPER_SOFT_LIMIT;
 	public static final int ARM_POSITIONAL_TOLERANCE = 750;
-<<<<<<< HEAD
-	
-//	public static final double ARM_LOWEST_LIMIT = 0.650; //0.980;
-//	public static final double ARM_LOWER_SOFT_LIMIT = .67;
-//	public static final double ARM_UPPER_SOFT_LIMIT = 0.037;
-//	private static final double ARM_EXTENSION_LOWER_LIMIT = 0.5;
-//	private static final double ARM_EXTENSION_UPPER_LIMIT = .2;
-//	
-//	public static final double ARM_LOWEST_POSITION = ARM_LOWER_SOFT_LIMIT;
-//	public static final double ARM_SWITCH_POSITION = .394;
-//	public static final double ARM_SCALE_LOW_POSITION = .139;
-//	public static final double ARM_SCALE_MID_POSITION = 0.139;
-//	public static final double ARM_SCALE_HIGH_POSITION = .139;
-//	public static final double ARM_CLIMB_POSITION = ARM_UPPER_SOFT_LIMIT;
-//	public static final double ARM_POSITIONAL_TOLERANCE = .007;
-	
-=======
+
 	public static final double ARM_LOWEST_POT_VALUE = 0;
 	
 /*	public static final double ARM_LOWEST_LIMIT = 0.650; //0.980;
@@ -105,7 +89,7 @@ public class Arm extends Subsystem {
 	public static final double ARM_CLIMB_POSITION = ARM_UPPER_SOFT_LIMIT;
 	public static final double ARM_POSITIONAL_TOLERANCE = .007;
 	*/
->>>>>>> master
+
 	private boolean endGameStarted;
 	
     public Arm() {
