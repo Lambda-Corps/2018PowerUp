@@ -3,12 +3,9 @@ package org.usfirst.frc.team1895.robot;
 import java.util.ArrayList;
 
 import org.usfirst.frc.team1895.robot.commands.arm.CalibrateArmWithPotentiometer;
-import org.usfirst.frc.team1895.robot.commands.arm.CalibrateWristWithAccelerometer;
 import org.usfirst.frc.team1895.robot.commands.arm.CubeIn;
-import org.usfirst.frc.team1895.robot.commands.arm.DeployCube;
 import org.usfirst.frc.team1895.robot.commands.arm.ExtendTelescopingPart;
 import org.usfirst.frc.team1895.robot.commands.arm.RetractTelescopingPart;
-import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToPosition;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_High;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_Low;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_Scale_Mid;
@@ -16,15 +13,11 @@ import org.usfirst.frc.team1895.robot.commands.arm.RotateArm_SwitchPos;
 import org.usfirst.frc.team1895.robot.commands.autonomous.AutoCommandBuilder;
 import org.usfirst.frc.team1895.robot.commands.autonomous.CommandHolder;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.CancelDrivetrain;
-import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithPID;
-import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveToObstacleTimed;
-import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
+import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveToObstacle;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveForTime;
-import org.usfirst.frc.team1895.robot.commands.testcommands.TestGrabCube;
-import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithoutPID;
-
+import org.usfirst.frc.team1895.robot.commands.testcommands.TestGrabCube;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithoutPID;
 import org.usfirst.frc.team1895.robot.oi.F310;
@@ -84,8 +77,8 @@ public class Robot extends TimedRobot {
 	public static int theirSwitchSide;
 
 	/**
-	 * This function is run when the robot is first started up and should be used
-	 * for any initialization code.
+	 * This function is run when the robot is first started up and should be
+	 * used for any initialization code.
 	 */
 	@Override
 	public void robotInit() {
@@ -132,9 +125,9 @@ public class Robot extends TimedRobot {
 	}
 
 	/**
-	 * This function is called once each time the robot enters Disabled mode. You
-	 * can use it to reset any subsystem information you want to clear when the
-	 * robot is disabled.
+	 * This function is called once each time the robot enters Disabled mode.
+	 * You can use it to reset any subsystem information you want to clear when
+	 * the robot is disabled.
 	 */
 	@Override
 	public void disabledInit() {
@@ -154,14 +147,14 @@ public class Robot extends TimedRobot {
 
 	/**
 	 * This autonomous (along with the chooser code above) shows how to select
-	 * between different autonomous modes using the dashboard. The sendable chooser
-	 * code works with the Java SmartDashboard. If you prefer the LabVIEW Dashboard,
-	 * remove all of the chooser code and uncomment the getString code to get the
-	 * auto name from the text box below the Gyro
+	 * between different autonomous modes using the dashboard. The sendable
+	 * chooser code works with the Java SmartDashboard. If you prefer the
+	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
+	 * getString code to get the auto name from the text box below the Gyro
 	 *
 	 * You can add additional auto modes by adding additional commands to the
-	 * chooser code above (like the commented example) or additional comparisons to
-	 * the switch structure below with additional strings & commands.
+	 * chooser code above (like the commented example) or additional comparisons
+	 * to the switch structure below with additional strings & commands.
 	 */
 	@Override
 	public void autonomousInit() {
@@ -172,10 +165,13 @@ public class Robot extends TimedRobot {
 		Robot.drivetrain.shiftToLowGear();
 
 		// access FMS data
-		// Game message comes in the form of three letters representing ourSwitch,
+		// Game message comes in the form of three letters representing
+		// ourSwitch,
 		// Scale, theirSwitch.
-		// The message is looking at the field from the alliance driver's perspective.
-		// For example, the game message "LLL" would represent our color alliance side
+		// The message is looking at the field from the alliance driver's
+		// perspective.
+		// For example, the game message "LLL" would represent our color
+		// alliance side
 		// chosen for all
 		// three to be our driver's left.
 		String colorString;
@@ -183,7 +179,8 @@ public class Robot extends TimedRobot {
 		do {
 			colorString = DriverStation.getInstance().getGameSpecificMessage();
 		} while (colorString.length() == 0);
-		if (colorString.charAt(0) == 'L') { // if switch closest to us has our color on the left, we are 1
+		if (colorString.charAt(0) == 'L') { // if switch closest to us has our
+											// color on the left, we are 1
 			ourSwitchSide = SWITCH_LEFT;
 		} else {
 			ourSwitchSide = SWITCH_RIGHT;
@@ -193,13 +190,15 @@ public class Robot extends TimedRobot {
 		} else {
 			ourScaleSide = SCALE_RIGHT;
 		}
-		if (colorString.charAt(2) == 'L') { // if switch farthest from us has our color on the left, we are 1
+		if (colorString.charAt(2) == 'L') { // if switch farthest from us has
+											// our color on the left, we are 1
 			theirSwitchSide = SWITCH_LEFT;
 		} else {
 			theirSwitchSide = SWITCH_RIGHT;
 		}
 		autonomousCommand = determineAuto();
-		// autonomousCommand = new DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED,
+		// autonomousCommand = new
+		// DriveStraightWithoutPID(Drivetrain.AUTO_DRIVE_SPEED,
 		// 140);
 
 		// schedule the autonomous command (example)
@@ -238,9 +237,10 @@ public class Robot extends TimedRobot {
 		Robot.drivetrain.setBrakeMode();
 		Robot.drivetrain.shiftToLowGear();
 
-//		SmartDashboard.putNumber("Dist per pulse", 0.02475);
-//
-//		SmartDashboard.putNumber("Rangefinder (front)", Robot.drivetrain.fr_rangefinderDist());
+		// SmartDashboard.putNumber("Dist per pulse", 0.02475);
+		//
+		// SmartDashboard.putNumber("Rangefinder (front)",
+		// Robot.drivetrain.fr_rangefinderDist());
 
 		// Testing Turning
 		SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
@@ -265,21 +265,25 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Test DriveStraight No PID", new TestDriveStraightWithoutPID());
 		SmartDashboard.putNumber("Test Drive Speed:", Drivetrain.AUTO_DRIVE_SPEED);
 
-		// SmartDashboard.putNumber("Test Drive Tank Scalar:", .94); // in case of
+		SmartDashboard.putData("Calibrate Arm Potentiometer", new CalibrateArmWithPotentiometer());
+		// SmartDashboard.putNumber("Test Drive Tank Scalar:", .94); // in case
+		// of
 		// drifting
 		// SmartDashboard.putNumber("Test Drive Buffer:", 10);
 		// SmartDashboard.putNumber("Test DTO Distance:", 50.0);
 		//
 		// SmartDashboard.putData("Test Drive With RangeFinder", new
 		// TestDriveToObstacle());
-		// SmartDashboard.putData("Test Drive Parallel", new TestDriveParallel());
+		// SmartDashboard.putData("Test Drive Parallel", new
+		// TestDriveParallel());
 
 		// SmartDashboard.putBoolean("Test boolean onLeft Value", false);
 
 		// Arm/lower intake commands
 		// SmartDashboard.putNumber("Test RotateArm Position", 1150);
 		// SmartDashboard.putData("Test RotateArm", new TestRotateArm());
-		// SmartDashboard.putData("Test DriveWrist to max", new DriveWristToMax());
+		// SmartDashboard.putData("Test DriveWrist to max", new
+		// DriveWristToMax());
 		// ////
 		//// SmartDashboard.putNumber("Claw Speed", 0);
 		//// SmartDashboard.putNumber("Arm Speed", 0.2);
@@ -290,43 +294,48 @@ public class Robot extends TimedRobot {
 		////
 		//// SmartDashboard.putData("Test Deploy Cube and Retract", new
 		//// DeployCubeAndRetract());
-		// SmartDashboard.putData("Test Extend Lower Intake", new ExtendLowerIntake());
+		// SmartDashboard.putData("Test Extend Lower Intake", new
+		// ExtendLowerIntake());
 		// SmartDashboard.putData("Test Retract Lower Intake", new
 		// RetractLowerIntake());
-		// SmartDashboard.putData("Test Raise Lower Intake", new RaiseLowerIntake());
-		// SmartDashboard.putData("Test Lower Lower Intake", new LowerLowerIntake());
+		// SmartDashboard.putData("Test Raise Lower Intake", new
+		// RaiseLowerIntake());
+		// SmartDashboard.putData("Test Lower Lower Intake", new
+		// LowerLowerIntake());
 		////
 		//// SmartDashboard.putNumber("Lower Intake Speed", 0.4);
 		////
 		//// SmartDashboard.putData("Test Grab Cube Lower Intake", new
 		//// GrabCube_LowerIntake());
-		
+
 		SmartDashboard.putNumber("Seconds for DriveForTime", 1);
 		SmartDashboard.putNumber("Lower Intake grab cube speed:", 0.2);
-		SmartDashboard.putNumber("Claw Intake grab cube speed", 0.6); //left
+		SmartDashboard.putNumber("Claw Intake grab cube speed", 0.6); // left
 		SmartDashboard.putNumber("Speed2", 0.2);
-		
+
 		SmartDashboard.putData("Test CubeIn Sequence", new CubeIn());
 		SmartDashboard.putData("Test GrabCube_Lower Intake", new TestGrabCube());
 		SmartDashboard.putData("Test DriveForTime Command", new TestDriveForTime());
-		
+
 		SmartDashboard.putData("Test Extend Telescoping Part", new ExtendTelescopingPart());
 		SmartDashboard.putData("Test Retract Telescoping Part", new RetractTelescopingPart());
 		SmartDashboard.putData("Test RotateArm_Scale_High", new RotateArm_Scale_High());
 		SmartDashboard.putData("Test RotateArm_Scale_Low", new RotateArm_Scale_Low());
 		SmartDashboard.putData("Test RotateArm_Scale_Mid", new RotateArm_Scale_Mid());
 		SmartDashboard.putData("Test RotateArm_SwitchPos", new RotateArm_SwitchPos());
-		
+
 		// SmartDashboard.putData("TestDriveStraightWithoutPID 50 in", new
 		// DriveStraightWithPID(50));
 		//
 		//// SmartDashboard.putNumber("Cube Close Value", 1);
 		////
-		//// SmartDashboard.putData("Rotate Arm to Zero", new RotateArmToZero());
+		//// SmartDashboard.putData("Rotate Arm to Zero", new
+		// RotateArmToZero());
 		////
 		//// SmartDashboard.putData("Rotate Wrist", new RotateWrist());
 		//
-		// SmartDashboard.putData("Drive To Obstacle", new TestDriveToObstacle());
+		// SmartDashboard.putData("Drive To Obstacle", new
+		// TestDriveToObstacle());
 		//// SmartDashboard.putData("Drive Parallel", new TestDriveParallel());
 		//
 		//
@@ -341,45 +350,57 @@ public class Robot extends TimedRobot {
 	@Override
 	public void teleopPeriodic() {
 		Scheduler.getInstance().run();
-		// SmartDashboard.putNumber("Short Range Finder", Robot.arm.getInRangeFinder());
+		// SmartDashboard.putNumber("Short Range Finder",
+		// Robot.arm.getInRangeFinder());
 		// SmartDashboard.putNumber("Accel Value X", Robot.arm.getXValue());
 		// SmartDashboard.putNumber("Accel Value Y", Robot.arm.getYValue());
 		// SmartDashboard.putNumber("Accel Value Z", Robot.arm.getZValue());
-		// SmartDashboard.putNumber("Wrist Encoder 2.0", Robot.arm.getWristEncoder());
+		// SmartDashboard.putNumber("Wrist Encoder 2.0",
+		// Robot.arm.getWristEncoder());
 		// SmartDashboard.putNumber("Arm potentiometer",
 		// Robot.arm.getPotentiometerVoltage());
 		// SmartDashboard.putNumber("Accel x", Robot.arm.getXValue());
 		// SmartDashboard.putNumber("Accel y", Robot.arm.getYValue());
 		// SmartDashboard.putNumber("Accel z", Robot.arm.getZValue());
-		// System.out.println("<joy> LY " + Robot.oi.gamepad.getAxis(F310.LY) + " RX " +
+		// System.out.println("<joy> LY " + Robot.oi.gamepad.getAxis(F310.LY) +
+		// " RX " +
 		// Robot.oi.gamepad.getAxis(F310.RX));
 		// System.out.printf("<joy> LY: %5.1f RX: %5.1f",
-		// Robot.oi.gamepad.getAxis(F310.LY), Robot.oi.gamepad.getAxis(F310.RX) );
-		// System.out.println("<joy> LY " + Robot.oi.gamepad.getAxis(F310.LY) + " RX " +
+		// Robot.oi.gamepad.getAxis(F310.LY), Robot.oi.gamepad.getAxis(F310.RX)
+		// );
+		// System.out.println("<joy> LY " + Robot.oi.gamepad.getAxis(F310.LY) +
+		// " RX " +
 		// Robot.oi.gamepad.getAxis(F310.RX));
 
 		// System.out.printf("<joy> LY: %5.1f RX: %5.1f",
-		// Robot.oi.gamepad1.getAxis(F310.LY), Robot.oi.gamepad1.getAxis(F310.RX) );
+		// Robot.oi.gamepad1.getAxis(F310.LY),
+		// Robot.oi.gamepad1.getAxis(F310.RX) );
 
-		// System.out.println("gyro teleop: " + Robot.drivetrain.getAHRSGyroAngle());
+		// System.out.println("gyro teleop: " +
+		// Robot.drivetrain.getAHRSGyroAngle());
 
-		// System.out.println("LE " + Robot.drivetrain.getLeftEncoder() + " RE " +
+		// System.out.println("LE " + Robot.drivetrain.getLeftEncoder() + " RE "
+		// +
 		// Robot.drivetrain.getRightEncoder());
 		if (Robot.oi.gamepad1.getPOV() == 0) {
 			Command turnCmd = new CancelDrivetrain();
 			turnCmd.start();
 		}
 
-		// SmartDashboard.putNumber("RM Current: ", Robot.drivetrain.getRMCurrent());
-		// SmartDashboard.putNumber("LM Current: ", Robot.drivetrain.getLMCurrent());
+		// SmartDashboard.putNumber("RM Current: ",
+		// Robot.drivetrain.getRMCurrent());
+		// SmartDashboard.putNumber("LM Current: ",
+		// Robot.drivetrain.getLMCurrent());
 
 		// SmartDashboard.putNumber("intake RF", Robot.arm.getIntakeRF());
 
 		// SmartDashboard.putNumber("encoder", Robot.arm.getArmEncoder());
-		//SmartDashboard.putNumber("LeftEncoder", drivetrain.getLeftEncoder());
-		//SmartDashboard.putNumber("RightEncoder", drivetrain.getRightEncoder());
+		// SmartDashboard.putNumber("LeftEncoder", drivetrain.getLeftEncoder());
+		// SmartDashboard.putNumber("RightEncoder",
+		// drivetrain.getRightEncoder());
 
-		//SmartDashboard.putNumber("Rangefinder (front)", Robot.drivetrain.fr_rangefinderDist());
+		// SmartDashboard.putNumber("Rangefinder (front)",
+		// Robot.drivetrain.fr_rangefinderDist());
 
 		SmartDashboard.putNumber("Arm potentiometer voltage", Robot.arm.getPotentiometerVoltage());
 		SmartDashboard.putNumber("Arm encoder value", Robot.arm.getArmEncoder());
@@ -400,7 +421,8 @@ public class Robot extends TimedRobot {
 
 	// This function will take in the our starting position from the smart
 	// dashboard,
-	// and use the desired destination to figure out which command sequence to run.
+	// and use the desired destination to figure out which command sequence to
+	// run.
 	public Command determineAuto() {
 		startPos = pos_chooser.getSelected().intValue();
 		priority = priority_chooser.getSelected();
@@ -412,99 +434,125 @@ public class Robot extends TimedRobot {
 
 		ArrayList<CommandHolder> commandList = new ArrayList<CommandHolder>();
 		commandList.clear();
-		
+
 		// First things first, calibrate the arm
-		commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new CalibrateArmWithPotentiometer()));
-		commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new CalibrateWristWithAccelerometer()));
+		System.out.println("calibrate arm");
+//		commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new CalibrateArmWithPotentiometer()));
+//		commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new CalibrateWristWithAccelerometer()));
 		switch (startPos) {
 		case 1:
 			// unconditional drive fwd (cross auto line and score in position B)
-			commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(150)));
+			System.out.println("1 unconditional dr fwd");
+//			commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(150)));
 
 			if (priority == "Scale") { // SCALE PRIORITY
-				System.out.println("the scale is the priority");
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("scale is pri")));
 				// drive farther (to btwn switch and scale)
 				if (ourScaleSide == SCALE_LEFT) { // SCALE LEFT - GO SCORE
-					System.out.println("the scale is left");
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("scale is L")));
+					System.out.println("1 pri = scale, scale left -- go score");
+					// System.out.println("the scale is left");
+					// commandList.add(new
+					// CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new
+					// PrintCommand("scale is L")));
 					// go for 1DL
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(5)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(20)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(85)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION)));
-					// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(5)));
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(20)));
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(85)));
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+//							new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION)));
+					// commandList.add(new
+					// CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
 					// new DriveStraightWithPID(10)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new RotateArmToPosition(Arm.ARM_LOWEST_POSITION)));
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+//							new RotateArmToPosition(Arm.ARM_LOWEST_POSITION)));
 					// second cube on scale or switch
-				} else { 
-					if (crossfield == "Cross") { // SCALE RIGHT, CAN CROSS - GO SCORE
+				} else {
+					if (crossfield == "Cross") { // SCALE RIGHT, CAN CROSS - GO
+													// SCORE
 						// go for 1DR
-						commandList
-								.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
-						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
-						commandList.add(
-								new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(180)));
-						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-90)));
-						commandList
-								.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(25)));
-						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-								new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION)));
-						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
-						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-								new RotateArmToPosition(Arm.ARM_LOWEST_POSITION)));
+						System.out.println("1 pri = scale, scale right, can cross -- go score");
+//						commandList
+//								.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
+//						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
+//						commandList.add(
+//								new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(180)));
+//						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-90)));
+//						commandList
+//								.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(25)));
+//						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+//								new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION)));
+//						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
+//						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+//								new RotateArmToPosition(Arm.ARM_LOWEST_POSITION)));
 						// second cube on scale or switch
 					} else { // SCALE RIGHT, CAN'T CROSS
-						if (ourSwitchSide == SWITCH_LEFT) { // SWITCH LEFT - GO SCORE SWITCH
+						if (ourSwitchSide == SWITCH_LEFT) { // SWITCH LEFT - GO
+															// SCORE SWITCH
 							// go for 1CL
-							commandList.add(
-									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
-							commandList.add(
-									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(45)));
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 9, 0.5)));
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
+							System.out.println("1 pri = scale, scale right, can't cross, switch left -- go score switch left (c)");
+//							commandList.add(
+//									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
+//							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
+//							commandList.add(
+//									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(45)));
+//							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
+//							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+//									new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 9, 0.5)));
+//							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+//									new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
+//							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
 
-						} else { // SWITCH RIGHT - GO SCORE SWITCH (FROM MID FIELD)
+						} else { // SWITCH RIGHT - GO SCORE SWITCH (FROM MID
+									// FIELD)
 							// go to mid field boundary and score from there
 							// 86in to mid field boundary (bump)
-
+							System.out.println("1 pri = scale, scale right, can't cross, switch right -- go score switch right (mid field)");
 							// ***UNTESTED***
-							commandList.add(
-									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
-							commandList.add(
-									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(86)));
+//							commandList.add(
+//									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
+//							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
+//							commandList.add(
+//									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(86)));
 
 						}
 					}
 				}
 			}
 			if (priority == "Switch") {
-				if (ourSwitchSide == SWITCH_LEFT) { // SWITCH LEFT - GO SCORE SWITCH
+				if (ourSwitchSide == SWITCH_LEFT) { // SWITCH LEFT - GO SCORE
+													// SWITCH
+					System.out.println("1 pri = switch, switch left -- go score");
 					// go for 1BL
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(45)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 9, 0.5)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
+					commandList.add(
+							new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("Turn w PID 90")));
+					
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
+					
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+//							new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 9, 0.5)));
+					commandList.add(
+							new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("Dri to Obs 9, 0.5")));
+
+					
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+//							new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
+					commandList.add(
+							new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("Rot arm to pos - switch")));
+
+					
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
+					commandList.add(
+							new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("Deploy cube")));
+
+					
 				} else { // SWITCH RIGHT - GO SCORE SWITCH (FROM MID FIELD)
 					// go to mid field boundary and score from there
-
+					System.out.println("1 pri = switch, switch right -- go score switch right (mid-field)");
 					// ***UNTESTED***
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(86)));
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(86)));
 				}
 			}
 
@@ -512,108 +560,122 @@ public class Robot extends TimedRobot {
 
 		case 2:
 			if (ourSwitchSide == SWITCH_RIGHT) {
+				System.out.println("2 switch right -- go score switch right");
 				commandList.add(
 						new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("Raise arm to switch")));
+//				commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
 				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
 						new PrintCommand("Drive to RangeFinder Distance")));
+//				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveToObstacle(Drivetrain.AUTO_DRIVE_SPEED, 9)));
+//				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveForTime(0.5)));
+//				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
 				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("DeployCube")));
 
 			} else {
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(16)));
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-65)));
-				// commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new
-				// PrintCommand("Raise Arm to Switch")));
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(120)));
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(65)));
-				// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,new
-				// PrintCommand("Drive to RangeFinder Distance")));
-				// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new
+				System.out.println("2 switch left -- go score switch left");
+//				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(16)));
+//				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-65)));
+				// commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("Raise Arm to Switch")));
+//				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
+//				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(120)));
+//				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(65)));
+				// commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("Drive to RangeFinder Distance")));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveToObstacle(Drivetrain.AUTO_DRIVE_SPEED, 9)));
+				// commandList.add(new
+				// CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new
 				// PrintCommand("DeployCube")));
 			}
+			
 			break;
+			
 		case 3:
 
 			// unconditional drive fwd
-			commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(150)));
+			System.out.println("3 unconditional dr fwd");
+//			commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(150)));
 
 			if (priority == "Scale") { // SCALE PRIORITY
 				// drive farther (to btwn switch and scale)
 				if (ourScaleSide == SCALE_RIGHT) { // SCALE RIGHT - GO SCORE
+					System.out.println("3 pri = scale, scale right -- go score (d)");
 					// go for 3DR
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-15)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(75)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new RotateArmToPosition(Arm.ARM_SCALE_LOW_POSITION)));
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(5)));
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-20)));
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(80)));
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+//							new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION)));
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+//							new RotateArmToPosition(Arm.ARM_SCALE_LOW_POSITION)));
 				} else {
-					if (crossfield == "Cross") { // SCALE RIGHT, CAN CROSS - GO SCORE
+					if (crossfield == "Cross") { // SCALE LEFT, CAN CROSS - GO
+													// SCORE
 						// go for 3DL
-						commandList
-								.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
-						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-90)));
-						commandList.add(
-								new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(180)));
-						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
-						commandList
-								.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(25)));
-						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-								new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION)));
-						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
-						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-								new RotateArmToPosition(Arm.ARM_SCALE_LOW_POSITION)));
+						System.out.println("3 pri = scale, scale left, can cross -- go score (d)");
+//						commandList
+//								.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
+//						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-90)));
+//						commandList.add(
+//								new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(180)));
+//						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
+//						commandList
+//								.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(25)));
+//						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+//								new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION)));
+//						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
+//						commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+//								new RotateArmToPosition(Arm.ARM_SCALE_LOW_POSITION)));
 					} else { // SCALE LEFT, CAN'T CROSS
-						if (ourSwitchSide == SWITCH_RIGHT) { // SWITCH RIGHT - GO SCORE SWITCH
+						if (ourSwitchSide == SWITCH_RIGHT) { // SWITCH RIGHT -
+																// GO SCORE
+																// SWITCH
 							// go for 3CR
-							commandList.add(
-									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-90)));
-							commandList.add(
-									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(45)));
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-90)));
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 9, 0.5)));
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
-						} else { // SWITCH LEFT - GO SCORE SWITCH (FROM MID FIELD)
+							System.out.println("3 pri = scale, scale left, can't cross, switch right -- go score switch right (b)");
+//							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-90)));
+//							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+//									new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 9, 0.5)));
+//							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+//									new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
+//							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
+						} else { // SWITCH LEFT - GO SCORE SWITCH (FROM MID
+									// FIELD)
 							// go for 1CL
-							commandList.add(
-									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-90)));
-							commandList.add(
-									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(86)));
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 9, 0.5)));
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
-							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
+							System.out.println("3 pri = scale, scale left, can't cross, switch left -- go score switch left (mid field)");
+//							commandList.add(
+//									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
+//							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-90)));
+//							commandList.add(
+//									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(86)));
+//							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
+//							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+//									new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 9, 0.5)));
+//							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+//									new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
+//							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
 						}
 					}
 				}
 			}
 			if (priority == "Switch") {
-				if (ourSwitchSide == SWITCH_RIGHT) { // SWITCH RIGHT - GO SCORE SWITCH
+				if (ourSwitchSide == SWITCH_RIGHT) { // SWITCH RIGHT - GO SCORE
+														// SWITCH
 					// go for 1BR
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new TurnWithPID(-90)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new DriveStraightWithPID(45)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new TurnWithPID(-90)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 9, 0.5)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
+					System.out.println("3 pri = switch, switch right -- go score (b)");
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-90)));
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(45)));
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-90)));
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+//							new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 9, 0.5)));
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
+//							new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
 				} else { // SWITCH LEFT - GO SCORE SWITCH (FROM MID FIELD)
 					// go to mid field boundary and score from there
 					// ***UNTESTED***
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-90)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(86)));
+					System.out.println("3 pri = switch, switch left -- go score (mid field)");
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(60)));
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-90)));
+//					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(86)));
 				}
 			}
 

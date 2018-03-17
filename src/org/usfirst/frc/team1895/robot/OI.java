@@ -89,7 +89,7 @@ public class OI {
 		
 		telescopeOut = new JoystickButton(gamepad1, F310.X);
 		telescopeOut.whenPressed(new ToggleTelescope());
-		
+		  
 		// Gamepad 1 open buttons
 		// RT
 		

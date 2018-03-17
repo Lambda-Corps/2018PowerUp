@@ -71,7 +71,7 @@ public class Drivetrain extends Subsystem {
 	private PIDController pidControllerDriving;
 	private PIDController pidControllerTurning;
 
-	final double pGainDriv = 0.1, iGainDriv = 0, dGainDriv = 0;
+	final double pGainDriv = 0.7, iGainDriv = 1.0, dGainDriv = 1.9;
 
 	final double pGainTurn = 0.05, iGainTurn = 0, dGainTurn = 0.01;
 

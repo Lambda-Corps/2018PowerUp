@@ -76,8 +76,7 @@ public class Arm extends Subsystem {
 	public static final int ARM_CLIMB_POSITION = ARM_UPPER_SOFT_LIMIT;
 	public static final int ARM_POSITIONAL_TOLERANCE = 750;
 
-	public static final double ARM_LOWEST_POT_VALUE = 0;
-	
+	public static final double ARM_LOWEST_POT_VALUE = 0.5664;
 /*	public static final double ARM_LOWEST_LIMIT = 0.650; //0.980;
 	public static final double ARM_LOWER_SOFT_LIMIT = .67;
 	public static final double ARM_UPPER_SOFT_LIMIT = 0.037;
@@ -154,7 +153,7 @@ public class Arm extends Subsystem {
     		armSpeed = removeDeadZoneInput(armSpeed);
     		
     		// Square the inputs for smoother arm controls.
-    		armSpeed = Math.copySign(armSpeed* armSpeed, armSpeed);
+//    		armSpeed = Math.copySign(armSpeed* armSpeed, armSpeed);
     	
     		// Check where we are with respect to the limits
     		int armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
@@ -555,6 +554,7 @@ public class Arm extends Subsystem {
     
 	private void resetArmEncoder() {
 		bot_arm_rotation_motor.getSensorCollection().setQuadraturePosition(0, 0);
+		System.out.println("resetting arm encoder" + bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition());
 	}
 	
 	//sets the arm to the lowest position, collects encoder and potentiometer values
@@ -586,7 +586,7 @@ public class Arm extends Subsystem {
 	}
 	
 	private void resetWristEncoder() {
-		wrist_motor.getSensorCollection().setQuadraturePosition(0, 0);
+		wrist_motor.getSensorCollection().setQuadraturePosition(0, 10);
 	}
 	
 	public boolean calibrateWristToZero() {
