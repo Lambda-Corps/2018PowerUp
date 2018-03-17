@@ -14,6 +14,9 @@ import org.usfirst.frc.team1895.robot.commands.autonomous.AutoCommandBuilder;
 import org.usfirst.frc.team1895.robot.commands.autonomous.CommandHolder;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.CancelDrivetrain;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveToObstacle;
+import org.usfirst.frc.team1895.robot.commands.lowerIntake.ExtendLowerIntake;
+import org.usfirst.frc.team1895.robot.commands.lowerIntake.RaiseLowerIntake;
+import org.usfirst.frc.team1895.robot.commands.lowerIntake.RetractLowerIntake;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveForTime;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithoutPID;
@@ -243,27 +246,27 @@ public class Robot extends TimedRobot {
 		// Robot.drivetrain.fr_rangefinderDist());
 
 		// Testing Turning
-		SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
-		SmartDashboard.putNumber("Test Turn Tolerance: ", 3.0);
-
-		SmartDashboard.putData("Test Turn With PID", new TestTurnWithPID());
-		SmartDashboard.putNumber("Turn: P value: ", .025);
-		SmartDashboard.putNumber("Turn: I value: ", 0.0);
-		SmartDashboard.putNumber("Turn: D value: ", -.005);
-
-		SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
-		SmartDashboard.putNumber("Test NP Turn Speed: ", Drivetrain.AUTO_TURN_SPEED);
-
-		// Distance Related Testing
-		SmartDashboard.putNumber("Test Drive Distance:", 30.0);
-
-		SmartDashboard.putData("Test DriveStraight With PID", new TestDriveStraightWithPID());
-		SmartDashboard.putNumber("Distance: P value: ", .1);
-		SmartDashboard.putNumber("Distance: I value: ", 0.0);
-		SmartDashboard.putNumber("Distance: D value: ", -.01);
-
-		SmartDashboard.putData("Test DriveStraight No PID", new TestDriveStraightWithoutPID());
-		SmartDashboard.putNumber("Test Drive Speed:", Drivetrain.AUTO_DRIVE_SPEED);
+//		SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
+//		SmartDashboard.putNumber("Test Turn Tolerance: ", 3.0);
+//
+//		SmartDashboard.putData("Test Turn With PID", new TestTurnWithPID());
+//		SmartDashboard.putNumber("Turn: P value: ", .025);
+//		SmartDashboard.putNumber("Turn: I value: ", 0.0);
+//		SmartDashboard.putNumber("Turn: D value: ", -.005);
+//
+//		SmartDashboard.putData("Test Turn Without PID", new TestTurnWithoutPID());
+//		SmartDashboard.putNumber("Test NP Turn Speed: ", Drivetrain.AUTO_TURN_SPEED);
+//
+//		// Distance Related Testing
+//		SmartDashboard.putNumber("Test Drive Distance:", 30.0);
+//
+//		SmartDashboard.putData("Test DriveStraight With PID", new TestDriveStraightWithPID());
+//		SmartDashboard.putNumber("Distance: P value: ", .1);
+//		SmartDashboard.putNumber("Distance: I value: ", 0.0);
+//		SmartDashboard.putNumber("Distance: D value: ", -.01);
+//
+//		SmartDashboard.putData("Test DriveStraight No PID", new TestDriveStraightWithoutPID());
+//		SmartDashboard.putNumber("Test Drive Speed:", Drivetrain.AUTO_DRIVE_SPEED);
 
 		SmartDashboard.putData("Calibrate Arm Potentiometer", new CalibrateArmWithPotentiometer());
 		// SmartDashboard.putNumber("Test Drive Tank Scalar:", .94); // in case
@@ -294,35 +297,35 @@ public class Robot extends TimedRobot {
 		////
 		//// SmartDashboard.putData("Test Deploy Cube and Retract", new
 		//// DeployCubeAndRetract());
-		// SmartDashboard.putData("Test Extend Lower Intake", new
-		// ExtendLowerIntake());
-		// SmartDashboard.putData("Test Retract Lower Intake", new
-		// RetractLowerIntake());
-		// SmartDashboard.putData("Test Raise Lower Intake", new
-		// RaiseLowerIntake());
-		// SmartDashboard.putData("Test Lower Lower Intake", new
-		// LowerLowerIntake());
+		 SmartDashboard.putData("Test Extend Lower Intake", new
+		 ExtendLowerIntake());
+		 SmartDashboard.putData("Test Retract Lower Intake", new
+		 RetractLowerIntake());
+		 SmartDashboard.putData("Test Raise Lower Intake", new
+		 RaiseLowerIntake());
+		 SmartDashboard.putData("Test Lower Lower Intake", new
+		 LowerLowerIntake());
 		////
 		//// SmartDashboard.putNumber("Lower Intake Speed", 0.4);
 		////
 		//// SmartDashboard.putData("Test Grab Cube Lower Intake", new
 		//// GrabCube_LowerIntake());
 
-		SmartDashboard.putNumber("Seconds for DriveForTime", 1);
-		SmartDashboard.putNumber("Lower Intake grab cube speed:", 0.2);
-		SmartDashboard.putNumber("Claw Intake grab cube speed", 0.6); // left
-		SmartDashboard.putNumber("Speed2", 0.2);
-
-		SmartDashboard.putData("Test CubeIn Sequence", new CubeIn());
-		SmartDashboard.putData("Test GrabCube_Lower Intake", new TestGrabCube());
-		SmartDashboard.putData("Test DriveForTime Command", new TestDriveForTime());
+//		SmartDashboard.putNumber("Seconds for DriveForTime", 1);
+//		SmartDashboard.putNumber("Lower Intake grab cube speed:", 0.2);
+//		SmartDashboard.putNumber("Claw Intake grab cube speed", 0.6); // left
+//		SmartDashboard.putNumber("Speed2", 0.2);
+//
+//		SmartDashboard.putData("Test CubeIn Sequence", new CubeIn());
+//		SmartDashboard.putData("Test GrabCube_Lower Intake", new TestGrabCube());
+//		SmartDashboard.putData("Test DriveForTime Command", new TestDriveForTime());
 
 		SmartDashboard.putData("Test Extend Telescoping Part", new ExtendTelescopingPart());
 		SmartDashboard.putData("Test Retract Telescoping Part", new RetractTelescopingPart());
-		SmartDashboard.putData("Test RotateArm_Scale_High", new RotateArm_Scale_High());
-		SmartDashboard.putData("Test RotateArm_Scale_Low", new RotateArm_Scale_Low());
-		SmartDashboard.putData("Test RotateArm_Scale_Mid", new RotateArm_Scale_Mid());
-		SmartDashboard.putData("Test RotateArm_SwitchPos", new RotateArm_SwitchPos());
+//		SmartDashboard.putData("Test RotateArm_Scale_High", new RotateArm_Scale_High());
+//		SmartDashboard.putData("Test RotateArm_Scale_Low", new RotateArm_Scale_Low());
+//		SmartDashboard.putData("Test RotateArm_Scale_Mid", new RotateArm_Scale_Mid());
+//		SmartDashboard.putData("Test RotateArm_SwitchPos", new RotateArm_SwitchPos());
 
 		// SmartDashboard.putData("TestDriveStraightWithoutPID 50 in", new
 		// DriveStraightWithPID(50));
