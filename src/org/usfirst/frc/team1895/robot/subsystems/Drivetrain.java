@@ -364,7 +364,7 @@ public class Drivetrain extends Subsystem {
 		if (inHigh) {
 			// ..and you dropped below the minimum high speed, switch to low gear
 			if (current_speed < DOWNSHIFT_SPEED) {
-				//transmission_solenoid.set(DoubleSolenoid.Value.kReverse);
+				transmission_solenoid.set(DoubleSolenoid.Value.kForward);
 				inHigh = false;
 			}
 		}
@@ -376,7 +376,7 @@ public class Drivetrain extends Subsystem {
 
 				// ..after ~ 1.5 seconds, shift into high gear
 				if(highgear_count == 100) {
-					//transmission_solenoid.set(DoubleSolenoid.Value.kForward); 
+					transmission_solenoid.set(DoubleSolenoid.Value.kReverse); 
 					inHigh = true;
 					highgear_count = 0;
 				}
@@ -393,7 +393,7 @@ public class Drivetrain extends Subsystem {
 	}
 	
 	public void shiftToLowGear() {
-		//transmission_solenoid.set(DoubleSolenoid.Value.kReverse);
+		transmission_solenoid.set(DoubleSolenoid.Value.kForward);
 	}
 
 	// for ShiftGearsTestStartLG command
@@ -545,6 +545,7 @@ public class Drivetrain extends Subsystem {
 		double inches = 40 * voltage; // from LinReg
 		return inches;
 	}
+
 
 	public double r_rangefinderDist() { // TODO: check that this is right / T U N E. also check if battery affects
 		double voltage = r_rangefinder.getAverageVoltage();

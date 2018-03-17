@@ -30,7 +30,7 @@ public class Arm extends Subsystem {
     private TalonSRX top_arm_rotation_motor;			// arm_rotation_motor1 
     private TalonSRX bot_arm_rotation_motor;			// arm_rotation_motor2 
     
-    public final Accelerometer accel;
+    public final Accelerometer wristAccel;
 	public final BuiltInAccelerometer BIA;
     
     // pneumatics
@@ -55,7 +55,7 @@ public class Arm extends Subsystem {
 	//potentiometer variables
 	private final double ARM_SPEED = 1.0;
 	private final double ARM_SPEED_CALIBRATION = .4;
-	private final double WRIST_SPEED = 0.25;
+	private final double WRIST_SPEED = 0.15;
 	private final double WRIST_SPEED_CALIBRATION = .25;
 	private final int WRIST_UPPER_SOFT_LIMIT = 120;
 	
@@ -91,6 +91,7 @@ public class Arm extends Subsystem {
 	public static final double ARM_CLIMB_POSITION = ARM_UPPER_SOFT_LIMIT;
 	public static final double ARM_POSITIONAL_TOLERANCE = .007;
 	*/
+	
 
 	private boolean endGameStarted;
 	
@@ -102,31 +103,32 @@ public class Arm extends Subsystem {
 	    	claw_intake_motor2.setInverted(true);
 	    	claw_intake_motor2.follow(claw_intake_motor1);
 	    	wrist_motor = new TalonSRX(RobotMap.WRIST_MOTOR_PORT);
+	    	wrist_motor.setInverted(true);
 	    	
 	    	top_arm_rotation_motor = new TalonSRX(RobotMap.TOP_ARM_ROTATION_MOTOR_PORT);
 	    	bot_arm_rotation_motor = new TalonSRX(RobotMap.BOT_ARM_ROTATION_MOTOR_PORT);
 	    	
 		// current limited to 7 amps when current is >10amps for 100 milliseconds
-		 top_arm_rotation_motor.configContinuousCurrentLimit(7, 0);
-		 top_arm_rotation_motor.configPeakCurrentLimit(10, 0);
-		 top_arm_rotation_motor.configPeakCurrentDuration(100, 0);
-		 top_arm_rotation_motor.enableCurrentLimit(true);
-		 top_arm_rotation_motor.configOpenloopRamp(0.5, 0);
-		 
-		 bot_arm_rotation_motor.configContinuousCurrentLimit(7, 0);
-		 bot_arm_rotation_motor.configPeakCurrentLimit(10, 0);
-		 bot_arm_rotation_motor.configPeakCurrentDuration(100, 0);
-		 bot_arm_rotation_motor.enableCurrentLimit(true);
-		 bot_arm_rotation_motor.configOpenloopRamp(0.5, 0);
+//		 top_arm_rotation_motor.configContinuousCurrentLimit(7, 0);
+//		 top_arm_rotation_motor.configPeakCurrentLimit(10, 0);
+//		 top_arm_rotation_motor.configPeakCurrentDuration(100, 0);
+//		 top_arm_rotation_motor.enableCurrentLimit(true);
+//		 top_arm_rotation_motor.configOpenloopRamp(0.5, 0);
+//		 
+//		 bot_arm_rotation_motor.configContinuousCurrentLimit(7, 0);
+//		 bot_arm_rotation_motor.configPeakCurrentLimit(10, 0);
+//		 bot_arm_rotation_motor.configPeakCurrentDuration(100, 0);
+//		 bot_arm_rotation_motor.enableCurrentLimit(true);
+//		 bot_arm_rotation_motor.configOpenloopRamp(0.5, 0);
 			 
 	    	
-	//    	bot_arm_rotation_motor.setInverted(true);
-	//    	top_arm_rotation_motor.setInverted(true);
+	    	bot_arm_rotation_motor.setInverted(true);
+	    	top_arm_rotation_motor.setInverted(true);
 	    	top_arm_rotation_motor.follow(bot_arm_rotation_motor);
 	    	
 	    	//accelerometer
 	    	BIA = new BuiltInAccelerometer();
-		accel = new ADXL345_I2C(I2C.Port.kOnboard, Accelerometer.Range.k4G);
+		wristAccel = new ADXL345_I2C(I2C.Port.kOnboard, Accelerometer.Range.k4G);
 		
 		//analog sensors
 		in_rangefinder = new AnalogInput(RobotMap.INTAKE_RANGEFINDER_PORT);
@@ -153,7 +155,7 @@ public class Arm extends Subsystem {
     		armSpeed = removeDeadZoneInput(armSpeed);
     		
     		// Square the inputs for smoother arm controls.
-//    		armSpeed = Math.copySign(armSpeed* armSpeed, armSpeed);
+    		armSpeed = Math.copySign(armSpeed* armSpeed, armSpeed);
     	
     		// Check where we are with respect to the limits
     		int armEncoderValue = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
@@ -186,8 +188,12 @@ public class Arm extends Subsystem {
 		    		//telescoping_solenoid.set(DoubleSolenoid.Value.kReverse);
 		    	}
 	    	}
+	    	if(armSpeed < 0) {
+	    		armSpeed = armSpeed*0.6;
+	    	}
 	    	bot_arm_rotation_motor.set(ControlMode.PercentOutput, armSpeed);
-	    	//System.out.println("Setting Arm to: " + armSpeed);  
+	    	
+//	    	System.out.println("Setting Arm to: " + armSpeed);  
 	    	
 	    	//levelWrist();
     }
@@ -206,17 +212,31 @@ public class Arm extends Subsystem {
 	}
 
 	private double normalizeMotorInput(double armSpeed) {
-		if( armSpeed < -1.0 ) {
-			return -1.0;
+		//if arm speed is negative and we're going down, max speed is -0.6
+		if( armSpeed < -.8 ) {
+			return -0.8;
 		}
-		if( armSpeed > 1.0 ) {
-			return 1.0;
+		//if going up, max speed is 0.8
+		if( armSpeed > .8 ) {
+			return 0.8;
 		}
 		return armSpeed;
 	}
+	
+	private double normalizeMotorInputWrist(double wristSpeed) {
+		//if arm speed is negative and we're going down, max speed is -0.6
+		if( wristSpeed < -.8 ) {
+			return -0.8;
+		}
+		//if going up, max speed is 0.8
+		if( wristSpeed > .8 ) {
+			return 0.8;
+		}
+		return wristSpeed;
+	}
 
 	public double getAccelValue() {
-	    	double accelValue = accel.getX();
+	    	double accelValue = wristAccel.getX();
 	    	
 //	    	bot_arm_rotation_motor.getSensorCollection().s
 	    	
@@ -297,7 +317,7 @@ public class Arm extends Subsystem {
 				}
 				
 				// We aren't there yet, drive the motor downward
-				driveArm(ARM_SPEED);
+				driveArm(-ARM_SPEED);
 			}
 			else {
 				if( ARM_SCALE_HIGH_POSITION - currArmPosition <= ARM_POSITIONAL_TOLERANCE) {
@@ -306,7 +326,7 @@ public class Arm extends Subsystem {
 					bReturnPos = true;
 				}
 				
-				driveArm(-ARM_SPEED);
+				driveArm(ARM_SPEED);
 			}
 			break;
 		case ARM_SCALE_MID_POSITION:
@@ -320,7 +340,7 @@ public class Arm extends Subsystem {
 				}
 				
 				// We aren't there yet, drive the motor downward
-				driveArm(ARM_SPEED);
+				driveArm(-ARM_SPEED);
 			}
 			else {
 				if( ARM_SCALE_MID_POSITION - currArmPosition <= ARM_POSITIONAL_TOLERANCE) {
@@ -329,7 +349,7 @@ public class Arm extends Subsystem {
 					bReturnPos = true;
 				}
 				
-				driveArm(-ARM_SPEED);
+				driveArm(ARM_SPEED);
 			}
 			
 			break;
@@ -344,7 +364,7 @@ public class Arm extends Subsystem {
 				}
 				
 				// We aren't there yet, drive the motor downward
-				driveArm(ARM_SPEED);
+				driveArm(-ARM_SPEED);
 			}
 			else {
 				if( ARM_SCALE_LOW_POSITION - currArmPosition <= ARM_POSITIONAL_TOLERANCE) {
@@ -354,7 +374,7 @@ public class Arm extends Subsystem {
 				}
 				
 				//up
-				driveArm(-ARM_SPEED);
+				driveArm(ARM_SPEED);
 			}
 			break;
 		}
@@ -379,7 +399,7 @@ public class Arm extends Subsystem {
 			}
 			
 			// We aren't there yet, drive the motor downward
-			driveArm(ARM_SPEED); 
+			driveArm(-ARM_SPEED); 
 		}
 		else {
 			if( ARM_SWITCH_POSITION - currArmPosition <= ARM_POSITIONAL_TOLERANCE) {
@@ -389,7 +409,7 @@ public class Arm extends Subsystem {
 			}
 			
 			//up
-			driveArm(-ARM_SPEED);
+			driveArm(ARM_SPEED);
 		}
 		
 		return bReturnPos;
@@ -448,7 +468,7 @@ public class Arm extends Subsystem {
     		} 
     		
     		// We aren't within the tolerance, so drive the arm down.
-    		driveArm(ARM_SPEED);
+    		driveArm(-ARM_SPEED);
     		
     		return false;
 	}
@@ -496,7 +516,7 @@ public class Arm extends Subsystem {
 		} 
 		
 		// We aren't there yet, so drive the arm up
-		driveArm(-ARM_SPEED);
+		driveArm(ARM_SPEED);
 		
 		return false;
     }
@@ -616,20 +636,20 @@ public class Arm extends Subsystem {
     
 //==Arm Get Methods========================================================================================================
 	public double getXValue(){
-		return accel.getX();
+		return wristAccel.getX();
 	}
 	
 	public double getYValue(){
-		return accel.getY();
+		return wristAccel.getY();
 	}
 	
 	public double getZValue(){
-		return accel.getZ();
+		return wristAccel.getZ();
 	}
     
     public String getAllAxesString(){
     	//System.out.println (String.format("X =  %6.2f   Y =  %6.2f  Z =  %6.2f ", accel.getX(), accel.getY(), accel.getZ()));
-		return String.format("X =  %6.2f   Y =  %6.2f  Z =  %6.2f ", accel.getX(), accel.getY(), accel.getZ());
+		return String.format("X =  %6.2f   Y =  %6.2f  Z =  %6.2f ", wristAccel.getX(), wristAccel.getY(), wristAccel.getZ());
 	}
     
 	public void driveArmShoulder(double setSpeed){
@@ -665,23 +685,28 @@ public class Arm extends Subsystem {
 	}
 
 		public void driveArmWrist(double wristSpeed) {
-			wristSpeed = normalizeMotorInput(wristSpeed);
+			wristSpeed = normalizeMotorInputWrist(wristSpeed);
 			wristSpeed = removeDeadZoneInput(wristSpeed);
 			//TODO set limits
-			if(wrist_motor.getSensorCollection().getQuadraturePosition() > 125) {
-				wristSpeed = 0;
-			}
+//			if(wrist_motor.getSensorCollection().getQuadraturePosition() > 125) {
+//				wristSpeed = 0;
+//			}
+			wristSpeed = Math.copySign(wristSpeed * wristSpeed, wristSpeed);
+			wrist_motor.set(ControlMode.PercentOutput, wristSpeed);
 			
-			if(wristSpeed > 0) {
-				wrist_motor.set(ControlMode.PercentOutput, -wristSpeed);
-			}
-			else if(wristSpeed < 0){
-				wrist_motor.set(ControlMode.PercentOutput, wristSpeed);
-			}
-			else {
-				wrist_motor.set(ControlMode.PercentOutput, 0);
-			}
+//			if(wristSpeed > 0) {
+//				wrist_motor.set(ControlMode.PercentOutput, wristSpeed);
+//				System.out.println("drive wrist up");
+//			}
+//			else if(wristSpeed < 0){
+//				wrist_motor.set(ControlMode.PercentOutput, wristSpeed);
+//				System.out.println("drive wrist down");
+//			}
+//			else {
+//				wrist_motor.set(ControlMode.PercentOutput, 0);
+//			}
 			SmartDashboard.putNumber("wrist value", Robot.arm.getWristEncoder());
+			System.out.println("wristspeed: " + wristSpeed);
 		}
 		
 		public boolean setMaxWrist() {
@@ -791,7 +816,7 @@ public class Arm extends Subsystem {
 	
     public void testDriveArm(double armSpeed) {
 	    	double speed = armSpeed / 2;
-	    	bot_arm_rotation_motor.set(ControlMode.PercentOutput, speed);
+	    	top_arm_rotation_motor.set(ControlMode.PercentOutput, speed);
     }
 	
 //==Wrist Code=========================================================================================================
@@ -799,7 +824,7 @@ public class Arm extends Subsystem {
 		double wristEncVal = getWristEncoder() * -1;
 		double armEncVal = getArmEncoder();
 		double targetEncVal = armEncVal/10;
-		double wristSpeed = 1.2*WRIST_SPEED;
+		double wristSpeed = WRIST_SPEED;
 		double tolerance = 120;
 	
 		if(wristEncVal > targetEncVal) {
@@ -851,9 +876,12 @@ public class Arm extends Subsystem {
 		return in_rangefinder.getAverageVoltage();
 	}
 	
-	public void getArmCurrent() {
+	public double getTopCurrent() {
+		return  top_arm_rotation_motor.getOutputCurrent();
+	}
+	public double getArmCurrent() {
 //		double top = bot_arm_rotation_motor.getOutputCurrent();
-//		double bottom = top_arm_rotation_motor.getOutputCurrent();
+		return bot_arm_rotation_motor.getOutputCurrent();
 //		System.out.println("ARM Currents: " + top + " " + bottom);
 	}
 	

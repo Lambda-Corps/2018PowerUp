@@ -4,6 +4,7 @@ import org.usfirst.frc.team1895.robot.Robot;
 import org.usfirst.frc.team1895.robot.subsystems.Drivetrain;
 
 import edu.wpi.first.wpilibj.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
  *
@@ -27,6 +28,7 @@ public class DriveForTime extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
+    	SmartDashboard.putNumber("counter --------------", m_counter);
 	    	if(m_counter-- <= 0) {
 	    		Robot.drivetrain.arcadeDrive(0, 0);
 	    		done = true;

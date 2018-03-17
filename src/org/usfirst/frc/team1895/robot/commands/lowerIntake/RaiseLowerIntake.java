@@ -21,7 +21,7 @@ public class RaiseLowerIntake extends Command {
     protected void initialize() {
 	    	counter = 0;
 	    	done = false;
-	    	Robot.lowerIntake.extendLowerIntake();
+	    	//Robot.lowerIntake.extendLowerIntake();
 	    	Robot.lowerIntake.raiseLowerIntake();
     }
 

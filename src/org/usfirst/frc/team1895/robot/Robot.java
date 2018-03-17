@@ -2,9 +2,9 @@ package org.usfirst.frc.team1895.robot;
 
 import java.util.ArrayList;
 
-import org.usfirst.frc.team1895.robot.commands.arm.CalibrateArmWithPotentiometer;
 import org.usfirst.frc.team1895.robot.commands.arm.CubeIn;
 import org.usfirst.frc.team1895.robot.commands.arm.DeployCube;
+import org.usfirst.frc.team1895.robot.commands.arm.DeployCubeAndRetract;
 import org.usfirst.frc.team1895.robot.commands.arm.ExtendTelescopingPart;
 import org.usfirst.frc.team1895.robot.commands.arm.RetractTelescopingPart;
 import org.usfirst.frc.team1895.robot.commands.arm.RotateArmToPosition;
@@ -20,12 +20,14 @@ import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveStraightWithPID;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveToObstacle;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.DriveToObstacleTimed;
 import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithPID;
+import org.usfirst.frc.team1895.robot.commands.drivetrain.TurnWithoutPID;
+import org.usfirst.frc.team1895.robot.commands.lowerIntake.ExtendLowerIntake;
+import org.usfirst.frc.team1895.robot.commands.lowerIntake.GrabCube_LowerIntake;
+import org.usfirst.frc.team1895.robot.commands.lowerIntake.LowerLowerIntake;
+import org.usfirst.frc.team1895.robot.commands.lowerIntake.RaiseLowerIntake;
+import org.usfirst.frc.team1895.robot.commands.lowerIntake.RetractLowerIntake;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveForTime;
-import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithPID;
-import org.usfirst.frc.team1895.robot.commands.testcommands.TestDriveStraightWithoutPID;
 import org.usfirst.frc.team1895.robot.commands.testcommands.TestGrabCube;
-import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithPID;
-import org.usfirst.frc.team1895.robot.commands.testcommands.TestTurnWithoutPID;
 import org.usfirst.frc.team1895.robot.oi.F310;
 import org.usfirst.frc.team1895.robot.subsystems.Arm;
 import org.usfirst.frc.team1895.robot.subsystems.Climber;
@@ -97,9 +99,9 @@ public class Robot extends TimedRobot {
 
 		// choosing start position
 		SmartDashboard.putData("Start Position", pos_chooser);
-		pos_chooser.addDefault("Default (drive forward to cross auto line)", 0);
+		pos_chooser.addObject("(drive forward to cross auto line)", 0);
 		pos_chooser.addObject("Position One", 1);
-		pos_chooser.addObject("Position Two", 2);
+		pos_chooser.addDefault("Position Two", 2);
 		pos_chooser.addObject("Position Three", 3);
 
 		// choosing initial priority
@@ -249,7 +251,7 @@ public class Robot extends TimedRobot {
 		// Robot.drivetrain.fr_rangefinderDist());
 
 		// Testing Turning
-		SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
+		/*SmartDashboard.putNumber("Test Turn Angle: ", 90.0);
 		SmartDashboard.putNumber("Test Turn Tolerance: ", 3.0);
 
 		SmartDashboard.putData("Test Turn With PID", new TestTurnWithPID());
@@ -271,7 +273,7 @@ public class Robot extends TimedRobot {
 		SmartDashboard.putData("Test DriveStraight No PID", new TestDriveStraightWithoutPID());
 		SmartDashboard.putNumber("Test Drive Speed:", Drivetrain.AUTO_DRIVE_SPEED);
 
-		SmartDashboard.putData("Calibrate Arm Potentiometer", new CalibrateArmWithPotentiometer());
+		SmartDashboard.putData("Calibrate Arm Potentiometer", new CalibrateArmWithPotentiometer());*/
 		// SmartDashboard.putNumber("Test Drive Tank Scalar:", .94); // in case
 		// of
 		// drifting
@@ -297,32 +299,32 @@ public class Robot extends TimedRobot {
 		// SmartDashboard.putData("Test CubeIn", new CubeIn());
 		////
 		//// SmartDashboard.putData("Test ResetArm", new ResetArm());
-		////
-		//// SmartDashboard.putData("Test Deploy Cube and Retract", new
-		//// DeployCubeAndRetract());
-		// SmartDashboard.putData("Test Extend Lower Intake", new
-		// ExtendLowerIntake());
-		// SmartDashboard.putData("Test Retract Lower Intake", new
-		// RetractLowerIntake());
-		// SmartDashboard.putData("Test Raise Lower Intake", new
-		// RaiseLowerIntake());
-		// SmartDashboard.putData("Test Lower Lower Intake", new
-		// LowerLowerIntake());
-		////
-		//// SmartDashboard.putNumber("Lower Intake Speed", 0.4);
-		////
-		//// SmartDashboard.putData("Test Grab Cube Lower Intake", new
-		//// GrabCube_LowerIntake());
-
-		SmartDashboard.putNumber("Seconds for DriveForTime", 1);
+//		////
+//		SmartDashboard.putData("Test Deploy Cube and Retract", new
+//		 DeployCubeAndRetract());
+//		 SmartDashboard.putData("Test Extend Lower Intake", new
+//		 ExtendLowerIntake());
+//		 SmartDashboard.putData("Test Retract Lower Intake", new
+//		 RetractLowerIntake());
+//		 SmartDashboard.putData("Test Raise Lower Intake", new
+//		 RaiseLowerIntake());
+//		 SmartDashboard.putData("Test Lower Lower Intake", new
+//		 LowerLowerIntake());
+		//
+		// SmartDashboard.putNumber("Lower Intake Speed", 0.4);
+		//
+//		 SmartDashboard.putData("Test Grab Cube Lower Intake", new
+//		 GrabCube_LowerIntake());
+//
+//		SmartDashboard.putNumber("Seconds for DriveForTime", 1);
 		SmartDashboard.putNumber("Lower Intake grab cube speed:", 0.2);
 		SmartDashboard.putNumber("Claw Intake grab cube speed", 0.6); // left
 		SmartDashboard.putNumber("Speed2", 0.2);
-
+//
 		SmartDashboard.putData("Test CubeIn Sequence", new CubeIn());
 		SmartDashboard.putData("Test GrabCube_Lower Intake", new TestGrabCube());
-		SmartDashboard.putData("Test DriveForTime Command", new TestDriveForTime());
-
+//		SmartDashboard.putData("Test DriveForTime Command", new TestDriveForTime());
+//
 		SmartDashboard.putData("Test Extend Telescoping Part", new ExtendTelescopingPart());
 		SmartDashboard.putData("Test Retract Telescoping Part", new RetractTelescopingPart());
 		SmartDashboard.putData("Test RotateArm_Scale_High", new RotateArm_Scale_High());
@@ -361,10 +363,10 @@ public class Robot extends TimedRobot {
 		// SmartDashboard.putNumber("Accel Value X", Robot.arm.getXValue());
 		// SmartDashboard.putNumber("Accel Value Y", Robot.arm.getYValue());
 		// SmartDashboard.putNumber("Accel Value Z", Robot.arm.getZValue());
-		// SmartDashboard.putNumber("Wrist Encoder 2.0",
-		// Robot.arm.getWristEncoder());
-		// SmartDashboard.putNumber("Arm potentiometer",
-		// Robot.arm.getPotentiometerVoltage());
+//		 SmartDashboard.putNumber("Wrist Encoder 2.0",
+//		 Robot.arm.getWristEncoder());
+//		 SmartDashboard.putNumber("Arm potentiometer",
+//		 Robot.arm.getPotentiometerVoltage());
 		// SmartDashboard.putNumber("Accel x", Robot.arm.getXValue());
 		// SmartDashboard.putNumber("Accel y", Robot.arm.getYValue());
 		// SmartDashboard.putNumber("Accel z", Robot.arm.getZValue());
@@ -399,7 +401,7 @@ public class Robot extends TimedRobot {
 		// Robot.drivetrain.getLMCurrent());
 
 		// SmartDashboard.putNumber("intake RF", Robot.arm.getIntakeRF());
-
+	
 		// SmartDashboard.putNumber("encoder", Robot.arm.getArmEncoder());
 		// SmartDashboard.putNumber("LeftEncoder", drivetrain.getLeftEncoder());
 		// SmartDashboard.putNumber("RightEncoder",
@@ -407,9 +409,16 @@ public class Robot extends TimedRobot {
 
 		// SmartDashboard.putNumber("Rangefinder (front)",
 		// Robot.drivetrain.fr_rangefinderDist());
-
-		SmartDashboard.putNumber("Arm potentiometer voltage", Robot.arm.getPotentiometerVoltage());
-		SmartDashboard.putNumber("Arm encoder value", Robot.arm.getArmEncoder());
+//		SmartDashboard.putNumber("Arm top motor current", Robot.arm.getTopCurrent());
+//		SmartDashboard.putNumber("Arm Current", Robot.arm.getArmCurrent());
+//		SmartDashboard.putNumber("Arm potentiometer voltage", Robot.arm.getPotentiometerVoltage());
+//		SmartDashboard.putNumber("Arm encoder value", Robot.arm.getArmEncoder());
+//		
+//		
+//		SmartDashboard.putNumber("RANGEFINDER", Robot.drivetrain.fr_rangefinderDist());
+//		SmartDashboard.putNumber("Wrist Accelerometer X ", Robot.arm.getXValue());
+//		SmartDashboard.putNumber("Wrist Accelerometer Y ", Robot.arm.getYValue());
+//		SmartDashboard.putNumber("Wrist Accelerometer Z ", Robot.arm.getZValue());
 	}
 
 	/**
@@ -436,20 +445,24 @@ public class Robot extends TimedRobot {
 		crossfield = cross_field.getSelected();
 		switchscale = switch_scale.getSelected();
 
-		System.out.println("Determining Auto Sequence for Switch: " + ourSwitchSide + ", Scale: " + ourScaleSide);
+		System.out.println("Determining Auto Sequence for Switch: " + ourSwitchSide + ", Scale: " + ourScaleSide + " at " + startPos);
 
 		ArrayList<CommandHolder> commandList = new ArrayList<CommandHolder>();
 		commandList.clear();
 
 		// First things first, calibrate the arm
 		System.out.println("calibrate arm");
+		
 //		commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new CalibrateArmWithPotentiometer()));
 //		commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new CalibrateWristWithAccelerometer()));
 		switch (startPos) {
+		case 0:
+			commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(150)));
+			break;
 		case 1:
 			// unconditional drive fwd (cross auto line and score in position B)
 			System.out.println("1 unconditional dr fwd");
-//			commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(150)));
+			commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(150)));
 
 			if (priority == "Scale") { // SCALE PRIORITY
 				// drive farther (to btwn switch and scale)
@@ -461,7 +474,7 @@ public class Robot extends TimedRobot {
 					 PrintCommand("scale is L")));
 //					 go for 1DL
 					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(5)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(20)));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, 20)));
 					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(85)));
 					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
 							new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION)));
@@ -503,7 +516,7 @@ public class Robot extends TimedRobot {
 									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(45)));
 							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
 							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 9, 0.5)));
+									new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 13, 0.5)));
 							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
 									new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
 							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
@@ -536,7 +549,7 @@ public class Robot extends TimedRobot {
 					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
 					
 					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 9, 0.5)));
+							new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 13, 0.5)));
 //					commandList.add(
 //							new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("Dri to Obs 9, 0.5")));
 
@@ -572,22 +585,24 @@ public class Robot extends TimedRobot {
 				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
 //				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
 //						new PrintCommand("Drive to RangeFinder Distance")));
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveToObstacle(Drivetrain.AUTO_DRIVE_SPEED, 9)));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveToObstacle(Drivetrain.AUTO_DRIVE_SPEED, 13)));
 				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveForTime(0.5)));
 				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("DeployCube")));
+//				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("DeployCube")));
 
 			} else {
 				System.out.println("2 switch left -- go score switch left");
 				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(16)));
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-65)));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, -65)));
 //				 commandList.add(new CommandHolder(CommandHolder.PARALLEL_COMMAND, new PrintCommand("Raise Arm to Switch")));
 				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
 				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(120)));
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(65)));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, 65)));
 //				 commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new PrintCommand("Drive to RangeFinder Distance")));
-				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveToObstacle(Drivetrain.AUTO_DRIVE_SPEED, 9)));
-//				 commandList.add(new
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveToObstacle(Drivetrain.AUTO_DRIVE_SPEED, 13)));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveForTime(0.5)));
+				commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
+				//				 commandList.add(new
 //				 CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new
 //				 PrintCommand("DeployCube")));
 			}
@@ -606,7 +621,7 @@ public class Robot extends TimedRobot {
 					System.out.println("3 pri = scale, scale right -- go score (d)");
 					// go for 3DR
 					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(5)));
-					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-20)));
+					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithoutPID(Drivetrain.AUTO_TURN_SPEED, -20)));
 					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(80)));
 					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
 							new RotateArmToPosition(Arm.ARM_SCALE_MID_POSITION)));
@@ -639,7 +654,7 @@ public class Robot extends TimedRobot {
 							System.out.println("3 pri = scale, scale left, can't cross, switch right -- go score switch right (b)");
 							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-90)));
 							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 9, 0.5)));
+									new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 13, 0.5)));
 							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
 									new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
 							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
@@ -654,7 +669,7 @@ public class Robot extends TimedRobot {
 									new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(86)));
 							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(90)));
 							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-									new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 9, 0.5)));
+									new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 13, 0.5)));
 							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
 									new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
 							commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));
@@ -671,7 +686,7 @@ public class Robot extends TimedRobot {
 					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DriveStraightWithPID(45)));
 					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new TurnWithPID(-90)));
 					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
-							new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 9, 0.5)));
+							new DriveToObstacleTimed(Drivetrain.AUTO_DRIVE_SPEED, 13, 0.5)));
 					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND,
 							new RotateArmToPosition(Arm.ARM_SWITCH_POSITION)));
 					commandList.add(new CommandHolder(CommandHolder.SEQUENTIAL_COMMAND, new DeployCube()));

@@ -25,7 +25,7 @@ public class ToggleLowerIntakeArms extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if(counter>=30) {
+    	if(counter>=10) {
     		done = true;
     	}
     	counter++;

@@ -23,7 +23,7 @@ public class Default_Arm extends Command {
     protected void execute() {
     	//if(Math.abs(Robot.oi.gamepad2.getAxis(F310.LY))) {
 //        	System.out.println("Printing arm joystick value" + Robot.oi.gamepad2.getAxis(F310.LY));
-        	Robot.arm.driveArm(Robot.oi.gamepad2.getAxis(F310.LY));
+        	Robot.arm.driveArm(-Robot.oi.gamepad2.getAxis(F310.LY));
         	Robot.arm.getArmCurrent();
     	//}
         	Robot.arm.driveArmWrist(-Robot.oi.gamepad2.getAxis(F310.RY));
