@@ -553,7 +553,7 @@ public class Arm extends Subsystem {
     }
     
 	private void resetArmEncoder() {
-		bot_arm_rotation_motor.getSensorCollection().setQuadraturePosition(0, 0);
+		System.out.println("error = " + bot_arm_rotation_motor.setSelectedSensorPosition(0, 0, 10));
 		System.out.println("resetting arm encoder" + bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition());
 	}
 	
@@ -673,10 +673,10 @@ public class Arm extends Subsystem {
 			}
 			
 			if(wristSpeed > 0) {
-				wrist_motor.set(ControlMode.PercentOutput, -WRIST_SPEED);
+				wrist_motor.set(ControlMode.PercentOutput, -wristSpeed);
 			}
 			else if(wristSpeed < 0){
-				wrist_motor.set(ControlMode.PercentOutput, WRIST_SPEED);
+				wrist_motor.set(ControlMode.PercentOutput, wristSpeed);
 			}
 			else {
 				wrist_motor.set(ControlMode.PercentOutput, 0);

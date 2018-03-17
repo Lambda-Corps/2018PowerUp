@@ -26,9 +26,7 @@ public class Default_Arm extends Command {
         	Robot.arm.driveArm(Robot.oi.gamepad2.getAxis(F310.LY));
         	Robot.arm.getArmCurrent();
     	//}
-    	//if(Math.abs(Robot.oi.gamepad2.getAxis(F310.RY))) {
-        	//Robot.arm.driveArmWrist(-Robot.oi.gamepad2.getAxis(F310.RY));
-    	//}
+        	Robot.arm.driveArmWrist(-Robot.oi.gamepad2.getAxis(F310.RY));
     }
 
     // Make this return true when this Command no longer needs to run execute()
