@@ -27,8 +27,8 @@ public class LowerIntake extends Subsystem {
 	private final DoubleSolenoid lower_intake_solenoid_ExRe;
 	private final DoubleSolenoid lower_intake_solenoid_UpDown;
 	
-	public static final double INTAKE_MOTOR_LEFT_SPEED = .3;
-	public static final double INTAKE_MOTOR_RIGHT_SPEED = .3;
+	public static final double INTAKE_MOTOR_LEFT_SPEED = .36;
+	public static final double INTAKE_MOTOR_RIGHT_SPEED = .4;
 
 	public LowerIntake() {
 		//motors

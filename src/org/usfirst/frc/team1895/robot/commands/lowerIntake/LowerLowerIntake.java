@@ -31,10 +31,10 @@ public class LowerLowerIntake extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-//    	if(counter>=15) {
-//    		done = true;
-//    	}
-    	done = true;
+    	if(counter>=10) {
+    		done = true;
+    	}
+    	//done = true;
     	counter++;
     }
 

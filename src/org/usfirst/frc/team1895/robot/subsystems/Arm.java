@@ -225,12 +225,12 @@ public class Arm extends Subsystem {
 	
 	private double normalizeMotorInputWrist(double wristSpeed) {
 		//if arm speed is negative and we're going down, max speed is -0.6
-		if( wristSpeed < -.8 ) {
-			return -0.8;
+		if( wristSpeed < -.65 ) {
+			return -0.65;
 		}
 		//if going up, max speed is 0.8
-		if( wristSpeed > .8 ) {
-			return 0.8;
+		if( wristSpeed > .65 ) {
+			return 0.65;
 		}
 		return wristSpeed;
 	}
@@ -691,6 +691,7 @@ public class Arm extends Subsystem {
 //			if(wrist_motor.getSensorCollection().getQuadraturePosition() > 125) {
 //				wristSpeed = 0;
 //			}
+			
 			wristSpeed = Math.copySign(wristSpeed * wristSpeed, wristSpeed);
 			wrist_motor.set(ControlMode.PercentOutput, wristSpeed);
 			

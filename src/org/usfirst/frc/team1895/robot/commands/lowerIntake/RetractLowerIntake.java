@@ -26,7 +26,7 @@ public class RetractLowerIntake extends Command {
 
     // Called repeatedly when this Command is scheduled to run
     protected void execute() {
-    	if(counter>=10) {
+    	if(counter>=7) {
     		done = true;
     	}
     	counter++;
