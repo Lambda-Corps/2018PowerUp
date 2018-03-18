@@ -288,7 +288,7 @@ public class Drivetrain extends Subsystem {
 		}
 
 
-		shiftGears();
+//		shiftGears();
 		
 		current_count++;
 		if(current_count % 66 == 0) {
@@ -360,7 +360,7 @@ public class Drivetrain extends Subsystem {
 
 		double current_speed = Math.max(Math.abs(l_encoder.getRate()), Math.abs(r_encoder.getRate()));
 
-		// if in high gear..
+		// if in high gear...
 		if (inHigh) {
 			// ..and you dropped below the minimum high speed, switch to low gear
 			if (current_speed < DOWNSHIFT_SPEED) {
@@ -368,14 +368,14 @@ public class Drivetrain extends Subsystem {
 				inHigh = false;
 			}
 		}
-		// if in low gear..
+		// if in low gear...
 		else {
 			// ..and you went above the max low gear speed..
 			if (current_speed > DOWNSHIFT_SPEED) {
 				highgear_count++;
 
-				// ..after ~ 1.5 seconds, shift into high gear
-				if(highgear_count == 100) {
+				// ..after some seconds, shift into high gear
+				if(highgear_count == 18) {
 					transmission_solenoid.set(DoubleSolenoid.Value.kReverse); 
 					inHigh = true;
 					highgear_count = 0;

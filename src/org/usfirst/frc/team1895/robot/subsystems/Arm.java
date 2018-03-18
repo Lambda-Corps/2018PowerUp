@@ -70,9 +70,9 @@ public class Arm extends Subsystem {
 	
 	public static final int ARM_LOWEST_POSITION = ARM_LOWER_SOFT_LIMIT;
 	public static final int ARM_SWITCH_POSITION = 5600;
-	public static final int ARM_SCALE_LOW_POSITION = 13000;
-	public static final int ARM_SCALE_MID_POSITION = 13001;
-	public static final int ARM_SCALE_HIGH_POSITION = 13002;
+	public static final int ARM_SCALE_LOW_POSITION = 12000;
+	public static final int ARM_SCALE_MID_POSITION = 12001;
+	public static final int ARM_SCALE_HIGH_POSITION = 12002;
 	public static final int ARM_CLIMB_POSITION = ARM_UPPER_SOFT_LIMIT;
 	public static final int ARM_POSITIONAL_TOLERANCE = 750;
 
@@ -213,8 +213,8 @@ public class Arm extends Subsystem {
 
 	private double normalizeMotorInput(double armSpeed) {
 		//if arm speed is negative and we're going down, max speed is -0.6
-		if( armSpeed < -.8 ) {
-			return -0.8;
+		if( armSpeed < -1.0 ) {
+			return -1.0;
 		}
 		//if going up, max speed is 0.8
 		if( armSpeed > .8 ) {
@@ -387,7 +387,7 @@ public class Arm extends Subsystem {
     	boolean bReturnPos = false;
     	// First get the current position in space
 		int currArmPosition = bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition();
-		System.out.println("current arm pos " + currArmPosition);
+		//System.out.println("current arm pos " + currArmPosition);
 		boolean armHigherThanPosition = (currArmPosition > ARM_SWITCH_POSITION);
 		
 		// First condition checks arm is above position, else checks for equal or below
@@ -573,8 +573,10 @@ public class Arm extends Subsystem {
     }
     
 	private void resetArmEncoder() {
-		System.out.println("error = " + bot_arm_rotation_motor.setSelectedSensorPosition(0, 0, 10));
-		System.out.println("resetting arm encoder" + bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition());
+		//System.out.println("error = " + bot_arm_rotation_motor.setSelectedSensorPosition(0, 0, 5));
+		bot_arm_rotation_motor.setSelectedSensorPosition(0, 0, 5);
+		//System.out.println("resetting arm encoder" + bot_arm_rotation_motor.getSensorCollection().getQuadraturePosition());
+		bot_arm_rotation_motor.getSensorCollection().setQuadraturePosition(0, 5);
 	}
 	
 	//sets the arm to the lowest position, collects encoder and potentiometer values
@@ -586,11 +588,10 @@ public class Arm extends Subsystem {
 		// we want it.  Move the arm down at a slower rate until the potentiometer 
 		// voltage is higher or equal
 		if(armPotVal < ARM_LOWEST_POT_VALUE) {
-			driveArm(ARM_SPEED_CALIBRATION); //drive down
+			driveArm(-ARM_SPEED_CALIBRATION); //drive down
 		} 
 		else {
 			driveArm(0);
-			
 			resetArmEncoder();
 	    	
 		    	top_arm_rotation_motor.configForwardSoftLimitThreshold(ARM_UPPER_SOFT_LIMIT, 0);
@@ -707,7 +708,7 @@ public class Arm extends Subsystem {
 //				wrist_motor.set(ControlMode.PercentOutput, 0);
 //			}
 			SmartDashboard.putNumber("wrist value", Robot.arm.getWristEncoder());
-			System.out.println("wristspeed: " + wristSpeed);
+			//System.out.println("wristspeed: " + wristSpeed);
 		}
 		
 		public boolean setMaxWrist() {
